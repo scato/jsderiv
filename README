@@ -1,0 +1,8 @@
+jsderiv is a parser generator written in server-side javascript
+
+the parser uses parser derivatives described in:
+http://www.ccs.neu.edu/home/turon/re-deriv.pdf
+http://arxiv.org/PS_cache/arxiv/pdf/1010/1010.5023v1.pdf
+
+jsderiv is work in progress
+
