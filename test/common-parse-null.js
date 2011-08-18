@@ -50,12 +50,18 @@ exports['test Seq'] = function(test) {
 exports['test Any'] = function(test) {
     var output;
     
+    output = derive(Any(Char('a')), "aa");
+    test.deepEqual(output.parseNull(), [['a', 'a']]);
+    
     test.done();
 };
 
 // r | s
 exports['test Or'] = function(test) {
     var output;
+    
+    output = derive(Or(Char('a'), Char('b')), "b");
+    test.deepEqual(output.parseNull(), [['b']]);
     
     test.done();
 };
@@ -64,6 +70,9 @@ exports['test Or'] = function(test) {
 exports['test And'] = function(test) {
     var output;
     
+    output = derive(And(Char('a'), Char('a')), "a");
+    test.deepEqual(output.parseNull(), [['a']]);
+    
     test.done();
 };
 
@@ -71,12 +80,21 @@ exports['test And'] = function(test) {
 exports['test Not'] = function(test) {
     var output;
     
+    output = derive(Not(Char('a')), "a");
+    test.deepEqual(output.parseNull(), []);
+    
+    output = derive(Not(Char('a')), "b");
+    test.deepEqual(output.parseNull(), [['b']]);
+    
     test.done();
 };
 
 // a+
 exports['test Many'] = function(test) {
     var output;
+    
+    output = derive(Many(Char('a')), "aa");
+    test.deepEqual(output.parseNull(), [['a', 'a']]);
     
     test.done();
 };
