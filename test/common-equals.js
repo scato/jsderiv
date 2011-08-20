@@ -1,5 +1,6 @@
-var common = require('../lib/common'),
-    lexer  = require('../lib/lexer');
+var common    = require('../lib/common'),
+    lexer     = require('../lib/lexer'),
+    lookahead = require('../lib/lookahead');
 
 var And     = common.And,
     Null    = common.Null,
@@ -9,7 +10,7 @@ var And     = common.And,
     Seq     = common.Seq,
     Or      = common.Or,
     Red     = common.Red,
-    Look    = common.Look,
+    Look    = lookahead.Look,
     Grammar = lexer.Grammar;
 
 var grammar = new Grammar();

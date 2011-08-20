@@ -1,5 +1,6 @@
-var common = require('../lib/common'),
-    lexer  = require('../lib/lexer');
+var common    = require('../lib/common'),
+    lexer     = require('../lib/lexer'),
+    lookahead = require('../lib/lookahead');
 
 var Null    = common.Null,
     Empty   = common.Empty,
@@ -12,7 +13,7 @@ var Null    = common.Null,
     Red     = common.Red,
     Many    = common.Many,
     Opt     = common.Opt,
-    Look    = common.Look;
+    Look    = lookahead.Look;
 
 function derive(expr, input) {
     var output = expr;
