@@ -189,13 +189,12 @@ exports['test Look'] = function(test) {
     var output;
     
     output = derive(Seq(Char("a"), Look(Char("b"))), "ab");
-    testNotNullable(output, test);
-    testNotNull(output, test);
-    
-    output = derive(Seq(Char("a"), Look(Char("b"))), "ac");
     testNull(output, test);
     
-    output = derive(Seq(Seq(Char("a"), Look(Char("b"))), Char("b")), "ab");
+    output = derive(Seq(Seq(Char("a"), Look(Char("b"))), Or(Char("b"), Char("c"))), "ac");
+    testNull(output, test);
+    
+    output = derive(Seq(Seq(Char("a"), Look(Char("b"))), Or(Char("b"), Char("c"))), "ab");
     testNullable(output, test);
     
     test.done();

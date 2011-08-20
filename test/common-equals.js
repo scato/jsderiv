@@ -9,6 +9,7 @@ var And     = common.And,
     Seq     = common.Seq,
     Or      = common.Or,
     Red     = common.Red,
+    Look    = common.Look,
     Grammar = lexer.Grammar;
 
 var grammar = new Grammar();
@@ -116,6 +117,16 @@ exports['test "^(^r) = r"'] = function(test) {
 
 exports['test "0 -> f = 0"'] = function(test) {
     test.ok(Red(Null(), function(x) { return x; }).equals(Null()));
+    test.done();
+};
+
+exports['test "?E = E"'] = function(test) {
+    test.ok(Look(Empty()).equals(Empty()));
+    test.done();
+};
+
+exports['test "?0 = 0"'] = function(test) {
+    test.ok(Look(Null()).equals(Null()));
     test.done();
 };
 
