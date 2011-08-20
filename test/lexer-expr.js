@@ -1,5 +1,5 @@
-var lexer  = require('../lib/lexer'),
-    common = require('../lib/common');
+var common = require('../lib/common'),
+    lexer  = require('../lib/lexer');
 
 var Null    = common.Null,
     Empty   = common.Empty,

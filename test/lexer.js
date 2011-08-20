@@ -4,17 +4,15 @@ var common = require('../lib/common'),
 var Literal = lexer.Literal,
     Token   = lexer.Token,
     Stream  = lexer.Stream,
-    Grammar = lexer.Grammar,
-    parse   = lexer.parse;
+    Grammar = lexer.Grammar;
 
-var grammar = new Grammar();
+var test = require('../src/grammars/test');
 
-var Def = grammar.Def,
-    Ref = grammar.Ref;
+var tokenize = test.tokenize;
 
-var LAYOUT = Def("LAYOUT", Literal(" "));
-var INT    = Def("INT",    Literal("1"));
-var OP     = Def("OP",     Literal("+"));
+var LAYOUT = test.LAYOUT,
+    INT    = test.INT,
+    OP     = test.OP;
 
 exports['parse "1 + 1"'] = function(test) {
     var input = '1 + 1';
@@ -27,7 +25,7 @@ exports['parse "1 + 1"'] = function(test) {
         INT("1")
     );
     
-    var result = parse(input, grammar);
+    var result = tokenize(input);
 
     test.ok(result instanceof Stream, 'test if result is a Stream');
     test.ok(result.equals(output), 'test if ' + result.toString() + ' equals ' + output.toString());

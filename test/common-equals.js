@@ -1,6 +1,6 @@
 var common    = require('../lib/common'),
-    lexer     = require('../lib/lexer'),
-    lookahead = require('../lib/lookahead');
+    lookahead = require('../lib/lookahead'),
+    lexer     = require('../lib/lexer');
 
 var And     = common.And,
     Null    = common.Null,
