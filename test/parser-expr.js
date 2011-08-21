@@ -4,7 +4,8 @@ var common = require('../lib/common'),
 
 var Null    = common.Null,
     Empty   = common.Empty,
-    Token   = parser.Token;
+    Token   = parser.Token,
+    Literal = parser.Literal;
 
 var Stream  = lexer.Stream;
 
@@ -47,6 +48,18 @@ exports['test Token'] = function(test) {
     testNullable(output, test);
     
     output = derive(Token(INT), new Stream(OP("+")));
+    testNotNullable(output, test);
+    
+    test.done();
+};
+
+exports['test Literal'] = function(test) {
+    var output;
+    
+    output = derive(Literal("+"), new Stream(OP("+")));
+    testNullable(output, test);
+    
+    output = derive(Literal("+"), new Stream(INT("1")));
     testNotNullable(output, test);
     
     test.done();

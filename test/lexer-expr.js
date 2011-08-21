@@ -4,7 +4,10 @@ var common = require('../lib/common'),
 var Null    = common.Null,
     Empty   = common.Empty,
     Char    = lexer.Char,
+    One     = lexer.One,
+    No      = lexer.No,
     Literal = lexer.Literal,
+    Range   = lexer.Range,
     RegExp  = lexer.RegExp;
 
 function derive(expr, input) {
@@ -45,6 +48,30 @@ exports['test Char'] = function(test) {
     test.done();
 };
 
+exports['test One'] = function(test) {
+    var output;
+    
+    output = derive(One(), "1");
+    testNullable(output, test);
+    
+    output = derive(One(), "+");
+    testNullable(output, test);
+    
+    test.done();
+};
+
+exports['test No'] = function(test) {
+    var output;
+    
+    output = derive(No("1"), "1");
+    testNotNullable(output, test);
+    
+    output = derive(No("1"), "+");
+    testNullable(output, test);
+    
+    test.done();
+};
+
 exports['test Literal'] = function(test) {
     var output;
     
@@ -56,6 +83,18 @@ exports['test Literal'] = function(test) {
     testNotNull(output, test);
     
     output = derive(Literal("test"), "tst");
+    testNull(output, test);
+    
+    test.done();
+};
+
+exports['test Range'] = function(test) {
+    var output;
+    
+    output = derive(Range("a", "f"), "c");
+    testNullable(output, test);
+    
+    output = derive(Range("a", "f"), "i");
     testNull(output, test);
     
     test.done();
