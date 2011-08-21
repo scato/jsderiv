@@ -8,7 +8,7 @@ var Token   = parser.Token,
     Set     = parser.Set,
     Term    = parser.Term;
 
-var test = require('../src/grammars/test');
+var test = require('../src/test-lang');
 
 var parse = test.parse;
 

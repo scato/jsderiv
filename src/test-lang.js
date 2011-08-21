@@ -1,6 +1,6 @@
-var common = require('../../lib/common'),
-    lexer  = require('../../lib/lexer'),
-    parser = require('../../lib/parser');
+var common = require('../lib/common'),
+    lexer  = require('../lib/lexer'),
+    parser = require('../lib/parser');
 
 
 (function() {

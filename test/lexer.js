@@ -6,7 +6,7 @@ var Literal = lexer.Literal,
     Stream  = lexer.Stream,
     Grammar = lexer.Grammar;
 
-var test = require('../src/grammars/test');
+var test = require('../src/test-lang');
 
 var tokenize = test.tokenize;
 

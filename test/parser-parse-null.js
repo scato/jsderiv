@@ -8,7 +8,7 @@ var Null    = common.Null,
 
 var Stream  = lexer.Stream;
 
-var test = require('../src/grammars/test');
+var test = require('../src/test-lang');
 
 var LAYOUT = test.LAYOUT,
     INT    = test.INT,

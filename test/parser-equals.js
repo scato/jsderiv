@@ -5,7 +5,7 @@ var Null    = common.Null,
     Empty   = common.Empty,
     Token   = parser.Token;
 
-var test = require('../src/grammars/test');
+var test = require('../src/test-lang');
 
 var LAYOUT = test.LAYOUT,
     INT    = test.INT,
