@@ -7,6 +7,18 @@ var LAYOUT = test.LAYOUT,
     INT    = test.INT,
     OP     = test.OP;
 
+exports['test parse error'] = function(test) {
+    test.doesNotThrow(function() {
+        parse(tokenize("1 + 1").exclude(LAYOUT));
+    });
+    
+    test.throws(function() {
+        parse(tokenize("1 + ").exclude(LAYOUT));
+    });
+    
+    test.done();
+};
+
 exports['test unexpected token'] = function(test) {
     test.doesNotThrow(function() {
         parse(tokenize("1 + 1").exclude(LAYOUT));

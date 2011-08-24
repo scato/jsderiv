@@ -30,7 +30,7 @@ var Def = grammar.Def,
 exports.LAYOUT  = Def("LAYOUT",  Many(Or(Or(Or(Char(" "), Char("\n")), Char("\r")), Char("\t"))));
 exports.IDPART  = Or(Or(Range("A", "Z"), Range("a", "z")), Char("_"));
 exports.ID      = Def("ID",      Seq(Many(exports.IDPART), Look(Not(exports.IDPART))));
-exports.SYMBOL  = Def("SYMBOL",  Or(Or(Or(Or(Or(Or(Or(Literal(":"), Literal("::")), Literal("|")), Literal("*")), Literal("?")), Literal("+")), Literal("(")), Literal(")")));
+exports.SYMBOL  = Def("SYMBOL",  Or(Or(Or(Or(Or(Or(Or(Or(Literal(":"), Literal("::")), Literal(";")), Literal("|")), Literal("*")), Literal("?")), Literal("+")), Literal("(")), Literal(")")));
 exports.LITERAL = Def("LITERAL", Seq(Seq(Char("'"), Any(Or(No("\\"), Seq(Char("\\"), Char("'"))))), Char("'")));
 
 exports.tokenize = function(string) {
@@ -63,8 +63,8 @@ var Def = grammar.Def,
     Ref = grammar.Ref;
 
 exports.Grammar =    Def("Grammar",    Any(Or(Ref("LexerRule"), Ref("ParserRule"))));
-exports.LexerRule =  Def("LexerRule",  Seq(Seq(Token(ID), Literal("::")), Ref("Expression")));
-exports.ParserRule = Def("ParserRule", Seq(Seq(Token(ID), Literal(":")), Ref("Expression")));
+exports.LexerRule =  Def("LexerRule",  Seq(Seq(Seq(Token(ID), Literal("::")), Ref("Expression")), Literal(";")));
+exports.ParserRule = Def("ParserRule", Seq(Seq(Seq(Token(ID), Literal(":")), Ref("Expression")), Literal(";")));
 exports.Expression = Def("Expression", Or(Seq(Seq(Ref("Expression"), Literal("|")), Token(ID)), Token(ID)));
 
 exports.parse = function(stream) {

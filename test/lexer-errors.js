@@ -6,6 +6,18 @@ var LAYOUT = test.LAYOUT,
     INT    = test.INT,
     OP     = test.OP;
 
+exports['test syntax error'] = function(test) {
+    test.doesNotThrow(function() {
+        tokenize("==");
+    });
+    
+    test.throws(function() {
+        tokenize("=");
+    });
+    
+    test.done();
+};
+
 exports['test invalid char'] = function(test) {
     test.throws(function() {
         tokenize("2");

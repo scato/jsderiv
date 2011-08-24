@@ -18,7 +18,7 @@ var Def = grammar.Def,
 
 var LAYOUT = Def("LAYOUT", Or(Char(" "), Char("\n")));
 var INT    = Def("INT",    Literal("1"));
-var OP     = Def("OP",     Literal("+"));
+var OP     = Def("OP",     Or(Literal("+"), Literal("==")));
 
 function tokenize(string) {
     return lexer.tokenize(string, grammar);
