@@ -1,4 +1,5 @@
 var common = require('../lib/common'),
+    lookahead = require('../lib/lookahead'),
     lexer  = require('../lib/lexer'),
     parser = require('../lib/parser');
 
@@ -6,11 +7,16 @@ var common = require('../lib/common'),
 (function() {
 
 
-var Or      = common.Or,
+var Empty   = common.Empty,
+    Or      = common.Or,
     Many    = common.Many,
     Seq     = common.Seq,
     Any     = common.Any,
+    And     = common.And,
+    Not     = common.Not,
+    Look    = lookahead.Look,
     Char    = lexer.Char,
+    One     = lexer.One,
     No      = lexer.No,
     Range   = lexer.Range,
     Literal = lexer.Literal,
@@ -22,7 +28,9 @@ var Def = grammar.Def,
     Ref = grammar.Ref;
 
 exports.LAYOUT  = Def("LAYOUT",  Many(Or(Or(Or(Char(" "), Char("\n")), Char("\r")), Char("\t"))));
-exports.ID      = Def("ID",      Many(Or(Or(Range("A", "Z"), Range("a", "z")), Char("_"))));
+exports.IDPART  = Or(Or(Range("A", "Z"), Range("a", "z")), Char("_"));
+exports.ID      = Def("ID",      Seq(Many(exports.IDPART), Look(Not(exports.IDPART))));
+//exports.ID      = Def("ID",      Seq(Many(exports.IDPART), Look(And(One(), Not(exports.IDPART)))));
 exports.SYMBOL  = Def("SYMBOL",  Or(Or(Or(Or(Or(Or(Or(Literal(":"), Literal("::")), Literal("|")), Literal("*")), Literal("?")), Literal("+")), Literal("(")), Literal(")")));
 exports.LITERAL = Def("LITERAL", Seq(Seq(Char("'"), Any(Or(No("\\"), Seq(Char("\\"), Char("'"))))), Char("'")));
 

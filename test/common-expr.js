@@ -134,6 +134,9 @@ exports['test And'] = function(test) {
 exports['test Not'] = function(test) {
     var output;
     
+    output = Not(Null());
+    testNullable(output, test);
+    
     output = derive(Not(Char("a")), "a");
     testNotNullable(output, test);  // not nullable because "a" does not match ~a
     testNotNull(output, test);      // not equal to Null(), because "aa" does match ~a
@@ -189,6 +192,9 @@ exports['test Opt'] = function(test) {
 exports['test Look'] = function(test) {
     var output;
     
+    output = derive(Seq(Char("a"), Look(Char("b"))), "a");
+    testNotNullable(output, test);
+    
     output = derive(Seq(Char("a"), Look(Char("b"))), "ab");
     testNull(output, test);
     
@@ -196,6 +202,37 @@ exports['test Look'] = function(test) {
     testNull(output, test);
     
     output = derive(Seq(Seq(Char("a"), Look(Char("b"))), Or(Char("b"), Char("c"))), "ab");
+    testNullable(output, test);
+    
+    output = derive(Seq(Seq(Seq(Char("a"), Look(Char("b"))), Char("b")), Char("b")), "ab");
+    testNotNullable(output, test);
+    
+    output = derive(Seq(Seq(Seq(Char("a"), Look(Char("b"))), Char("b")), Char("b")), "abb");
+    testNullable(output, test);
+    
+    test.done();
+};
+
+// a (?! b)
+exports['test Look/Not'] = function(test) {
+    var output;
+    
+    output = derive(Seq(Char("a"), Look(Not(Char("b")))), "a");
+    testNullable(output, test);
+    
+    output = derive(Seq(Char("a"), Look(Not(Char("b")))), "ac");
+    testNull(output, test);
+    
+    output = derive(Seq(Seq(Char("a"), Look(Not(Char("b")))), Or(Char("b"), Char("c"))), "ab");
+    testNull(output, test);
+    
+    output = derive(Seq(Seq(Char("a"), Look(Not(Char("b")))), Or(Char("b"), Char("c"))), "ac");
+    testNullable(output, test);
+    
+    output = derive(Seq(Seq(Seq(Char("a"), Look(Not(Char("b")))), Char("c")), Char("c")), "ac");
+    testNotNullable(output, test);
+    
+    output = derive(Seq(Seq(Seq(Char("a"), Look(Not(Char("b")))), Char("c")), Char("c")), "acc");
     testNullable(output, test);
     
     test.done();
