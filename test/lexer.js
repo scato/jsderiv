@@ -1,7 +1,8 @@
 var common = require('../lib/common'),
     lexer  = require('../lib/lexer');
 
-var Literal = lexer.Literal,
+var Expr    = common.Expr,
+    Literal = lexer.Literal,
     Token   = lexer.Token,
     Stream  = lexer.Stream,
     Grammar = lexer.Grammar;

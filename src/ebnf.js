@@ -30,7 +30,6 @@ var Def = grammar.Def,
 exports.LAYOUT  = Def("LAYOUT",  Many(Or(Or(Or(Char(" "), Char("\n")), Char("\r")), Char("\t"))));
 exports.IDPART  = Or(Or(Range("A", "Z"), Range("a", "z")), Char("_"));
 exports.ID      = Def("ID",      Seq(Many(exports.IDPART), Look(Not(exports.IDPART))));
-//exports.ID      = Def("ID",      Seq(Many(exports.IDPART), Look(And(One(), Not(exports.IDPART)))));
 exports.SYMBOL  = Def("SYMBOL",  Or(Or(Or(Or(Or(Or(Or(Literal(":"), Literal("::")), Literal("|")), Literal("*")), Literal("?")), Literal("+")), Literal("(")), Literal(")")));
 exports.LITERAL = Def("LITERAL", Seq(Seq(Char("'"), Any(Or(No("\\"), Seq(Char("\\"), Char("'"))))), Char("'")));
 

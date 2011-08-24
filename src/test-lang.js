@@ -6,7 +6,9 @@ var common = require('../lib/common'),
 (function() {
 
 
-var Literal = lexer.Literal,
+var Or      = common.Or,
+    Char    = lexer.Char,
+    Literal = lexer.Literal,
     Grammar = lexer.Grammar;
 
 var grammar = new Grammar();
@@ -14,7 +16,7 @@ var grammar = new Grammar();
 var Def = grammar.Def,
     Ref = grammar.Ref;
 
-var LAYOUT = Def("LAYOUT", Literal(" "));
+var LAYOUT = Def("LAYOUT", Or(Char(" "), Char("\n")));
 var INT    = Def("INT",    Literal("1"));
 var OP     = Def("OP",     Literal("+"));
 
