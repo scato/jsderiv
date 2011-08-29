@@ -1,0 +1,12 @@
+%%%
+ %% 7.3: Line Terminators
+ %%
+ %% @todo Missing Unicode characters: \u2028 \u2029
+ %%%
+module languages/ecmascript3/lexical/LineTerminators
+exports
+  lexical syntax
+    [\10\13] -> LineTerminator
+
+  context-free restrictions
+    LAYOUT? -/- [\10\13]

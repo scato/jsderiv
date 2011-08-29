@@ -1,0 +1,139 @@
+%%%
+ %% 12: Statements
+ %%%
+module languages/ecmascript3/Statements[Ctx]
+exports
+  syntax
+    <Block-CF>                      -> <Stm[[Ctx]]-CF>
+    <EmptyStm-CF>                   -> <Stm[[Ctx]]-CF>
+    <IfStm[[Ctx]]-CF>               -> <Stm[[Ctx]]-CF>
+    <IterationStm[[Ctx]]-CF>        -> <Stm[[Ctx]]-CF>
+    <WithStm[[Ctx]]-CF>             -> <Stm[[Ctx]]-CF>
+    <LabelledStm[[Ctx]]-CF>         -> <Stm[[Ctx]]-CF>
+    <SwitchStm-CF>                  -> <Stm[[Ctx]]-CF>
+    <TryStm-CF>                     -> <Stm[[Ctx]]-CF>
+
+    <ExprStm-CF>      <WhiteSpace-CF>* StmTerminator -> <Stm[[Ctx]]-CF> {ast("<1>")}
+    <ContinueStm-CF>  <WhiteSpace-CF>* StmTerminator -> <Stm[[Ctx]]-CF> {ast("<1>")}
+    <BreakStm-CF>     <WhiteSpace-CF>* StmTerminator -> <Stm[[Ctx]]-CF> {ast("<1>")}
+    <ReturnStm-CF>    <WhiteSpace-CF>* StmTerminator -> <Stm[[Ctx]]-CF> {ast("<1>")}
+    <ThrowStm-CF>     <WhiteSpace-CF>* StmTerminator -> <Stm[[Ctx]]-CF> {ast("<1>")}
+    <VarStm-CF>       <WhiteSpace-CF>* StmTerminator -> <Stm[[Ctx]]-CF> {ast("<1>")}
+
+
+    <ExprStm-CF>      -> <NotTerminatedStm[[Ctx]]-CF>
+    <ContinueStm-CF>  -> <NotTerminatedStm[[Ctx]]-CF>
+    <BreakStm-CF>     -> <NotTerminatedStm[[Ctx]]-CF>
+    <ReturnStm-CF>    -> <NotTerminatedStm[[Ctx]]-CF>
+    <ThrowStm-CF>     -> <NotTerminatedStm[[Ctx]]-CF>
+    <VarStm-CF>       -> <NotTerminatedStm[[Ctx]]-CF>
+
+    %% @todo Avoid this duplication.    
+    <Block-CF>                      -> <NotTerminatedStm[[Ctx]]-CF>
+    <EmptyStm-CF>                   -> <NotTerminatedStm[[Ctx]]-CF>
+    <IfStm[[Ctx]]-CF>               -> <NotTerminatedStm[[Ctx]]-CF>
+    <IterationStm[[Ctx]]-CF>        -> <NotTerminatedStm[[Ctx]]-CF>
+    <WithStm[[Ctx]]-CF>             -> <NotTerminatedStm[[Ctx]]-CF>
+    <LabelledStm[[Ctx]]-CF>         -> <NotTerminatedStm[[Ctx]]-CF>
+    <SwitchStm-CF>                  -> <NotTerminatedStm[[Ctx]]-CF>
+    <TryStm-CF>                     -> <NotTerminatedStm[[Ctx]]-CF>
+
+    %% @todo: in some cases the semicolon is optimal
+    %% @todo: this definition does not support the curly brace ...
+    ";"                 -> StmTerminator {cons("Semicolon")}
+    <LineTerminator-CF> -> StmTerminator {cons("LineTerminator")}
+
+  %%%
+   %% 12.1: Block
+   %%%
+  context-free syntax
+    "{" StmList? "}" -> Block {cons("Block")}
+    
+  context-free syntax
+    Stm[[Full]]* -> StmListPrefix
+    
+  syntax
+     <StmListPrefix-CF> <LAYOUT?-CF> <NotTerminatedStm[[Full]]-CF> (<WhiteSpace-CF>* ";")?
+      -> <StmList-CF> {ast("<conc(<1>, [<2>])>")}
+
+  %%%
+   %% 12.2: Variable Statement
+   %%%
+  context-free syntax
+    "var" {VarDec[[AllowIn]] ","}+ -> VarStm {cons("VarStm")}
+
+    Id Initialiser[[Ctx]]?    -> VarDec[[Ctx]]      {cons("VarDec")}
+    "=" AssignmentExpr[[Ctx]] -> Initialiser[[Ctx]] {cons("Init")}
+
+  %%%
+   %% 12.3: Empty Statement
+   %%%
+  context-free syntax
+    ";" -> EmptyStm
+
+  %%%
+   %% 12.4: Expression Statement
+   %%
+   %% @todo Check the lookahead.
+   %%%
+  context-free syntax
+    Expr[[AllowIn]] -> ExprStm {cons("ExprStm")}
+
+  %%%
+   %% 12.5: The if Statement
+   %%%
+  context-free syntax
+    "if" "(" Expr ")" Stm[[Full]]                              -> Stm[[Full]]      {cons("IfThen")}
+    "if" "(" Expr ")" Stm[[NoShortIf]] "else" Stm[[Full]]      -> Stm[[Full]]      {cons("If")}
+    "if" "(" Expr ")" Stm[[NoShortIf]] "else" Stm[[NoShortIf]] -> Stm[[NoShortIf]] {cons("If")}
+
+  %%%
+   %% 12.6: Iteration Statements
+   %%%
+  context-free syntax
+    DoStm           StmTerminator -> IterationStm[[Ctx]]
+    WhileStm[[Ctx]]               -> IterationStm[[Ctx]]
+    ForStm[[Ctx]]                 -> IterationStm[[Ctx]]
+
+    "do" Stm "while" "(" Expr ")"   -> DoStm
+
+    "while" "(" Expr ")" Stm[[Ctx]] -> WhileStm[[Ctx]]
+
+    "for" "(" ForInit? ";" Expr? ";" Expr? ")" Stm[[Ctx]] -> ForStm[[Ctx]]
+    Expr[[NoIn]]             -> ForInit
+    "var" VarDecList[[NoIn]] -> ForInit
+
+    "for" "(" ForInBinding "in" Expr       ")" Stm[[Ctx]] -> ForStm[[Ctx]]
+    LeftHandSideExpr     -> ForInBinding
+    "var" VarDec[[NoIn]] -> ForInBinding
+
+  syntax
+    "continue" <WhiteSpace-CF>* <Id-CF>? -> <ContinueStm-CF> {ast("Continue(<2>)")}
+
+  syntax
+    "break" <WhiteSpace-CF>* <Id-CF>? -> <BreakStm-CF> {ast("Break(<2>)")}
+
+  syntax
+    "return" <WhiteSpace-CF>* <Expr-CF>? -> <ReturnStm-CF> {ast("Return(<2>)")}
+
+  context-free syntax
+    "with" "(" Expr ")" Stm -> WithStm
+
+  context-free syntax
+    "switch" "(" Expr ")" "{" CaseClause* "}" -> SwitchStm
+    "case" Expr ":" StmList? -> CaseClause
+    "default"   ":" StmList? -> CaseClause
+
+  context-free syntax
+    Id ":" Stm -> LabelledStm
+
+  context-free syntax
+    "throw" Expr -> ThrowStm
+
+  context-free syntax
+    "try" Block Catch         -> TryStm
+    "try" Block Finally       -> TryStm
+    "try" Block Catch Finally -> TryStam
+
+    "catch" "(" Id ")" Block -> Catch
+    "finally" Block -> Finallly
