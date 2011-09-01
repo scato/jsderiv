@@ -1,0 +1,12 @@
+%%%
+ %% 7.2: White Space
+ %%
+ %% @todo Missing unicode category USP
+ %%%
+module languages/ecmascript3/lexical/WhiteSpace
+exports
+  lexical syntax
+    [\9\11\12\32\160] -> WhiteSpace
+
+  context-free restrictions
+    LAYOUT? -/- [\9\11\12\32\160]

@@ -1,0 +1,45 @@
+module languages/ecmascript3/lexical/Tokens
+exports
+
+  %%%
+   %% 7.5.1: Reserved Words
+   %%%
+  lexical syntax
+    Keyword        -> ReservedWord
+    NullLiteral    -> ReservedWord
+    BooleanLiteral -> ReservedWord
+    FutureReservedWord -> ReservedWord
+    
+  %%%
+   %% 7.5.2: Keywords
+   %%%
+  lexical syntax
+      "break"    | "else"       | "new"    | "var"
+    | "case"     | "finally"    | "return" | "void"
+    | "catch"    | "for"        | "switch" | "while"
+    | "continue" | "function"   | "this"   | "with"
+    | "default"  | "if"         | "throw"
+    | "delete"   | "in"         | "try"
+    | "do"       | "instanceof" | "typeof"
+    -> Keyword
+
+  lexical syntax
+      "abstract" | "enum"       | "int"       | "short"
+    | "boolean"  | "export"     | "interface" | "static"
+    | "byte"     | "extends"    | "long"      | "super"
+    | "char"     | "final"      | "native"    | "synchronized"
+    | "class"    | "float"      | "package"   | "throws"
+    | "const"    | "goto"       | "private"   | "transient"
+    | "debugger" | "implements" | "protected" | "volatile"
+    | "double"   | "import"     | "public"
+    -> FutureReservedKeyword
+      
+  lexical restrictions
+    "break"    "else"       "new"    "var"
+    "case"     "finally"    "return" "void"
+    "catch"    "for"        "switch" "while"
+    "continue" "function"   "this"   "with"
+    "default"  "if"         "throw"
+    "delete"   "in"         "try"
+    "do"       "instanceof" "typeof" 
+    -/- [A-Za-z0-9]     
