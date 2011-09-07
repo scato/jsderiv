@@ -5,7 +5,7 @@ var Null    = common.Null,
     Empty   = common.Empty,
     Token   = parser.Token;
 
-var test = require('../src/test-lang');
+var test = require('../src/test-lp-lang');
 
 var LAYOUT = test.LAYOUT,
     INT    = test.INT,

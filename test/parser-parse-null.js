@@ -8,7 +8,7 @@ var Null    = common.Null,
 
 var Stream  = lexer.Stream;
 
-var test = require('../src/test-lang');
+var test = require('../src/test-lp-lang');
 
 var LAYOUT = test.LAYOUT,
     INT    = test.INT,

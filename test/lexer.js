@@ -7,7 +7,7 @@ var Expr    = common.Expr,
     Stream  = lexer.Stream,
     Grammar = lexer.Grammar;
 
-var test = require('../src/test-lang');
+var test = require('../src/test-lp-lang');
 
 var tokenize = test.tokenize;
 

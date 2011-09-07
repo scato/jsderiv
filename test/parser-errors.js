@@ -1,4 +1,4 @@
-var test = require('../src/test-lang');
+var test = require('../src/test-lp-lang');
 
 var tokenize = test.tokenize,
     parse    = test.parse;

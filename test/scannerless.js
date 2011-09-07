@@ -1,14 +1,12 @@
-var common = require('../lib/common'),
-    lexer  = require('../lib/lexer'),
-    parser = require('../lib/parser');
+var common      = require('../lib/common'),
+    scannerless = require('../lib/scannerless');
 
-var Token   = parser.Token,
-    Stream  = lexer.Stream,
-    Grammar = parser.Grammar,
-    Set     = parser.Set,
-    Term    = parser.Term;
+var Char    = scannerless.Char,
+    Grammar = scannerless.Grammar,
+    Set     = scannerless.Set,
+    Term    = scannerless.Term;
 
-var test = require('../src/test-lp-lang');
+var test = require('../src/test-sl-lang');
 
 var parse = test.parse;
 
@@ -18,11 +16,7 @@ var LAYOUT = test.LAYOUT,
     Expr   = test.Expr;
 
 exports['parse "1 + 1"'] = function(test) {
-    var input = new Stream(
-        INT("1"),
-        OP("+"),
-        INT("1")
-    );
+    var input = "1 + 1";
     
     var output = new Set(
         Expr(Expr(INT("1")), OP("+"), INT("1"))
@@ -37,7 +31,7 @@ exports['parse "1 + 1"'] = function(test) {
 
 exports['test Def/Ref'] = function(test) {
     var grammar = new Grammar();
-    var expr = new Token(INT);
+    var expr = Char("1");
     var ref = grammar.Ref("Test");
     
     test.throws(function() {
