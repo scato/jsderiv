@@ -2,8 +2,8 @@ var common = require('../lib/common'),
     lexer  = require('../lib/lexer'),
     parser = require('../lib/parser');
 
-var Null    = common.Null,
-    Empty   = common.Empty,
+var Void    = common.Void,
+    Null   = common.Null,
     Token   = parser.Token;
 
 var Stream  = lexer.Stream;

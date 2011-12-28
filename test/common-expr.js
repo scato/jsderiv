@@ -2,8 +2,8 @@ var common    = require('../lib/common'),
     lookahead = require('../lib/lookahead'),
     lexer     = require('../lib/lexer');
 
-var Null    = common.Null,
-    Empty   = common.Empty,
+var Void    = common.Void,
+    Null   = common.Null,
     Char    = lexer.Char,
     Seq     = common.Seq,
     Any     = common.Any,
@@ -25,38 +25,38 @@ function derive(expr, input) {
     return output;
 }
 
-function testNullable(output, test) {
+function testVoidable(output, test) {
     test.ok(output.isNullable(), 'test if ' + output.toString() + ' is nullable');
 }
 
-function testNotNullable(output, test) {
+function testNotVoidable(output, test) {
     test.ok(!output.isNullable(), 'test if ' + output.toString() + ' is not nullable');
 }
 
-function testNull(output, test) {
-    test.ok(output.isNull(), 'test if ' + output.toString() + ' is equal to Null()');
+function testVoid(output, test) {
+    test.ok(output.isVoid(), 'test if ' + output.toString() + ' is equal to Void()');
 }
 
-function testNotNull(output, test) {
-    test.ok(!output.isNull(), 'test if ' + output.toString() + ' is not equal to Null()');
+function testNotVoid(output, test) {
+    test.ok(!output.isVoid(), 'test if ' + output.toString() + ' is not equal to Void()');
 }
 
 // {}
-exports['test Null'] = function(test) {
+exports['test Void'] = function(test) {
     var output;
     
-    output = derive(Null(), "1");
-    testNull(output, test);
+    output = derive(Void(), "1");
+    testVoid(output, test);
     
     test.done();
 };
 
 // {""}
-exports['test Empty'] = function(test) {
+exports['test Null'] = function(test) {
     var output;
     
-    output = derive(Empty(), "1");
-    testNull(output, test);
+    output = derive(Null(), "1");
+    testVoid(output, test);
     
     test.done();
 };
@@ -66,15 +66,15 @@ exports['test Seq'] = function(test) {
     var output;
     
     output = derive(Seq(Char("a"), Char("b")), "a");
-    testNotNullable(output, test);
-    testNotNull(output, test);
+    testNotVoidable(output, test);
+    testNotVoid(output, test);
     
     output = derive(Seq(Char("a"), Char("b")), "ab");
-    testNullable(output, test);
-    testNotNull(output, test);
+    testVoidable(output, test);
+    testNotVoid(output, test);
     
     output = derive(Seq(Char("a"), Char("b")), "b");
-    testNull(output, test);
+    testVoid(output, test);
     
     test.done();
 };
@@ -84,19 +84,19 @@ exports['test Any'] = function(test) {
     var output;
     
     output = derive(Any(Char("a")), "");
-    testNullable(output, test);
+    testVoidable(output, test);
     
     output = derive(Any(Char("a")), "a");
-    testNullable(output, test);
+    testVoidable(output, test);
     
     output = derive(Any(Char("a")), "aa");
-    testNullable(output, test);
+    testVoidable(output, test);
     
     output = derive(Any(Char("a")), "b");
-    testNull(output, test);
+    testVoid(output, test);
     
     output = derive(Any(Char("a")), "ab");
-    testNull(output, test);
+    testVoid(output, test);
     
     test.done();
 };
@@ -106,13 +106,13 @@ exports['test Or'] = function(test) {
     var output;
     
     output = derive(Or(Char("a"), Char("b")), "a");
-    testNullable(output, test);
+    testVoidable(output, test);
     
     output = derive(Or(Char("a"), Char("b")), "b");
-    testNullable(output, test);
+    testVoidable(output, test);
     
     output = derive(Or(Char("a"), Char("b")), "c");
-    testNull(output, test);
+    testVoid(output, test);
     
     test.done();
 };
@@ -122,10 +122,10 @@ exports['test And'] = function(test) {
     var output;
     
     output = derive(And(Char("a"), Char("a")), "a");
-    testNullable(output, test);
+    testVoidable(output, test);
     
     output = derive(And(Char("a"), Char("b")), "a");
-    testNull(output, test);
+    testVoid(output, test);
     
     test.done();
 };
@@ -134,18 +134,18 @@ exports['test And'] = function(test) {
 exports['test Not'] = function(test) {
     var output;
     
-    output = Not(Null());
-    testNullable(output, test);
+    output = Not(Void());
+    testVoidable(output, test);
     
     output = derive(Not(Char("a")), "a");
-    testNotNullable(output, test);  // not nullable because "a" does not match ~a
-    testNotNull(output, test);      // not equal to Null(), because "aa" does match ~a
+    testNotVoidable(output, test);  // not nullable because "a" does not match ~a
+    testNotVoid(output, test);      // not equal to Void(), because "aa" does match ~a
     
     output = derive(Not(Char("a")), "aa");
-    testNullable(output, test);
+    testVoidable(output, test);
     
     output = derive(Not(Char("a")), "b");
-    testNullable(output, test);
+    testVoidable(output, test);
     
     test.done();
 };
@@ -155,19 +155,19 @@ exports['test Many'] = function(test) {
     var output;
     
     output = derive(Many(Char("a")), "");
-    testNotNullable(output, test);
+    testNotVoidable(output, test);
     
     output = derive(Many(Char("a")), "a");
-    testNullable(output, test);
+    testVoidable(output, test);
     
     output = derive(Many(Char("a")), "aa");
-    testNullable(output, test);
+    testVoidable(output, test);
     
     output = derive(Many(Char("a")), "b");
-    testNull(output, test);
+    testVoid(output, test);
     
     output = derive(Many(Char("a")), "ab");
-    testNull(output, test);
+    testVoid(output, test);
     
     test.done();
 };
@@ -177,13 +177,13 @@ exports['test Opt'] = function(test) {
     var output;
     
     output = derive(Opt(Char("a")), "");
-    testNullable(output, test);
+    testVoidable(output, test);
     
     output = derive(Opt(Char("a")), "a");
-    testNullable(output, test);
+    testVoidable(output, test);
     
     output = derive(Opt(Char("a")), "b");
-    testNull(output, test);
+    testVoid(output, test);
     
     test.done();
 };
@@ -193,22 +193,22 @@ exports['test Look'] = function(test) {
     var output;
     
     output = derive(Seq(Char("a"), Look(Char("b"))), "a");
-    testNotNullable(output, test);
+    testNotVoidable(output, test);
     
     output = derive(Seq(Char("a"), Look(Char("b"))), "ab");
-    testNull(output, test);
+    testVoid(output, test);
     
     output = derive(Seq(Seq(Char("a"), Look(Char("b"))), Or(Char("b"), Char("c"))), "ac");
-    testNull(output, test);
+    testVoid(output, test);
     
     output = derive(Seq(Seq(Char("a"), Look(Char("b"))), Or(Char("b"), Char("c"))), "ab");
-    testNullable(output, test);
+    testVoidable(output, test);
     
     output = derive(Seq(Seq(Seq(Char("a"), Look(Char("b"))), Char("b")), Char("b")), "ab");
-    testNotNullable(output, test);
+    testNotVoidable(output, test);
     
     output = derive(Seq(Seq(Seq(Char("a"), Look(Char("b"))), Char("b")), Char("b")), "abb");
-    testNullable(output, test);
+    testVoidable(output, test);
     
     test.done();
 };
@@ -218,22 +218,22 @@ exports['test Look/Not'] = function(test) {
     var output;
     
     output = derive(Seq(Char("a"), Look(Not(Char("b")))), "a");
-    testNullable(output, test);
+    testVoidable(output, test);
     
     output = derive(Seq(Char("a"), Look(Not(Char("b")))), "ac");
-    testNull(output, test);
+    testVoid(output, test);
     
     output = derive(Seq(Seq(Char("a"), Look(Not(Char("b")))), Or(Char("b"), Char("c"))), "ab");
-    testNull(output, test);
+    testVoid(output, test);
     
     output = derive(Seq(Seq(Char("a"), Look(Not(Char("b")))), Or(Char("b"), Char("c"))), "ac");
-    testNullable(output, test);
+    testVoidable(output, test);
     
     output = derive(Seq(Seq(Seq(Char("a"), Look(Not(Char("b")))), Char("c")), Char("c")), "ac");
-    testNotNullable(output, test);
+    testNotVoidable(output, test);
     
     output = derive(Seq(Seq(Seq(Char("a"), Look(Not(Char("b")))), Char("c")), Char("c")), "acc");
-    testNullable(output, test);
+    testVoidable(output, test);
     
     test.done();
 };

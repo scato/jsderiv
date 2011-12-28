@@ -1,8 +1,8 @@
 var common = require('../lib/common'),
     lexer  = require('../lib/lexer');
 
-var Null    = common.Null,
-    Empty   = common.Empty,
+var Void    = common.Void,
+    Null   = common.Null,
     Char    = lexer.Char,
     Literal = lexer.Literal,
     RegExp  = lexer.RegExp;

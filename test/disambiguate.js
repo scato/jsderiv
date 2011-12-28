@@ -2,8 +2,8 @@ var common    = require('../lib/common'),
     lookahead = require('../lib/lookahead'),
     lexer     = require('../lib/lexer');
 
-var Null    = common.Null,
-    Empty   = common.Empty,
+var Void    = common.Void,
+    Null   = common.Null,
     Seq     = common.Seq,
     Any     = common.Any,
     Or      = common.Or,

@@ -1,8 +1,8 @@
 var common = require('../lib/common'),
     parser = require('../lib/parser');
 
-var Null    = common.Null,
-    Empty   = common.Empty,
+var Void    = common.Void,
+    Null   = common.Null,
     Token   = parser.Token;
 
 var test = require('../src/test-lp-lang');

@@ -2,8 +2,8 @@ var common = require('../lib/common'),
     lexer  = require('../lib/lexer'),
     parser = require('../lib/parser');
 
-var Null    = common.Null,
-    Empty   = common.Empty,
+var Void    = common.Void,
+    Null   = common.Null,
     Token   = parser.Token,
     Literal = parser.Literal;
 
@@ -25,30 +25,30 @@ function derive(expr, input) {
     return output;
 }
 
-function testNullable(output, test) {
+function testVoidable(output, test) {
     test.ok(output.isNullable(), 'test if ' + output.toString() + ' is nullable');
 }
 
-function testNotNullable(output, test) {
+function testNotVoidable(output, test) {
     test.ok(!output.isNullable(), 'test if ' + output.toString() + ' is not nullable');
 }
 
-function testNull(output, test) {
-    test.ok(output.isNull(), 'test if ' + output.toString() + ' is equal to Null()');
+function testVoid(output, test) {
+    test.ok(output.isVoid(), 'test if ' + output.toString() + ' is equal to Void()');
 }
 
-function testNotNull(output, test) {
-    test.ok(!output.isNull(), 'test if ' + output.toString() + ' is not equal to Null()');
+function testNotVoid(output, test) {
+    test.ok(!output.isVoid(), 'test if ' + output.toString() + ' is not equal to Void()');
 }
 
 exports['test Token'] = function(test) {
     var output;
     
     output = derive(Token(INT), new Stream(INT("1")));
-    testNullable(output, test);
+    testVoidable(output, test);
     
     output = derive(Token(INT), new Stream(OP("+")));
-    testNotNullable(output, test);
+    testNotVoidable(output, test);
     
     test.done();
 };
@@ -57,10 +57,10 @@ exports['test Literal'] = function(test) {
     var output;
     
     output = derive(Literal("+"), new Stream(OP("+")));
-    testNullable(output, test);
+    testVoidable(output, test);
     
     output = derive(Literal("+"), new Stream(INT("1")));
-    testNotNullable(output, test);
+    testNotVoidable(output, test);
     
     test.done();
 };

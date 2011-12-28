@@ -1,8 +1,8 @@
 var common = require('../lib/common'),
     lexer  = require('../lib/lexer');
 
-var Null    = common.Null,
-    Empty   = common.Empty,
+var Void    = common.Void,
+    Null   = common.Null,
     Char    = lexer.Char,
     Seq     = common.Seq,
     Any     = common.Any,
@@ -25,14 +25,14 @@ function derive(expr, input) {
 }
 
 // {}
-exports['test Null'] = function(test) {
-    test.deepEqual(Null().parseNull(), []);
+exports['test Void'] = function(test) {
+    test.deepEqual(Void().parseNull(), []);
     test.done();
 };
 
 // {""}
-exports['test Empty'] = function(test) {
-    test.deepEqual(Empty().parseNull(), [[]]);
+exports['test Null'] = function(test) {
+    test.deepEqual(Null().parseNull(), [[]]);
     test.done();
 };
 

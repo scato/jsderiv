@@ -3,8 +3,8 @@ var common    = require('../lib/common'),
     lexer     = require('../lib/lexer');
 
 var And     = common.And,
-    Null    = common.Null,
-    Empty   = common.Empty,
+    Void    = common.Void,
+    Null   = common.Null,
     Any     = common.Any,
     Not     = common.Not,
     Seq     = common.Seq,
@@ -37,12 +37,12 @@ exports['test "(r & s) & t = r & (s & t)"'] = function(test) {
 };
 
 exports['test "0 & r = 0"'] = function(test) {
-    test.ok(And(Null(), r).equals(Null()));
+    test.ok(And(Void(), r).equals(Void()));
     test.done();
 };
 
 exports['test "^0 & r = r"'] = function(test) {
-    test.ok(And(Not(Null()), r).equals(r));
+    test.ok(And(Not(Void()), r).equals(r));
     test.done();
 };
 
@@ -62,12 +62,12 @@ exports['test "(r + s) + t = r + (s + t)"'] = function(test) {
 };
 
 exports['test "^0 + r = ^0"'] = function(test) {
-    test.ok(Or(Not(Null()), r).equals(Not(Null())));
+    test.ok(Or(Not(Void()), r).equals(Not(Void())));
     test.done();
 };
 
 exports['test "0 + r = r"'] = function(test) {
-    test.ok(Or(Null(), r).equals(r));
+    test.ok(Or(Void(), r).equals(r));
     test.done();
 };
 
@@ -77,22 +77,22 @@ exports['test "(r . s) . t = r . (s . t)"'] = function(test) {
 };
 
 exports['test "0 . r = 0"'] = function(test) {
-    test.ok(Seq(Null(), r).equals(Null()));
+    test.ok(Seq(Void(), r).equals(Void()));
     test.done();
 };
 
 exports['test "r . 0 = 0"'] = function(test) {
-    test.ok(Seq(r, Null()).equals(Null()));
+    test.ok(Seq(r, Void()).equals(Void()));
     test.done();
 };
 
 exports['test "E . r = r"'] = function(test) {
-    test.ok(Seq(Empty(), r).equals(r));
+    test.ok(Seq(Null(), r).equals(r));
     test.done();
 };
 
 exports['test "r . E = r"'] = function(test) {
-    test.ok(Seq(r, Empty()).equals(r));
+    test.ok(Seq(r, Null()).equals(r));
     test.done();
 };
 
@@ -102,12 +102,12 @@ exports['test "(r*)* = r*"'] = function(test) {
 };
 
 exports['test "E* = E"'] = function(test) {
-    test.ok(Any(Empty()).equals(Empty()));
+    test.ok(Any(Null()).equals(Null()));
     test.done();
 };
 
 exports['test "0* = E"'] = function(test) {
-    test.ok(Any(Null()).equals(Empty()));
+    test.ok(Any(Void()).equals(Null()));
     test.done();
 };
 
@@ -117,17 +117,17 @@ exports['test "^(^r) = r"'] = function(test) {
 };
 
 exports['test "0 -> f = 0"'] = function(test) {
-    test.ok(Red(Null(), function(x) { return x; }).equals(Null()));
+    test.ok(Red(Void(), function(x) { return x; }).equals(Void()));
     test.done();
 };
 
 exports['test "?E = E"'] = function(test) {
-    test.ok(Look(Empty()).equals(Empty()));
+    test.ok(Look(Null()).equals(Null()));
     test.done();
 };
 
 exports['test "?0 = 0"'] = function(test) {
-    test.ok(Look(Null()).equals(Null()));
+    test.ok(Look(Void()).equals(Void()));
     test.done();
 };
 

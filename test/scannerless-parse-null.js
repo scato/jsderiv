@@ -1,8 +1,8 @@
 var common      = require('../lib/common'),
     scannerless = require('../lib/scannerless');
 
-var Null    = common.Null,
-    Empty   = common.Empty,
+var Void    = common.Void,
+    Null   = common.Null,
     Char    = scannerless.Char,
     Literal = scannerless.Literal;
 
