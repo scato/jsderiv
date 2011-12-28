@@ -25,11 +25,11 @@ function derive(expr, input) {
     return output;
 }
 
-function testVoidable(output, test) {
+function testNullable(output, test) {
     test.ok(output.isNullable(), 'test if ' + output.toString() + ' is nullable');
 }
 
-function testNotVoidable(output, test) {
+function testNotNullable(output, test) {
     test.ok(!output.isNullable(), 'test if ' + output.toString() + ' is not nullable');
 }
 
@@ -45,10 +45,10 @@ exports['test Token'] = function(test) {
     var output;
     
     output = derive(Token(INT), new Stream(INT("1")));
-    testVoidable(output, test);
+    testNullable(output, test);
     
     output = derive(Token(INT), new Stream(OP("+")));
-    testNotVoidable(output, test);
+    testNotNullable(output, test);
     
     test.done();
 };
@@ -57,10 +57,10 @@ exports['test Literal'] = function(test) {
     var output;
     
     output = derive(Literal("+"), new Stream(OP("+")));
-    testVoidable(output, test);
+    testNullable(output, test);
     
     output = derive(Literal("+"), new Stream(INT("1")));
-    testNotVoidable(output, test);
+    testNotNullable(output, test);
     
     test.done();
 };

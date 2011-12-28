@@ -20,11 +20,11 @@ function derive(expr, input) {
     return output;
 }
 
-function testVoidable(output, test) {
+function testNullable(output, test) {
     test.ok(output.isNullable(), 'test if ' + output.toString() + ' is nullable');
 }
 
-function testNotVoidable(output, test) {
+function testNotNullable(output, test) {
     test.ok(!output.isNullable(), 'test if ' + output.toString() + ' is not nullable');
 }
 
@@ -40,10 +40,10 @@ exports['test Char'] = function(test) {
     var output;
     
     output = derive(Char("1"), "1");
-    testVoidable(output, test);
+    testNullable(output, test);
     
     output = derive(Char("1"), "+");
-    testNotVoidable(output, test);
+    testNotNullable(output, test);
     
     test.done();
 };
@@ -52,10 +52,10 @@ exports['test One'] = function(test) {
     var output;
     
     output = derive(One(), "1");
-    testVoidable(output, test);
+    testNullable(output, test);
     
     output = derive(One(), "+");
-    testVoidable(output, test);
+    testNullable(output, test);
     
     test.done();
 };
@@ -64,10 +64,10 @@ exports['test No'] = function(test) {
     var output;
     
     output = derive(No("1"), "1");
-    testNotVoidable(output, test);
+    testNotNullable(output, test);
     
     output = derive(No("1"), "+");
-    testVoidable(output, test);
+    testNullable(output, test);
     
     test.done();
 };
@@ -76,10 +76,10 @@ exports['test Literal'] = function(test) {
     var output;
     
     output = derive(Literal("test"), "test");
-    testVoidable(output, test);
+    testNullable(output, test);
     
     output = derive(Literal("test"), "tes");
-    testNotVoidable(output, test);
+    testNotNullable(output, test);
     testNotVoid(output, test);
     
     output = derive(Literal("test"), "tst");
@@ -92,7 +92,7 @@ exports['test Range'] = function(test) {
     var output;
     
     output = derive(Range("a", "f"), "c");
-    testVoidable(output, test);
+    testNullable(output, test);
     
     output = derive(Range("a", "f"), "i");
     testVoid(output, test);
@@ -105,10 +105,10 @@ exports['test RegExp'] = function(test) {
     var output;
     
     output = derive(RegExp(/a(bb)+c/), "abbc");
-    testVoidable(output, test);
+    testNullable(output, test);
     
     output = derive(RegExp(/a(bb)+c/), "abbb");
-    testNotVoidable(output, test);
+    testNotNullable(output, test);
     testNotVoid(output, test);
 
     output = derive(RegExp(/a(bb)+c/), "abbbc");
