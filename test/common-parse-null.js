@@ -1,5 +1,6 @@
-var common = require('../lib/common'),
-    lexer  = require('../lib/lexer');
+var common    = require('../lib/common'),
+    lexer     = require('../lib/lexer'),
+    lookahead = require('../lib/lookahead');
 
 var Void    = common.Void,
     Null   = common.Null,
@@ -11,8 +12,9 @@ var Void    = common.Void,
     Not     = common.Not,
     Red     = common.Red,
     Many    = common.Many,
-    Opt     = common.Opt,
-    Look    = common.Look;
+    Maybe   = common.Maybe,
+    Ignore  = common.Ignore,
+    Look    = lookahead.Look;
 
 function derive(expr, input) {
     var output = expr;
@@ -100,8 +102,17 @@ exports['test Many'] = function(test) {
 };
 
 // a?
-exports['test Opt'] = function(test) {
+exports['test Maybe'] = function(test) {
     var output;
+    
+    output = derive(Maybe(Char('a')), "a");
+    test.deepEqual(output.parseNull(), [['a']]);
+    
+    output = derive(Maybe(Char('a')), "");
+    test.deepEqual(output.parseNull(), [[]]);
+    
+    output = derive(Maybe(Char('a')), "b");
+    test.deepEqual(output.parseNull(), []);
     
     test.done();
 };
@@ -110,6 +121,38 @@ exports['test Opt'] = function(test) {
 exports['test Look'] = function(test) {
     var output;
     
+    output = derive(Seq(Char('a'), Look(Char('b'))), "a");
+    test.deepEqual(output.parseNull(), [['a']]);
+    
+    output = derive(Seq(Char('a'), Look(Char('b'))), "ab");
+    test.deepEqual(output.parseNull(), []);
+    
+    output = derive(Seq(Seq(Char('a'), Look(Char('b'))), Char('b')), "ab");
+    test.deepEqual(output.parseNull(), [['a', 'b']]);
+    
     test.done();
 };
 
+// a -> f
+exports['test Red'] = function(test) {
+    var output;
+    
+    function f(x) {
+        return [['"' + x.join('') + '"']];
+    }
+    
+    output = derive(Red(Char('a'), f), "a");
+    test.deepEqual(output.parseNull(), [['"a"']]);
+    
+    test.done();
+};
+
+// a!
+exports['test Ignore'] = function(test) {
+    var output;
+    
+    output = derive(Ignore(Char('a')), "a");
+    test.deepEqual(output.parseNull(), [[]]);
+    
+    test.done();
+};

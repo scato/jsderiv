@@ -12,7 +12,7 @@ var Void    = common.Void,
     Not     = common.Not,
     Red     = common.Red,
     Many    = common.Many,
-    Opt     = common.Opt,
+    Maybe   = common.Maybe,
     Look    = lookahead.Look;
 
 function derive(expr, input) {
@@ -173,16 +173,16 @@ exports['test Many'] = function(test) {
 };
 
 // a?
-exports['test Opt'] = function(test) {
+exports['test Maybe'] = function(test) {
     var output;
     
-    output = derive(Opt(Char("a")), "");
+    output = derive(Maybe(Char("a")), "");
     testNullable(output, test);
     
-    output = derive(Opt(Char("a")), "a");
+    output = derive(Maybe(Char("a")), "a");
     testNullable(output, test);
     
-    output = derive(Opt(Char("a")), "b");
+    output = derive(Maybe(Char("a")), "b");
     testVoid(output, test);
     
     test.done();
@@ -237,4 +237,3 @@ exports['test Look/Not'] = function(test) {
     
     test.done();
 };
-

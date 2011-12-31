@@ -3,7 +3,7 @@ var common    = require('../lib/common'),
     lexer     = require('../lib/lexer');
 
 var Void    = common.Void,
-    Null   = common.Null,
+    Null    = common.Null,
     Seq     = common.Seq,
     Any     = common.Any,
     Or      = common.Or,
