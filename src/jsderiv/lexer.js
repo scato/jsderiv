@@ -6,42 +6,42 @@ var Grammar = exports.Grammar = function() {};
 
 // start (SPACE | ID | COMMENT | LITERAL | SYMBOL | CLASS | KEYWORD)*;
 Grammar.prototype.start = function() {
-    return new c.Any(new c.Or(new c.Or(new c.Or(new c.Or(new c.Or(new c.Or(
+    return c.Any(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(
         this.SPACE(), this.ID()), this.COMMENT()), this.LITERAL()), this.SYMBOL()), this.CLASS()), this.KEYWORD())
     );
 };
 
 // NEWLINE: "\r\n" | "\n";
 Grammar.prototype.NEWLINE = function() {
-    return new g.Ref(function() {
-        return new c.Or(g.Literal("\r\n"), new g.Literal("\n"));
+    return g.Ref(function() {
+        return c.Or(g.Literal("\r\n"), g.Literal("\n"));
     }.bind(this));
 };
 
 // SPACE:      (" " | "\t" | "\r" | "\n")+!;
 Grammar.prototype.SPACE = function() {
-    return new g.Ref(function() {
-        return new c.Ignore(new c.Many(new c.Or(new c.Or(new c.Or(
-            new g.Literal(" "), new g.Literal("\t")), new g.Literal("\r")), new g.Literal("\n"))
+    return g.Ref(function() {
+        return c.Ignore(c.Many(c.Or(c.Or(c.Or(
+            g.Literal(" "), g.Literal("\t")), g.Literal("\r")), g.Literal("\n"))
         ));
     }.bind(this));
 };
 
 //ID:         [A-Za-z]+ & ~KEYWORD -> ID;
 Grammar.prototype.ID = function() {
-    return new g.Ref(function() {
-        return new c.Red(new c.And(
-            new c.Or(new g.Range("A", "Z"), new g.Range("a", "z")),
-            new c.Not(this.KEYWORD())
+    return g.Ref(function() {
+        return c.Red(c.And(
+            c.Or(g.Range("A", "Z"), g.Range("a", "z")),
+            c.Not(this.KEYWORD())
         ), ID);
     }.bind(this));
 };
 
 // COMMENT:    ("/*" ([^*] | "*" ?= ~"/")* "*/" | "//" ~NEWLINE ?= (NEWLINE | end))!;
 Grammar.prototype.COMMENT = function() {
-    return new g.Ref(function() {
-        return new c.Ignore(new c.Or(
-            new c.Seq(c.Seq(g.Literal("/*"), c.Any(
+    return g.Ref(function() {
+        return c.Ignore(c.Or(
+            c.Seq(c.Seq(g.Literal("/*"), c.Any(
                 c.Or(c.Not(g.Char("*")), c.Seq(g.Char("*"), l.Look(c.Not(g.Char("/")))))
             )), g.Literal("*/")),
             c.Seq(c.Seq(g.Literal("//"), c.Not(this.NEWLINE())), l.Look(c.Or(this.NEWLINE(), g.End())))
@@ -49,14 +49,20 @@ Grammar.prototype.COMMENT = function() {
     }.bind(this));
 };
 
-/*
 // LITERAL:    (
 //                 "\"" ([^"] | "\\\\" | "\\\"")* "\""
 //               | '\'' ([^'] | '\\\\' | '\\\'')* '\''
 //             ) -> LITERAL;
 Grammar.prototype.LITERAL = function() {
-    return new g.Ref(function() {
-        return new c.Red();
+    return g.Ref(function() {
+        return c.Red(c.Or(
+            c.Seq(c.Seq(g.Literal("\""), c.Any(
+                c.Or(c.Or(c.Not(g.Literal("\"")), g.Literal("\\\\")), g.Literal("\\\""))
+            )), g.Literal("\"")),
+            c.Seq(c.Seq(g.Literal('\''), c.Any(
+                c.Or(c.Or(c.Not(g.Literal('\'')), g.Literal('\\\\')), g.Literal('\\\''))
+            )), g.Literal('\''))
+        ), LITERAL);
     }.bind(this));
 };
 
@@ -69,44 +75,67 @@ Grammar.prototype.LITERAL = function() {
 //               | "{" | "}" | "," | "."
 //             ) -> SYMBOL;
 Grammar.prototype.SYMBOL = function() {
-    return new g.Ref(function() {
-        return new c.Red(, SYMBOL);
+    return g.Ref(function() {
+        return c.Red(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(
+                g.Literal(":"), g.Literal(";")),
+                g.Literal("(")), g.Literal(")")),
+                g.Literal("*")), g.Literal("+")), g.Literal("?")),
+                g.Literal("&")), g.Literal("|")), g.Literal("~")),
+                g.Literal("?=")), g.Literal("!")), g.Literal("->")), g.Literal("@")),
+                g.Literal("{")), g.Literal("}")), g.Literal(",")), g.Literal(".")
+        ), SYMBOL);
     }.bind(this));
 };
 
 // RANGE:      CHAR "-" CHAR;
 Grammar.prototype.RANGE = function() {
-    return new g.Ref(function() {
-        return new c.Ignore();
+    return g.Ref(function() {
+        return c.Seq(c.Seq(this.CHAR(), g.Literal("-")), this.CHAR());
     }.bind(this));
 };
 
 // CHAR:       [^\^\-\\] | "\\^" | "\\-" | "\\\\";
 Grammar.prototype.CHAR = function() {
-    return new g.Ref(function() {
-        return new c.Ignore();
+    return g.Ref(function() {
+        return c.Or(c.Or(c.Or(c.Or(
+            c.And(c.One(), c.Not(c.Or(c.Or(g.Literal("^"), g.Literal("-")), g.Literal("\\")))),
+            g.Literal("\\^")),
+            g.Literal("\\-")),
+            g.Literal("\\\\")
+        ));
     }.bind(this));
 };
 
 // CLASS:      "[" (RANGE | CHAR)* ("^" (RANGE | CHAR)+)? "]" -> CLASS;
 Grammar.prototype.CLASS = function() {
-    return new g.Ref(function() {
-        return new c.Red(, CLASS);
+    return g.Ref(function() {
+        return c.Red(c.Seq(c.Seq(c.Seq(
+            g.Literal("["),
+            c.Any(c.Or(this.RANGE(), this.CHAR()))),
+            c.Maybe(c.Seq(g.Literal("^"), c.Many(c.Or(this.RANGE(), this.CHAR()))))),
+            g.Literal("]")
+        ), CLASS);
     }.bind(this));
 };
 
 // KEYWORD:    "grammar" | "start" | "end" | "import" | "from" | "constructor" -> KEYWORD;
 Grammar.prototype.KEYWORD = function() {
-    return new g.Ref(function() {
-        return new c.Red(, KEYWORD);
+    return g.Ref(function() {
+        return c.Red(c.Or(c.Or(c.Or(c.Or(c.Or(
+            g.Literal("grammar"),
+            g.Literal("start")),
+            g.Literal("end")),
+            g.Literal("import")),
+            g.Literal("from")),
+            g.Literal("constructor")
+        ), KEYWORD);
     }.bind(this));
 };
-*/
 
 // cons ID;
 var ID = exports.ID = function(value, metadata) {
     if(this.constructor === ID) {
-        g.Token.apply(this, ['ID', value, metadata]);
+        g.Node.apply(this, ['ID', value, metadata]);
         
         return this;
     } else {
@@ -114,13 +143,13 @@ var ID = exports.ID = function(value, metadata) {
     }
 };
 
-ID.prototype = Object.create(g.Token.prototype);
+ID.prototype = Object.create(g.Node.prototype);
 ID.prototype.constructor = ID;
 
 // cons LITERAL;
 var LITERAL = exports.LITERAL = function(value, metadata) {
     if(this.constructor === LITERAL) {
-        g.Token.apply(this, ['LITERAL', value, metadata]);
+        g.Node.apply(this, ['LITERAL', value, metadata]);
         
         return this;
     } else {
@@ -128,13 +157,13 @@ var LITERAL = exports.LITERAL = function(value, metadata) {
     }
 };
 
-LITERAL.prototype = Object.create(g.Token.prototype);
+LITERAL.prototype = Object.create(g.Node.prototype);
 LITERAL.prototype.constructor = LITERAL;
 
 // cons SYMBOL;
 var SYMBOL = exports.SYMBOL = function(value, metadata) {
     if(this.constructor === SYMBOL) {
-        g.Token.apply(this, ['SYMBOL', value, metadata]);
+        g.Node.apply(this, ['SYMBOL', value, metadata]);
         
         return this;
     } else {
@@ -142,13 +171,13 @@ var SYMBOL = exports.SYMBOL = function(value, metadata) {
     }
 };
 
-SYMBOL.prototype = Object.create(g.Token.prototype);
+SYMBOL.prototype = Object.create(g.Node.prototype);
 SYMBOL.prototype.constructor = SYMBOL;
 
 // cons CLASS;
 var CLASS = exports.CLASS = function(value, metadata) {
     if(this.constructor === CLASS) {
-        g.Token.apply(this, ['CLASS', value, metadata]);
+        g.Node.apply(this, ['CLASS', value, metadata]);
         
         return this;
     } else {
@@ -156,13 +185,13 @@ var CLASS = exports.CLASS = function(value, metadata) {
     }
 };
 
-CLASS.prototype = Object.create(g.Token.prototype);
+CLASS.prototype = Object.create(g.Node.prototype);
 CLASS.prototype.constructor = CLASS;
 
 // cons KEYWORD;
 var KEYWORD = exports.KEYWORD = function(value, metadata) {
     if(this.constructor === KEYWORD) {
-        g.Token.apply(this, ['KEYWORD', value, metadata]);
+        g.Node.apply(this, ['KEYWORD', value, metadata]);
         
         return this;
     } else {
@@ -170,5 +199,5 @@ var KEYWORD = exports.KEYWORD = function(value, metadata) {
     }
 };
 
-KEYWORD.prototype = Object.create(g.Token.prototype);
+KEYWORD.prototype = Object.create(g.Node.prototype);
 KEYWORD.prototype.constructor = KEYWORD;
