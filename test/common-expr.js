@@ -51,7 +51,7 @@ exports['test Void'] = function(test) {
     test.done();
 };
 
-// {""}
+// []
 exports['test Null'] = function(test) {
     var output;
     

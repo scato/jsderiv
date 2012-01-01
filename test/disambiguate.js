@@ -20,13 +20,13 @@ var Void    = common.Void,
     Range   = lexer.Range;
 
 var a = Char("a");
-var f = function(x) { return [[{f: x}]]; };
-var g = function(x) { return [[{g: x}]]; };
+var f = function(x) { return [{f: x}]; };
+var g = function(x) { return [{g: x}]; };
 
 exports['test "a* -> f"'] = function(test) {
     var expr = Red(Any(a), f);
     
-    test.deepEqual(expr.derive("a").parseNull(), f(["a"]));
+    test.deepEqual(expr.derive("a").parseNull(), [f(["a"])]);
     
     test.done();
 };
@@ -34,7 +34,7 @@ exports['test "a* -> f"'] = function(test) {
 exports['test "a* -> f . a* -> g"'] = function(test) {
     var expr = Or(Red(Any(a), f), Red(Any(a), g));
     
-    test.deepEqual(expr.derive("a").parseNull(), f(["a"]).concat(g(["a"])));
+    test.deepEqual(expr.derive("a").parseNull(), [f(["a"]), g(["a"])]);
     
     test.done();
 };
@@ -51,19 +51,19 @@ exports['test "(a* . ?!a) -> f . a* -> g"'] = function(test) {
     test.ok(!s.isNullable("a"));
     
     // "(a* . ?!a) -> f" will match
-    test.ok(s.derive("a").parseNull(), f(["a"]));
+    test.deepEqual(s.derive("a").parseNull(), [f(["a"])]);
     
     // "a* -> g" resolves to g("")
-    test.deepEqual(t.parseNull(), g([]));
+    test.deepEqual(t.parseNull(), [g([])]);
     
     // "?!a" resolves to ""
     test.deepEqual(r.parseNull(), [[]]);
     
     // "(a* . ?!a) -> f" resolves to f("a")
-    test.deepEqual(s.derive("a").parseNull(), f(["a"]));
+    test.deepEqual(s.derive("a").parseNull(), [f(["a"])]);
     
     // "(a* . ?!a) -> f . a* -> g" resolves to f("a") x g("")
-    test.deepEqual(expr.derive("a").parseNull(), [f(["a"])[0].concat(g([])[0])]);
+    test.deepEqual(expr.derive("a").parseNull(), [f(["a"]).concat(g([]))]);
     
     test.done();
 };

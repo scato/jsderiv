@@ -11,6 +11,7 @@ var Void    = common.Void,
     And     = common.And,
     Not     = common.Not,
     Red     = common.Red,
+    RedMany  = common.RedMany,
     Many    = common.Many,
     Maybe   = common.Maybe,
     Ignore  = common.Ignore,
@@ -138,10 +139,24 @@ exports['test Red'] = function(test) {
     var output;
     
     function f(x) {
-        return [['"' + x.join('') + '"']];
+        return ['"' + x.join('') + '"'];
     }
     
     output = derive(Red(Char('a'), f), "a");
+    test.deepEqual(output.parseNull(), [['"a"']]);
+    
+    test.done();
+};
+
+// a => f
+exports['test RedMany'] = function(test) {
+    var output;
+    
+    function f(x) {
+        return [['"' + x.join('') + '"']];
+    }
+    
+    output = derive(RedMany(Char('a'), f), "a");
     test.deepEqual(output.parseNull(), [['"a"']]);
     
     test.done();
