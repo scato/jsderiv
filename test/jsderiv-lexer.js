@@ -28,11 +28,13 @@ exports["test SPACE"] = function(test) {
 //    start Grammar.ID;
 //    
 //    assert "id" -> (ID("id"));
+//    assert "start" -> {};
 //}
 exports["test ID"] = function(test) {
     var start = new Grammar().ID();
     
     test.deepEqual(g.parse(start, "id"), [[ID("id")]]);
+    test.deepEqual(g.parse(start, "start"), []);
     test.done();
 };
 
@@ -40,11 +42,13 @@ exports["test ID"] = function(test) {
 //    start Grammar.COMMENT;
 //    
 //    assert "/* comment */" -> ();
+//    assert "// comment" -> ();
 //}
 exports["test COMMENT"] = function(test) {
     var start = new Grammar().COMMENT();
     
     test.deepEqual(g.parse(start, "/* comment */"), [[]]);
+    test.deepEqual(g.parse(start, "// comment"), [[]]);
     test.done();
 };
 
@@ -119,3 +123,4 @@ exports["test start"] = function(test) {
     test.deepEqual(g.parse(start, "id /* comment */ \"literal\" | [0-9] start 123"), []);
     test.done();
 };
+

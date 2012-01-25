@@ -6,8 +6,9 @@ lexical grammar Grammar {
     NEWLINE: "\r\n" | "\n";
     
     SPACE:      (" " | "\t" | "\r" | "\n")+!;
-    ID:         [A-Za-z]+ & ~KEYWORD -> ID;
-    COMMENT:    ("/*" ([^*] | "*" ?= ~"/")* "*/" | "//" ~NEWLINE ?= (NEWLINE | end))!;
+    ID:         [A-Za-z]+ ?= ~[A-Za-z] & ~KEYWORD -> ID;
+    // COMMENT:    ("/*" ([^*] | "*" ?= ~"/")* "*/" | "//" (~NEWLINE)* ?= NEWLINE)!;
+    COMMENT:    ("/*" ~(.* "*/" .*) "*/" | "//" (~NEWLINE)* ?= NEWLINE)!
     LITERAL:    (
                     "\"" ([^"] | "\\\\" | "\\\"")* "\""
                   | '\'' ([^'] | '\\\\' | '\\\'')* '\''

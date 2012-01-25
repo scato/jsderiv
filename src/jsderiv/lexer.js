@@ -27,24 +27,36 @@ Grammar.prototype.SPACE = function() {
     }.bind(this));
 };
 
-//ID:         [A-Za-z]+ & ~KEYWORD -> ID;
+// ID:         [A-Za-z]+ ?= ~[A-Za-z] & ~KEYWORD -> ID;
 Grammar.prototype.ID = function() {
     return g.Ref(function() {
         return c.Red(c.And(
-            c.Or(g.Range("A", "Z"), g.Range("a", "z")),
+            c.Seq(
+                c.Many(c.Or(g.Range("A", "Z"), g.Range("a", "z"))),
+                l.Look(c.Not(c.Or(g.Range("A", "Z"), g.Range("a", "z"))))
+            ),
             c.Not(this.KEYWORD())
-        ), ID);
+        ), function(x) { return [ID(x)]; });
     }.bind(this));
 };
 
-// COMMENT:    ("/*" ([^*] | "*" ?= ~"/")* "*/" | "//" ~NEWLINE ?= (NEWLINE | end))!;
+// // COMMENT:    ("/*" ([^*] | "*" ?= ~"/")* "*/" | "//" (~NEWLINE)* ?= NEWLINE)!;
+// COMMENT:    ("/*" ~(.* "*/" .*) "*/" | "//" (~NEWLINE)* ?= NEWLINE)!
 Grammar.prototype.COMMENT = function() {
+//    return g.Ref(function() {
+//        return c.Ignore(c.Or(
+//            c.Seq(c.Seq(g.Literal("/*"), c.Any(
+//                c.Or(c.And(g.One(), c.Not(g.Char("*"))), c.Seq(g.Char("*"), l.Look(c.Not(g.Char("/")))))
+//            )), g.Literal("*/")),
+//            c.Seq(c.Seq(g.Literal("//"), c.Any(c.Not(this.NEWLINE()))), l.Look(this.NEWLINE()))
+//        ));
+//    }.bind(this));
     return g.Ref(function() {
         return c.Ignore(c.Or(
-            c.Seq(c.Seq(g.Literal("/*"), c.Any(
-                c.Or(c.Not(g.Char("*")), c.Seq(g.Char("*"), l.Look(c.Not(g.Char("/")))))
+            c.Seq(c.Seq(g.Literal("/*"), c.Not(
+                c.Seq(c.Seq(c.Any(g.One()), g.Literal("*/")), c.Any(g.One()))
             )), g.Literal("*/")),
-            c.Seq(c.Seq(g.Literal("//"), c.Not(this.NEWLINE())), l.Look(c.Or(this.NEWLINE(), g.End())))
+            c.Seq(c.Seq(g.Literal("//"), c.Any(c.Not(this.NEWLINE()))), l.Look(this.NEWLINE()))
         ));
     }.bind(this));
 };
@@ -57,12 +69,12 @@ Grammar.prototype.LITERAL = function() {
     return g.Ref(function() {
         return c.Red(c.Or(
             c.Seq(c.Seq(g.Literal("\""), c.Any(
-                c.Or(c.Or(c.Not(g.Literal("\"")), g.Literal("\\\\")), g.Literal("\\\""))
+                c.Or(c.Or(c.And(g.One(), c.Not(g.Literal("\""))), g.Literal("\\\\")), g.Literal("\\\""))
             )), g.Literal("\"")),
             c.Seq(c.Seq(g.Literal('\''), c.Any(
-                c.Or(c.Or(c.Not(g.Literal('\'')), g.Literal('\\\\')), g.Literal('\\\''))
+                c.Or(c.Or(c.And(g.One(), c.Not(g.Literal('\''))), g.Literal('\\\\')), g.Literal('\\\''))
             )), g.Literal('\''))
-        ), LITERAL);
+        ), function(x) { return [LITERAL(x)]; });
     }.bind(this));
 };
 
@@ -83,7 +95,7 @@ Grammar.prototype.SYMBOL = function() {
                 g.Literal("&")), g.Literal("|")), g.Literal("~")),
                 g.Literal("?=")), g.Literal("!")), g.Literal("->")), g.Literal("@")),
                 g.Literal("{")), g.Literal("}")), g.Literal(",")), g.Literal(".")
-        ), SYMBOL);
+        ), function(x) { return [SYMBOL(x)]; });
     }.bind(this));
 };
 
@@ -97,12 +109,12 @@ Grammar.prototype.RANGE = function() {
 // CHAR:       [^\^\-\\] | "\\^" | "\\-" | "\\\\";
 Grammar.prototype.CHAR = function() {
     return g.Ref(function() {
-        return c.Or(c.Or(c.Or(c.Or(
-            c.And(c.One(), c.Not(c.Or(c.Or(g.Literal("^"), g.Literal("-")), g.Literal("\\")))),
+        return c.Or(c.Or(c.Or(
+            c.And(g.One(), c.Not(c.Or(c.Or(g.Literal("^"), g.Literal("-")), g.Literal("\\")))),
             g.Literal("\\^")),
             g.Literal("\\-")),
             g.Literal("\\\\")
-        ));
+        );
     }.bind(this));
 };
 
@@ -114,7 +126,7 @@ Grammar.prototype.CLASS = function() {
             c.Any(c.Or(this.RANGE(), this.CHAR()))),
             c.Maybe(c.Seq(g.Literal("^"), c.Many(c.Or(this.RANGE(), this.CHAR()))))),
             g.Literal("]")
-        ), CLASS);
+        ), function(x) { return [CLASS(x)]; });
     }.bind(this));
 };
 
@@ -128,7 +140,7 @@ Grammar.prototype.KEYWORD = function() {
             g.Literal("import")),
             g.Literal("from")),
             g.Literal("constructor")
-        ), KEYWORD);
+        ), function(x) { return [KEYWORD(x)]; });
     }.bind(this));
 };
 

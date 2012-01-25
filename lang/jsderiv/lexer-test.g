@@ -11,12 +11,14 @@ export test "ID" {
     start Grammar.ID;
     
     assert "id" -> (ID("id"));
+    assert "start" -> {};
 }
 
 export test "COMMENT" {
     start Grammar.COMMENT;
     
     assert "/* comment */" -> ();
+    assert "// comment" -> ();
 }
 
 export test "LITERAL" {
