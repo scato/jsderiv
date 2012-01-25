@@ -2,20 +2,20 @@ var common    = require('../lib/common'),
     lexer     = require('../lib/lexer'),
     lookahead = require('../lib/lookahead');
 
-var Void    = common.Void,
+var Void   = common.Void,
     Null   = common.Null,
-    Char    = lexer.Char,
-    Seq     = common.Seq,
-    Any     = common.Any,
-    Or      = common.Or,
-    And     = common.And,
-    Not     = common.Not,
-    Red     = common.Red,
-    RedMany  = common.RedMany,
-    Many    = common.Many,
-    Maybe   = common.Maybe,
-    Ignore  = common.Ignore,
-    Look    = lookahead.Look;
+    Char   = lexer.Char,
+    Seq    = common.Seq,
+    Any    = common.Any,
+    Or     = common.Or,
+    And    = common.And,
+    Not    = common.Not,
+    Red    = common.Red,
+    Join   = common.Join,
+    Many   = common.Many,
+    Maybe  = common.Maybe,
+    Ignore = common.Ignore,
+    Look   = lookahead.Look;
 
 function derive(expr, input) {
     var output = expr;
@@ -148,15 +148,15 @@ exports['test Red'] = function(test) {
     test.done();
 };
 
-// a => f
-exports['test RedMany'] = function(test) {
+// a |> f
+exports['test Join'] = function(test) {
     var output;
     
     function f(x) {
         return [['"' + x.join('') + '"']];
     }
     
-    output = derive(RedMany(Char('a'), f), "a");
+    output = derive(Join(Char('a'), f), "a");
     test.deepEqual(output.parseNull(), [['"a"']]);
     
     test.done();
