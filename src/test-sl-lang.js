@@ -6,7 +6,7 @@ var Or      = common.Or,
     Literal = scannerless.Literal,
     Grammar = scannerless.Grammar,
     Seq     = common.Seq,
-    Ignore  = scannerless.Ignore,
+    Ignore  = common.Ignore,
     Any     = common.Any;
 
 var grammar = new Grammar("Expr");

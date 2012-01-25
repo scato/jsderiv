@@ -139,7 +139,7 @@ exports['test Red'] = function(test) {
     var output;
     
     function f(x) {
-        return ['"' + x.join('') + '"'];
+        return '"' + x.join('') + '"';
     }
     
     output = derive(Red(Char('a'), f), "a");

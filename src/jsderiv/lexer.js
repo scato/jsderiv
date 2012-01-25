@@ -36,7 +36,7 @@ Grammar.prototype.ID = function() {
                 l.Look(c.Not(c.Or(g.Range("A", "Z"), g.Range("a", "z"))))
             ),
             c.Not(this.KEYWORD())
-        ), function(x) { return [ID(x)]; });
+        ), function(x) { return ID(x); });
     }.bind(this));
 };
 
@@ -74,7 +74,7 @@ Grammar.prototype.LITERAL = function() {
             c.Seq(c.Seq(g.Literal('\''), c.Any(
                 c.Or(c.Or(c.And(g.One(), c.Not(g.Literal('\''))), g.Literal('\\\\')), g.Literal('\\\''))
             )), g.Literal('\''))
-        ), function(x) { return [LITERAL(x)]; });
+        ), function(x) { return LITERAL(x); });
     }.bind(this));
 };
 
@@ -95,7 +95,7 @@ Grammar.prototype.SYMBOL = function() {
                 g.Literal("&")), g.Literal("|")), g.Literal("~")),
                 g.Literal("?=")), g.Literal("!")), g.Literal("->")), g.Literal("@")),
                 g.Literal("{")), g.Literal("}")), g.Literal(",")), g.Literal(".")
-        ), function(x) { return [SYMBOL(x)]; });
+        ), function(x) { return SYMBOL(x); });
     }.bind(this));
 };
 
@@ -126,7 +126,7 @@ Grammar.prototype.CLASS = function() {
             c.Any(c.Or(this.RANGE(), this.CHAR()))),
             c.Maybe(c.Seq(g.Literal("^"), c.Many(c.Or(this.RANGE(), this.CHAR()))))),
             g.Literal("]")
-        ), function(x) { return [CLASS(x)]; });
+        ), function(x) { return CLASS(x); });
     }.bind(this));
 };
 
@@ -140,7 +140,7 @@ Grammar.prototype.KEYWORD = function() {
             g.Literal("import")),
             g.Literal("from")),
             g.Literal("constructor")
-        ), function(x) { return [KEYWORD(x)]; });
+        ), function(x) { return KEYWORD(x); });
     }.bind(this));
 };
 
