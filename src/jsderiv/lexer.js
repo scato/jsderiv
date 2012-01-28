@@ -144,72 +144,17 @@ Grammar.prototype.KEYWORD = function() {
     }.bind(this));
 };
 
-// cons ID;
-var ID = exports.ID = function(value, metadata) {
-    if(this.constructor === ID) {
-        g.Node.apply(this, ['ID', value, metadata]);
-        
-        return this;
-    } else {
-        return new ID(value, metadata);
-    }
-};
+// export constructor ID;
+var ID = exports.ID = g.Cons("ID");
 
-ID.prototype = Object.create(g.Node.prototype);
-ID.prototype.constructor = ID;
+// export constructor LITERAL;
+var LITERAL = exports.LITERAL = g.Cons("LITERAL");
 
-// cons LITERAL;
-var LITERAL = exports.LITERAL = function(value, metadata) {
-    if(this.constructor === LITERAL) {
-        g.Node.apply(this, ['LITERAL', value, metadata]);
-        
-        return this;
-    } else {
-        return new LITERAL(value, metadata);
-    }
-};
+// export constructor SYMBOL;
+var SYMBOL = exports.SYMBOL = g.Cons("SYMBOL");
 
-LITERAL.prototype = Object.create(g.Node.prototype);
-LITERAL.prototype.constructor = LITERAL;
+// export constructor CLASS;
+var CLASS = exports.CLASS = g.Cons("CLASS");
 
-// cons SYMBOL;
-var SYMBOL = exports.SYMBOL = function(value, metadata) {
-    if(this.constructor === SYMBOL) {
-        g.Node.apply(this, ['SYMBOL', value, metadata]);
-        
-        return this;
-    } else {
-        return new SYMBOL(value, metadata);
-    }
-};
-
-SYMBOL.prototype = Object.create(g.Node.prototype);
-SYMBOL.prototype.constructor = SYMBOL;
-
-// cons CLASS;
-var CLASS = exports.CLASS = function(value, metadata) {
-    if(this.constructor === CLASS) {
-        g.Node.apply(this, ['CLASS', value, metadata]);
-        
-        return this;
-    } else {
-        return new CLASS(value, metadata);
-    }
-};
-
-CLASS.prototype = Object.create(g.Node.prototype);
-CLASS.prototype.constructor = CLASS;
-
-// cons KEYWORD;
-var KEYWORD = exports.KEYWORD = function(value, metadata) {
-    if(this.constructor === KEYWORD) {
-        g.Node.apply(this, ['KEYWORD', value, metadata]);
-        
-        return this;
-    } else {
-        return new KEYWORD(value, metadata);
-    }
-};
-
-KEYWORD.prototype = Object.create(g.Node.prototype);
-KEYWORD.prototype.constructor = KEYWORD;
+// export constructor KEYWORD;
+var KEYWORD = exports.KEYWORD = g.Cons("KEYWORD");

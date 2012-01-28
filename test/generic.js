@@ -1,18 +1,20 @@
 var common = require('../lib/common'),
     generic = require('../lib/generic');
 
-var Void    = common.Void,
-    Null    = common.Null,
-    Or      = common.Or,
-    Seq     = common.Seq,
-    Many    = common.Many,
-    Char    = generic.Char,
-    One     = generic.One,
-    Literal = generic.Literal,
-    Range   = generic.Range,
-    Node    = generic.Node,
-    Ref     = generic.Ref,
-    parse   = generic.parse;
+var Void       = common.Void,
+    Null       = common.Null,
+    Or         = common.Or,
+    Seq        = common.Seq,
+    Many       = common.Many,
+    Char       = generic.Char,
+    One        = generic.One,
+    Literal    = generic.Literal,
+    InstanceOf = generic.InstanceOf,
+    Range      = generic.Range,
+    Node       = generic.Node,
+    Ref        = generic.Ref,
+    Cons       = generic.Cons,
+    parse      = generic.parse;
 
 function derive(expr, input) {
     var output = expr;
@@ -92,6 +94,33 @@ exports['test Literal'] = function(test) {
     testNotVoid(output, test);
     
     output = derive(Literal("test"), "tst");
+    testVoid(output, test);
+    
+    var ID = Cons("ID");
+    
+    output = Literal("id").derive(ID("id"));
+    testNullable(output, test);
+    
+    test.deepEqual(output.parseNull(), [['i', 'd']]);
+    
+    output = Literal("literal").derive(ID("id"));
+    testVoid(output, test);
+    
+    test.done();
+};
+
+exports['test InstanceOf'] = function(test) {
+    var output;
+    
+    var ID = Cons("ID");
+    var LITERAL = Cons("LITERAL");
+    
+    output = InstanceOf(ID).derive(ID("id"));
+    testNullable(output, test);
+    
+    test.deepEqual(output.parseNull(), [['id']]);
+    
+    output = InstanceOf(ID).derive(LITERAL("\"literal\""));
     testVoid(output, test);
     
     test.done();
