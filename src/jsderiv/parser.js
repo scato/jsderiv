@@ -2,18 +2,22 @@ var c = require('../../lib/common');
 var g = require('../../lib/generic');
 var l = require('../../lib/lookahead');
 
+var List = g.List,
+    Text = g.Text;
+
 // import {ID, CLASS, LITERAL} from .lexer;
 var ID      = require('./lexer').ID,
     CLASS   = require('./lexer').CLASS,
     LITERAL = require('./lexer').LITERAL;
 
-// export constructor Module, Import, Export, Grammar, Start, Rule;
-var Module  = exports.Module  = g.Cons("Module"),
-    Import  = exports.Import  = g.Cons("Import"),
-    Export  = exports.Export  = g.Cons("Export"),
-    Grammar = exports.Grammar = g.Cons("Grammar"),
-    Start   = exports.Start   = g.Cons("Start"),
-    Rule    = exports.Rule    = g.Cons("Rule");
+// export constructor Module, Import, Export, Constructor, Grammar, Start, Rule;
+var Module      = exports.Module      = g.Cons("Module"),
+    Import      = exports.Import      = g.Cons("Import"),
+    Export      = exports.Export      = g.Cons("Export"),
+    Constructor = exports.Constructor = g.Cons("Constructor"),
+    Grammar     = exports.Grammar     = g.Cons("Grammar"),
+    Start       = exports.Start       = g.Cons("Start"),
+    Rule        = exports.Rule        = g.Cons("Rule");
 
 // export constructor Or, Red, And, Seq, Any, Many, Maybe, Ignore, Not, InstanceOf, Ref, Class, Literal;
 var Or         = exports.Or         = g.Cons("Or"),
@@ -30,20 +34,84 @@ var Or         = exports.Or         = g.Cons("Or"),
     Class      = exports.Class      = g.Cons("Class"),
     Literal    = exports.Literal    = g.Cons("Literal");
 
-var Grammar = exports.Grammar = function() {};
+var Parser = exports.Parser = function() {};
 
 // start Statement* -> Module ;
+Parser.prototype.start = function() {
+    return this._start = this._start || g.Ref(function() {
+        return c.Red(c.Any(this.Statement()), Module);
+    }.bind(this));
+};
 
 // Statement       : Import | Export | Definition ;
+Parser.prototype.Statement = function() {
+    return this._Statement = this._Statement || g.Ref(function() {
+        return c.Or(c.Or(this.Import(), this.Export()), this.Definition());
+    }.bind(this));
+};
+
 // Import          : "import"! IdentifierList "from"! ModuleIdentifier ";"! -> Import ;
+Parser.prototype.Import = function() {
+    return this._Import = this._Import || g.Ref(function() {
+        return c.Red(c.Seq(c.Seq(c.Seq(c.Seq(
+            c.Ignore(g.Literal("import")),
+            this.IdentifierList()),
+            c.Ignore(g.Literal("from"))),
+            this.ModuleIdentifier()),
+            c.Ignore(g.Literal(";"))
+        ), Import);
+    }.bind(this));
+};
+
 // Export          : "export"! Definition -> Export ;
-// Definition      : Grammar ;
-// Grammar         : "grammar"! @ID ";"! Definition* -> Grammar ;
+Parser.prototype.Export = function() {
+    return this._Export = this._Export || g.Ref(function() {
+        return c.Red(c.Seq(
+            c.Ignore(g.Literal("export")),
+            this.Definition()
+        ), Export);
+    }.bind(this));
+};
+
+// Definition      : Constructor | Grammar ;
+Parser.prototype.Definition = function() {
+    return this._Definition = this._Definition || g.Ref(function() {
+        return c.Or(this.Constructor(), this.Grammar());
+    }.bind(this));
+};
+
+// Constructor     : "constructor"! @ID (","! @ID)* ";"! -> Constructor ;
+Parser.prototype.Constructor = function() {
+    return this._Constructor = this._Constructor || g.Ref(function() {
+        return c.Red(c.Seq(c.Seq(c.Seq(
+            c.Ignore(g.Literal("constructor")),
+            g.InstanceOf(ID)),
+            c.Any(c.Seq(
+                c.Ignore(g.Literal(",")),
+                g.InstanceOf(ID)
+            ))),
+            c.Ignore(g.Literal(";"))
+        ), Constructor);
+    }.bind(this));
+};
+
+// Grammar         : "grammar"! @ID "{"! (Rule* -> List) "}"! -> Grammar ;
+Parser.prototype.Grammar = function() {
+    return this._Grammar = this._Grammar || g.Ref(function() {
+        return c.Red(c.Seq(c.Seq(c.Seq(c.Seq(
+            c.Ignore(g.Literal("grammar")),
+            g.InstanceOf(ID)),
+            c.Ignore(g.Literal("{"))),
+            c.Red(c.Any(this.Rule()), List)),
+            c.Ignore(g.Literal("}"))
+        ), Grammar);
+    }.bind(this));
+};
 
 // Rule            : "start"! Expression ";"! -> Start
 //                 | @ID ":"! Expression ";"! -> Rule ;
-Grammar.prototype.Rule = function() {
-    return g.Ref(function() {
+Parser.prototype.Rule = function() {
+    return this._Rule = this._Rule || g.Ref(function() {
         return c.Or(
             c.Red(c.Seq(c.Seq(c.Ignore(g.Literal("start")), this.Expression()), c.Ignore(g.Literal(";"))), Start),
             c.Red(c.Seq(c.Seq(c.Seq(g.InstanceOf(ID), c.Ignore(g.Literal(":"))), this.Expression()), c.Ignore(g.Literal(";"))), Rule)
@@ -51,44 +119,118 @@ Grammar.prototype.Rule = function() {
     }.bind(this));
 };
 
-// IdentifierList  : "{"! @ID (","! @ID)* "}"! ;
-// ModuleIdentifier: "."* @ID ("." @ID)* ;
+// IdentifierList  : "{"! @ID (","! @ID)* "}"! -> List ;
+Parser.prototype.IdentifierList = function() {
+    return this._IdentifierList = this._IdentifierList || g.Ref(function() {
+        return c.Red(c.Seq(c.Seq(c.Seq(
+            c.Ignore(g.Literal("{")),
+            g.InstanceOf(ID)),
+            c.Any(c.Seq(c.Ignore(g.Literal(",")), g.InstanceOf(ID)))),
+            c.Ignore(g.Literal("}"))
+        ), List);
+    }.bind(this));
+};
+
+// ModuleIdentifier: "."* @ID ("." @ID)* -> Text ;
+Parser.prototype.ModuleIdentifier = function() {
+    return this._ModuleIdentifier = this._ModuleIdentifier || g.Ref(function() {
+        return c.Red(c.Seq(c.Seq(
+            g.Literal("."),
+            g.InstanceOf(ID)),
+            c.Any(c.Seq(g.Literal("."), g.InstanceOf(ID)))
+        ), Text);
+    }.bind(this));
+};
 
 // Expression  : OrExpr ;
-Grammar.prototype.Expression = function() {
-    // debug
-    return this.Terminal();
-    
-    return g.Ref(function() {
+Parser.prototype.Expression = function() {
+    return this._Expression = this._Expression || g.Ref(function() {
         return this.OrExpr();
     }.bind(this));
 };
 
-// OrExpr      : OrExpr "|" RedExpr -> Or
+// OrExpr      : OrExpr "|"! RedExpr -> Or
 //             | RedExpr ;
-// RedExpr     : AndExpr "->" @ID -> Red
+Parser.prototype.OrExpr = function() {
+    return this._OrExpr = this._OrExpr || g.Ref(function() {
+        return c.Or(
+            c.Red(c.Seq(c.Seq(this.OrExpr(), c.Ignore(g.Literal("|"))), this.RedExpr()), Or),
+            this.RedExpr()
+        );
+    }.bind(this));
+};
+
+// RedExpr     : RedExpr "->"! @ID -> Red
 //             | AndExpr ;
-// AndExpr     : AndExpr "&" SeqExpr -> And
+Parser.prototype.RedExpr = function() {
+    return this._RedExpr = this._RedExpr || g.Ref(function() {
+        return c.Or(
+            c.Red(c.Seq(c.Seq(this.RedExpr(), c.Ignore(g.Literal("->"))), g.InstanceOf(ID)), Red),
+            this.AndExpr()
+        );
+    }.bind(this));
+};
+
+// AndExpr     : AndExpr "&"! SeqExpr -> And
 //             | SeqExpr ;
+Parser.prototype.AndExpr = function() {
+    return this._AndExpr = this._AndExpr || g.Ref(function() {
+        return c.Or(
+            c.Red(c.Seq(c.Seq(this.AndExpr(), c.Ignore(g.Literal("&"))), this.SeqExpr()), And),
+            this.SeqExpr()
+        );
+    }.bind(this));
+};
+
 // SeqExpr     : SeqExpr RightExpr -> Seq
 //             | RightExpr ;
-// RightExpr   : LeftExpr "*" -> Any
-//             | LeftExpr "+" -> Many
-//             | LeftExpr "?" -> Maybe
-//             | LeftExpr "!" -> Ignore
-//             | LeftExpr ;
-// LeftExpr    : "~" Terminal -> Not
-//             | "@" @ID -> InstanceOf
-//             | Terminal ;
+Parser.prototype.SeqExpr = function() {
+    return this._SeqExpr = this._SeqExpr || g.Ref(function() {
+        return c.Or(
+            c.Red(c.Seq(this.SeqExpr(), this.RightExpr()), Seq),
+            this.RightExpr()
+        );
+    }.bind(this));
+};
 
-// Terminal    : "(" Expression ")"
+// RightExpr   : RightExpr "*"! -> Any
+//             | RightExpr "+"! -> Many
+//             | RightExpr "?"! -> Maybe
+//             | RightExpr "!"! -> Ignore
+//             | LeftExpr ;
+Parser.prototype.RightExpr = function() {
+    return this._RightExpr = this._RightExpr || g.Ref(function() {
+        return c.Or(c.Or(c.Or(c.Or(
+            c.Red(c.Seq(this.RightExpr(), c.Ignore(g.Literal("*"))), Any),
+            c.Red(c.Seq(this.RightExpr(), c.Ignore(g.Literal("+"))), Many)),
+            c.Red(c.Seq(this.RightExpr(), c.Ignore(g.Literal("?"))), Maybe)),
+            c.Red(c.Seq(this.RightExpr(), c.Ignore(g.Literal("!"))), Ignore)),
+            this.LeftExpr()
+        );
+    }.bind(this));
+};
+
+// LeftExpr    : "~"! LeftExpr -> Not
+//             | Terminal ;
+Parser.prototype.LeftExpr = function() {
+    return this._LeftExpr = this._LeftExpr || g.Ref(function() {
+        return c.Or(
+            c.Red(c.Seq(c.Ignore(g.Literal("~")), this.LeftExpr()), Not),
+            this.Terminal()
+        );
+    }.bind(this));
+};
+
+// Terminal    : "("! Expression ")"!
+//             | "@"! @ID -> InstanceOf
 //             | @ID -> Ref
 //             | @CLASS -> Class
 //             | @LITERAL -> Literal ;
-Grammar.prototype.Terminal = function() {
+Parser.prototype.Terminal = function() {
     return this._Terminal = this._Terminal || g.Ref(function() {
-        return c.Or(c.Or(c.Or(
-            c.Seq(c.Seq(g.Literal("("), this.Expression()), g.Literal(")")),
+        return c.Or(c.Or(c.Or(c.Or(
+            c.Seq(c.Seq(c.Ignore(g.Literal("(")), this.Expression()), c.Ignore(g.Literal(")"))),
+            c.Red(c.Seq(c.Ignore(g.Literal("@")), g.InstanceOf(ID)), InstanceOf)),
             c.Red(g.InstanceOf(ID), Ref)),
             c.Red(g.InstanceOf(CLASS), Class)),
             c.Red(g.InstanceOf(LITERAL), Literal)

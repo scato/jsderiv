@@ -2,24 +2,24 @@ var c = require('../../lib/common');
 var g = require('../../lib/generic');
 var l = require('../../lib/lookahead');
 
-var Grammar = exports.Grammar = function() {};
+var Lexer = exports.Lexer = function() {};
 
 // start (SPACE | ID | COMMENT | LITERAL | SYMBOL | CLASS | KEYWORD)*;
-Grammar.prototype.start = function() {
+Lexer.prototype.start = function() {
     return c.Any(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(
         this.SPACE(), this.ID()), this.COMMENT()), this.LITERAL()), this.SYMBOL()), this.CLASS()), this.KEYWORD())
     );
 };
 
 // NEWLINE: "\r\n" | "\n";
-Grammar.prototype.NEWLINE = function() {
+Lexer.prototype.NEWLINE = function() {
     return g.Ref(function() {
         return c.Or(g.Literal("\r\n"), g.Literal("\n"));
     }.bind(this));
 };
 
 // SPACE:      (" " | "\t" | "\r" | "\n")+!;
-Grammar.prototype.SPACE = function() {
+Lexer.prototype.SPACE = function() {
     return g.Ref(function() {
         return c.Ignore(c.Many(c.Or(c.Or(c.Or(
             g.Literal(" "), g.Literal("\t")), g.Literal("\r")), g.Literal("\n"))
@@ -28,7 +28,7 @@ Grammar.prototype.SPACE = function() {
 };
 
 // ID:         [A-Za-z]+ ?= ~[A-Za-z] & ~KEYWORD -> ID;
-Grammar.prototype.ID = function() {
+Lexer.prototype.ID = function() {
     return g.Ref(function() {
         return c.Red(c.And(
             c.Seq(
@@ -42,7 +42,7 @@ Grammar.prototype.ID = function() {
 
 // // COMMENT:    ("/*" ([^*] | "*" ?= ~"/")* "*/" | "//" (~NEWLINE)* ?= NEWLINE)!;
 // COMMENT:    ("/*" ~(.* "*/" .*) "*/" | "//" (~NEWLINE)* ?= NEWLINE)!
-Grammar.prototype.COMMENT = function() {
+Lexer.prototype.COMMENT = function() {
 //    return g.Ref(function() {
 //        return c.Ignore(c.Or(
 //            c.Seq(c.Seq(g.Literal("/*"), c.Any(
@@ -65,7 +65,7 @@ Grammar.prototype.COMMENT = function() {
 //                 "\"" ([^"] | "\\\\" | "\\\"")* "\""
 //               | '\'' ([^'] | '\\\\' | '\\\'')* '\''
 //             ) -> LITERAL;
-Grammar.prototype.LITERAL = function() {
+Lexer.prototype.LITERAL = function() {
     return g.Ref(function() {
         return c.Red(c.Or(
             c.Seq(c.Seq(g.Literal("\""), c.Any(
@@ -86,7 +86,7 @@ Grammar.prototype.LITERAL = function() {
 //               | "?=" | "!" | "->" | "@"
 //               | "{" | "}" | "," | "."
 //             ) -> SYMBOL;
-Grammar.prototype.SYMBOL = function() {
+Lexer.prototype.SYMBOL = function() {
     return g.Ref(function() {
         return c.Red(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(
                 g.Literal(":"), g.Literal(";")),
@@ -100,14 +100,14 @@ Grammar.prototype.SYMBOL = function() {
 };
 
 // RANGE:      CHAR "-" CHAR;
-Grammar.prototype.RANGE = function() {
+Lexer.prototype.RANGE = function() {
     return g.Ref(function() {
         return c.Seq(c.Seq(this.CHAR(), g.Literal("-")), this.CHAR());
     }.bind(this));
 };
 
 // CHAR:       [^\^\-\\] | "\\^" | "\\-" | "\\\\";
-Grammar.prototype.CHAR = function() {
+Lexer.prototype.CHAR = function() {
     return g.Ref(function() {
         return c.Or(c.Or(c.Or(
             c.And(g.One(), c.Not(c.Or(c.Or(g.Literal("^"), g.Literal("-")), g.Literal("\\")))),
@@ -119,7 +119,7 @@ Grammar.prototype.CHAR = function() {
 };
 
 // CLASS:      "[" (RANGE | CHAR)* ("^" (RANGE | CHAR)+)? "]" -> CLASS;
-Grammar.prototype.CLASS = function() {
+Lexer.prototype.CLASS = function() {
     return g.Ref(function() {
         return c.Red(c.Seq(c.Seq(c.Seq(
             g.Literal("["),
@@ -131,7 +131,7 @@ Grammar.prototype.CLASS = function() {
 };
 
 // KEYWORD:    "grammar" | "start" | "end" | "import" | "from" | "constructor" -> KEYWORD;
-Grammar.prototype.KEYWORD = function() {
+Lexer.prototype.KEYWORD = function() {
     return g.Ref(function() {
         return c.Red(c.Or(c.Or(c.Or(c.Or(c.Or(
             g.Literal("grammar"),

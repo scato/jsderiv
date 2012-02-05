@@ -1,6 +1,6 @@
 constructor ID, LITERAL, SYMBOL, CLASS, KEYWORD;
 
-lexical grammar Grammar {
+lexical grammar Lexer {
     start (SPACE | ID | COMMENT | LITERAL | SYMBOL | CLASS | KEYWORD)*;
     
     NEWLINE: "\r\n" | "\n";

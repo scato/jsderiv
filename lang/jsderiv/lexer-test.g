@@ -1,40 +1,40 @@
-import Grammar from ..src.jsderiv.lexer;
+import Lexer from ..src.jsderiv.lexer;
 import ID, LITERAL, SYMBOL, CLASS, KEYWORD from ..src.jsderiv.lexer;
 
 export test "SPACE" {
-    start Grammar.SPACE;
+    start Lexer.SPACE;
     
     assert " " -> ();
 }
 
 export test "ID" {
-    start Grammar.ID;
+    start Lexer.ID;
     
     assert "id" -> (ID "id");
     assert "start" -> {};
 }
 
 export test "COMMENT" {
-    start Grammar.COMMENT;
+    start Lexer.COMMENT;
     
     assert "/* comment */" -> ();
     assert "// comment" -> ();
 }
 
 export test "LITERAL" {
-    start Grammar.LITERAL;
+    start Lexer.LITERAL;
     
     assert "\"literal\"" -> (LITERAL "\"literal\"");
 }
 
 export test "SYMBOL" {
-    start Grammar.SYMBOL;
+    start Lexer.SYMBOL;
     
     assert "|" -> (SYMBOL "|");
 }
 
 export test "CLASS" {
-    start Grammar.CLASS;
+    start Lexer.CLASS;
     
     assert "[0-9]" -> (CLASS "[0-9]");
     assert "[123]" -> (CLASS "[123]");
@@ -46,12 +46,14 @@ export test "CLASS" {
 }
 
 export test "KEYWORD" {
-    start Grammar.KEYWORD;
+    start Lexer.KEYWORD;
     
     assert "start" -> (KEYWORD "start");
 }
 
 export test "start" {
+    start Lexer.start;
+    
     assert "id /* comment */ \"literal\" | [0-9] start" -> (ID "id", LITERAL "\"literal\"", SYMBOL "|", RANGE "[0-9]", KEYWORD "start");
     assert "id /* comment */ \"literal\" | [0-9] start 123" -> {};
 }
