@@ -14,7 +14,7 @@ import Parser from ..src.jsderiv.parser;
 
 import {ID, LITERAL, SYMBOL, CLASS, KEYWORD} from ..src.jsderiv.lexer;
 import {Module, Import, Export, Constructor, Grammar, Start, Rule} from ..src.jsderiv.parser;
-import {Or, Red, And, Seq, Any, Many, Maybe, Ignore, Not, Token, Ref, Class, Literal, InstanceOf} from ..src.jsderiv.parser;
+import {Or, Red, And, Seq, Any, Many, Maybe, Ignore, Not, Look, Token, One, Ref, Class, Literal, InstanceOf} from ..src.jsderiv.parser;
 
 export test "start" {
     start Parser.start;
@@ -234,6 +234,12 @@ export test "LeftExpr" {
     ) -> (
         Not(InstanceOf("INT"))
     );
+    
+    assert (
+        SYMBOL "?=", SYMBOL "@", ID "INT"
+    ) -> (
+        Look(InstanceOf("INT"))
+    );
 }
 
 export test "Terminal" {
@@ -241,6 +247,7 @@ export test "Terminal" {
     
     assert (SYMBOL "(", ID "id", SYMBOL ")") -> (Ref("id"));
     assert (SYMBOL "@", ID "STRING") -> (InstanceOf("STRING"));
+    assert (SYMBOL ".") -> (One());
     assert (ID "id") -> (Ref("id"));
     assert (CLASS "[a-z]") -> (Class("[a-z]"));
     assert (LITERAL "\"literal\"") -> (Literal("\"literal\""));

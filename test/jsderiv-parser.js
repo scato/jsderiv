@@ -21,7 +21,7 @@ var Module      = require('../src/jsderiv/parser').Module,
     Start       = require('../src/jsderiv/parser').Start,
     Rule        = require('../src/jsderiv/parser').Rule;
 
-//import {Or, Red, And, Seq, Any, Many, Maybe, Ignore, Not, Token, Ref, Class, Literal, InstanceOf} from ..src.jsderiv.parser;
+//import {Or, Red, And, Seq, Any, Many, Maybe, Ignore, Not, Look, Token, One, Ref, Class, Literal, InstanceOf} from ..src.jsderiv.parser;
 var Or         = require('../src/jsderiv/parser').Or,
     Red        = require('../src/jsderiv/parser').Red,
     And        = require('../src/jsderiv/parser').And,
@@ -31,7 +31,9 @@ var Or         = require('../src/jsderiv/parser').Or,
     Maybe      = require('../src/jsderiv/parser').Maybe,
     Ignore     = require('../src/jsderiv/parser').Ignore,
     Not        = require('../src/jsderiv/parser').Not,
+    Look       = require('../src/jsderiv/parser').Look,
     Token      = require('../src/jsderiv/parser').Token,
+    One        = require('../src/jsderiv/parser').One,
     Ref        = require('../src/jsderiv/parser').Ref,
     Class      = require('../src/jsderiv/parser').Class,
     Literal    = require('../src/jsderiv/parser').Literal,
@@ -464,15 +466,15 @@ exports['test "RightExpr"'] = function(test) {
 //    start Parser.LeftExpr;
 //    
 //    assert (
-//        SYMBOL "@", ID "STRING"
-//    ) -> (
-//        InstanceOf("STRING")
-//    );
-//    
-//    assert (
 //        SYMBOL "~", SYMBOL "@", ID "INT"
 //    ) -> (
 //        Not(InstanceOf("INT"))
+//    );
+//    
+//    assert (
+//        SYMBOL "?=", SYMBOL "@", ID "INT"
+//    ) -> (
+//        Look(InstanceOf("INT"))
 //    );
 //}
 exports['test "LeftExpr"'] = function(test) {
@@ -484,6 +486,12 @@ exports['test "LeftExpr"'] = function(test) {
         Not([InstanceOf(["INT"])])
     ]]);
     
+    test.deepEqual(g.parse(start, [
+        SYMBOL("?="), SYMBOL("@"), ID("INT")
+    ]), [[
+        Look([InstanceOf(["INT"])])
+    ]]);
+    
     test.done();
 };
 
@@ -491,6 +499,8 @@ exports['test "LeftExpr"'] = function(test) {
 //    start Parser.Terminal;
 //    
 //    assert (SYMBOL "(", ID "id", SYMBOL ")") -> (Ref("id"));
+//    assert (SYMBOL "@", ID "STRING") -> (InstanceOf("STRING"));
+//    assert (SYMBOL ".") -> (One());
 //    assert (ID "id") -> (Ref("id"));
 //    assert (CLASS "[a-z]") -> (Class("[a-z]"));
 //    assert (LITERAL "\"literal\"") -> (Literal("\"literal\""));
@@ -502,6 +512,7 @@ exports['test "Terminal"'] = function(test) {
     
     test.deepEqual(g.parse(start, [SYMBOL("("), ID("id"), SYMBOL(")")]), [[Ref(["id"])]]);
     test.deepEqual(g.parse(start, [SYMBOL("@"), ID("STRING")]), [[InstanceOf(["STRING"])]]);
+    test.deepEqual(g.parse(start, [SYMBOL(".")]), [[One([])]]);
     test.deepEqual(g.parse(start, [ID("id")]), [[Ref(["id"])]]);
     test.deepEqual(g.parse(start, [CLASS("[a-z]")]), [[Class(["[a-z]"])]]);
     test.deepEqual(g.parse(start, [LITERAL("\"literal\"")]), [[Literal(["\"literal\""])]]);

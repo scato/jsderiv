@@ -2,7 +2,7 @@ import {ID, CLASS, LITERAL} from .lexer;
 
 export constructor Module, Import, Export, Constructor, Grammar, Start, Rule;
 
-export constructor Or, Red, And, Seq, Any, Many, Maybe, Ignore, Not, InstanceOf, Ref, Class, Literal;
+export constructor Or, Red, And, Seq, Any, Many, Maybe, Ignore, Not, Look, InstanceOf, One, Ref, Class, Literal;
 
 export grammar Parser {
     start Statement* -> Module ;
@@ -34,10 +34,12 @@ export grammar Parser {
                 | RightExpr "!"! -> Ignore
                 | LeftExpr ;
     LeftExpr    : "~"! LeftExpr -> Not
+                | "?="! LeftExpr -> Look
                 | Terminal ;
     
     Terminal    : "("! Expression ")"!
                 | "@"! @ID -> InstanceOf
+                | "."! -> One
                 | @ID -> Ref
                 | @CLASS -> Class
                 | @LITERAL -> Literal ;

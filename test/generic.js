@@ -75,7 +75,7 @@ exports['test One'] = function(test) {
                 Literal("\\-")),
                 Literal("\\\\")
             );
-        });
+        }, 'CHAR');
     
     output = derive(CHAR, "^");
     testNotNullable(output, test);
@@ -178,7 +178,7 @@ exports['test Node with Array<Char>'] = function(test) {
 exports['test Ref'] = function(test) {
     var ref = Ref(function() {
         return Char("1");
-    });
+    }, 'TEST');
     
     var output;
     
@@ -190,11 +190,11 @@ exports['test Ref'] = function(test) {
     
     var ref2 = Ref(function() {
         return Char("2");
-    });
+    }, 'TEST2');
     
     var ref3 = Ref(function() {
         return Char("1");
-    });
+    }, 'TEST3');
     
     test.ok(!ref.equals(ref2));
     test.ok(!ref.equals(ref3));
@@ -208,7 +208,7 @@ exports['test derive on recursive Ref'] = function(test) {
     function EXPR() {
         return cache = cache || Ref(function() {
             return Or(Char("1"), Seq(Seq(EXPR(), Char("+")), EXPR()));
-        });
+        }, 'EXPR');
     }
     
     var ref = EXPR();
@@ -230,7 +230,7 @@ exports['test delta on recursive Ref'] = function(test) {
     function EXPR() {
         return cache = cache || Ref(function() {//require('sys').puts(cache.expr);
             return Or(Char("1"), Seq(Seq(EXPR(), Char("+")), EXPR()));
-        });
+        }, 'EXPR');
     }
     
     var ref = EXPR();
@@ -249,7 +249,7 @@ exports['test isNullable on recursive Ref'] = function(test) {
     function EXPR() {
         return cache = cache || Ref(function() {
             return Or(Char("1"), Seq(Seq(EXPR(), Char("+")), EXPR()));
-        });
+        }, 'EXPR');
     }
     
     var ref = EXPR();
@@ -266,7 +266,7 @@ exports['test parseNull on recursive Ref'] = function(test) {
     function EXPR() {
         return cache = cache || Ref(function() {
             return Or(Char("1"), Seq(Seq(EXPR(), Char("+")), EXPR()));
-        });
+        }, 'EXPR');
     }
     
     var ref = EXPR();
