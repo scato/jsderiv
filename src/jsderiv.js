@@ -1,5 +1,6 @@
-var lexer = require('./jseriv/lexer');
-var parser = require('./jseriv/parser');
+var lexer   = require('./jsderiv/lexer');
+var parser  = require('./jsderiv/parser');
+var generic = require('../lib/generic')
 
 require('./jsderiv/parser-indent');
 require('./jsderiv/parser-to-source');

@@ -1,6 +1,6 @@
-var c = require('../../../lib/common');
-var g = require('../../../lib/generic');
-var l = require('../../../lib/lookahead');
+var c = require('../../lib/common');
+var g = require('../../lib/generic');
+var l = require('../../lib/lookahead');
 
 //import Parser from .parser;
 var Parser = require('./parser').Parser;

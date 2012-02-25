@@ -12,10 +12,11 @@ var input  = fs.readFileSync(source).toString();
 
 sys.puts("Parsing...");
 
-var output = jsderiv.parse(input)[0].toJavascript('../../../lib/');
+var output = jsderiv.parse(input)[0].toJavascript('../../lib/');
 
 sys.puts("Writing " + target + "...");
 
-fs.writeFileSync(target, output);
+//fs.writeFileSync(target, output);
+sys.puts(output);
 
 sys.puts("Done.");

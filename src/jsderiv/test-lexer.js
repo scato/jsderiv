@@ -1,6 +1,6 @@
-var c = require('../../../lib/common');
-var g = require('../../../lib/generic');
-var l = require('../../../lib/lookahead');
+var c = require('../../lib/common');
+var g = require('../../lib/generic');
+var l = require('../../lib/lookahead');
 
 //import Lexer from .lexer;
 var Lexer = require('./lexer').Lexer;
