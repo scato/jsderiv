@@ -16,7 +16,6 @@ var output = jsderiv.parse(input)[0].toJavascript('../../lib/');
 
 sys.puts("Writing " + target + "...");
 
-//fs.writeFileSync(target, output);
-sys.puts(output);
+fs.writeFileSync(target, output);
 
 sys.puts("Done.");
