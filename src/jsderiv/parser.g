@@ -1,22 +1,30 @@
 import {ID, CLASS, LITERAL} from .lexer;
 
-constructor Module, Import, Export, Constructor, Grammar, Start, Rule;
+export constructor Module, Import, Export, Constructor, Grammar, Start, Rule, Augmentation;
 
-constructor Or, Red, And, Seq, Any, Many, Maybe, Ignore, Not, Look, InstanceOf, One, Ref, Class, Literal;
+export constructor Or, Red, And, Seq, Any, Many, Maybe, Ignore, Not, Look, InstanceOf, One, Ref, Class, Literal, Default;
 
-grammar Parser {
+export grammar Parser {
     start Statement* -> Module ;
     
-    Statement       : Import | Export | Definition ;
+    Statement       : Import | Export | Definition | Augmentation ;
+    
     Import          : "import"! IdentifierList "from"! ModuleIdentifier ";"! -> Import ;
+    IdentifierList  : "{"! @ID (":"! @ID)? (","! @ID (":"! @ID)?)* "}"! -> List
+                    | @ID (","! @ID)* -> List ;
+    ModuleIdentifier: "."* @ID ("." @ID)* -> Text ;
+    
     Export          : "export"! Definition -> Export ;
+    
     Definition      : Constructor | Grammar ;
+    
     Constructor     : "constructor"! @ID (","! @ID)* ";"! -> Constructor ;
+    
     Grammar         : "grammar"! @ID "{"! (Rule* -> List) "}"! -> Grammar ;
     Rule            : "start"! Expression ";"! -> Start
                     | @ID ":"! Expression ";"! -> Rule ;
-    IdentifierList  : "{"! @ID (","! @ID)* "}"! -> List ;
-    ModuleIdentifier: "."* @ID ("." @ID)* -> Text ;
+    
+    Augmentation    : "augment"! "grammar"! @ID "{"! (Rule* -> List) "}"! -> Augmentation ;
     
     Expression  : OrExpr ;
     
@@ -42,5 +50,6 @@ grammar Parser {
                 | "."! -> One
                 | @ID -> Ref
                 | @CLASS -> Class
-                | @LITERAL -> Literal ;
+                | @LITERAL -> Literal
+                | "default"! -> Default ;
 }

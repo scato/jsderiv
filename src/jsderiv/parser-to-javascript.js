@@ -27,13 +27,10 @@ parser.Import.prototype.toJavascript = function() {
 };
 
 parser.Export.prototype.toJavascript = function() {
-    return '//' + this.toSource() + '\n' + this.toJavascript('exports');
+    return '// ' + this.toSource(true) + '\n' + this.value[0].toJavascript('exports');
 };
 
 parser.Constructor.prototype.toJavascript = function(exports) {
-    // FIXME
-    exports = 'exports';
-    
     var comment = exports === undefined ? '// ' + this.toSource() + '\n' : '';
     var padding = helper.padding(this.value);
     
@@ -45,9 +42,6 @@ parser.Constructor.prototype.toJavascript = function(exports) {
 };
 
 parser.Grammar.prototype.toJavascript = function(exports) {
-    // FIXME
-    exports = 'exports';
-    
     var infix = exports === undefined ? '' : exports + '.' + this.value[0] + ' = ';
     var cons = exports === undefined ? this.value[0] : exports + '.' + this.value[0];
     var proto = cons + '.prototype';
@@ -58,22 +52,37 @@ parser.Grammar.prototype.toJavascript = function(exports) {
         }).join('\n\n');
 };
 
-function exprToJavascript(id, expr, exports) {
-    return exports + '.' + id + ' = function() {\n' +
-        '    return this._' + id + ' = this._' + id + ' || g.Ref(function() {\n' +
-        '        return ' + expr.toJavascript() + ';\n' +
-        '    }.bind(this), \'' + id + '\');\n' +
-        '};';
+parser.Augmentation.prototype.toJavascript = function() {
+    var proto = this.value[0] + '.prototype';
+    
+    return this.value[1].map(function(rule) {
+            return rule.toJavascript(proto, true);
+        }).join('\n\n');
 };
 
-parser.Start.prototype.toJavascript = function(exports) {
-    return '// ' + this.toSource() + '\n' +
-        exprToJavascript('start', this.value[0], exports);
+function exprToJavascript(id, expr, exports, augmentation) {
+    var param = augmentation ? '$default' : '';
+    var value = augmentation ? exports + '.' + id : '';
+    
+    return '(function(' + param + ') {\n' +
+        '    var $cache;\n' +
+        '    \n' +
+        '    ' + exports + '.' + id + ' = function() {\n' +
+        '        return $cache = $cache || g.Ref(function() {\n' +
+        '            return ' + expr.toJavascript() + ';\n' +
+        '        }.bind(this), \'' + id + '\');\n' +
+        '    };\n' +
+        '})(' + value + ');';
 };
 
-parser.Rule.prototype.toJavascript = function(exports) {
+parser.Start.prototype.toJavascript = function(exports, augmentation) {
     return '// ' + this.toSource() + '\n' +
-        exprToJavascript(this.value[0], this.value[1], exports);
+        exprToJavascript('start', this.value[0], exports, augmentation);
+};
+
+parser.Rule.prototype.toJavascript = function(exports, augmentation) {
+    return '// ' + this.toSource() + '\n' +
+        exprToJavascript(this.value[0], this.value[1], exports, augmentation);
 };
 
 parser.Or.prototype.toJavascript = function() {
@@ -187,4 +196,8 @@ parser.Class.prototype.toJavascript = function() {
 
 parser.Literal.prototype.toJavascript = function() {
     return 'g.Literal(' + this.value[0] + ')';
+};
+
+parser.Default.prototype.toJavascript = function() {
+    return '$default.apply(this, [])';
 };

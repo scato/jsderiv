@@ -1,6 +1,6 @@
-constructor ID, LITERAL, SYMBOL, CLASS, KEYWORD;
+export constructor ID, LITERAL, SYMBOL, CLASS, KEYWORD;
 
-grammar Lexer {
+export grammar Lexer {
     start (SPACE | ID | COMMENT | LITERAL | SYMBOL | CLASS | KEYWORD)*;
     
     NEWLINE: "\r\n" | "\n";
@@ -26,5 +26,8 @@ grammar Lexer {
     RANGE:      CHAR "-" CHAR;
     CHAR:       [^\^\-\\\]] | "\\^" | "\\-" | "\\\\" | "\\t" | "\\r" | "\\n" | "\\]";
     CLASS:      "[" (RANGE | CHAR)* ("^" (RANGE | CHAR)+)? "]" -> CLASS;
-    KEYWORD:    ("grammar" | "start" | "end" | "import" | "from" | "constructor") -> KEYWORD;
+    KEYWORD:    (
+                    "grammar" | "start" | "import" | "from" | "export" | "constructor"
+                  | "augment" | "default"
+                ) -> KEYWORD;
 }

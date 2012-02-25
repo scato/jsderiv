@@ -11,16 +11,36 @@ parser.Import.prototype.toSource = function() {
     return 'import {' + this.value[0].join(', ') + '} from ' + this.value[1] + ';';
 };
 
-
-parser.Export.prototype.toSource = function() {
-    return 'export ' + this.value[0].toSource();
+parser.Export.prototype.toSource = function(forComment) {
+    return 'export ' + this.value[0].toSource(forComment);
 };
 
 parser.Constructor.prototype.toSource = function() {
     return 'constructor ' + this.value.join(', ') + ';';
 };
 
-parser.Grammar.prototype.toSource = function() {
+parser.Grammar.prototype.toSource = function(forComment) {
+    forComment = forComment || false;
+    
+    if(forComment) {
+        return 'grammar ' + this.value[0] + ';';
+    } else {
+        var padding = helper.padding(this.value[1].map(function(rule) {
+            if(rule instanceof parser.Start) {
+                return 'start';
+            } else {
+                return rule.value[0];
+            }
+        }));
+        
+        return 'grammar ' + this.value[0] + ' {\n' +
+            '    ' + this.value[1].map(function(rule) {
+                return rule.toSource(padding);
+            }).join('\n    ') + '\n}';
+    }
+};
+
+parser.Augmentation.prototype.toSource = function() {
     var padding = helper.padding(this.value[1].map(function(rule) {
         if(rule instanceof parser.Start) {
             return 'start';
@@ -29,7 +49,7 @@ parser.Grammar.prototype.toSource = function() {
         }
     }));
     
-    return 'grammar ' + this.value[0] + ' {\n' +
+    return 'augment grammar ' + this.value[0] + ' {\n' +
         '    ' + this.value[1].map(function(rule) {
             return rule.toSource(padding);
         }).join('\n    ') + '\n}';
@@ -115,4 +135,8 @@ parser.Class.prototype.toSource = function() {
 
 parser.Literal.prototype.toSource = function() {
     return this.value[0];
+};
+
+parser.Default.prototype.toSource = function() {
+    return 'default';
 };
