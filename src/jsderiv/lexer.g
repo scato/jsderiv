@@ -26,5 +26,5 @@ grammar Lexer {
     RANGE:      CHAR "-" CHAR;
     CHAR:       [^\^\-\\\]] | "\\^" | "\\-" | "\\\\" | "\\t" | "\\r" | "\\n" | "\\]";
     CLASS:      "[" (RANGE | CHAR)* ("^" (RANGE | CHAR)+)? "]" -> CLASS;
-    KEYWORD:    "grammar" | "start" | "end" | "import" | "from" | "constructor" -> KEYWORD;
+    KEYWORD:    ("grammar" | "start" | "end" | "import" | "from" | "constructor") -> KEYWORD;
 }

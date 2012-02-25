@@ -1,5 +1,5 @@
-var lexer = require('./jseriv/lexer.g');
-var parser = require('./jseriv/parser.g');
+var lexer = require('./jseriv/lexer');
+var parser = require('./jseriv/parser');
 
 require('./jsderiv/parser-indent');
 require('./jsderiv/parser-to-source');

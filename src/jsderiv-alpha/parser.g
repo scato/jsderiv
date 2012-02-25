@@ -1,10 +1,10 @@
 import {ID, CLASS, LITERAL} from .lexer;
 
-constructor Module, Import, Export, Constructor, Grammar, Start, Rule;
+export constructor Module, Import, Export, Constructor, Grammar, Start, Rule;
 
-constructor Or, Red, And, Seq, Any, Many, Maybe, Ignore, Not, Look, InstanceOf, One, Ref, Class, Literal;
+export constructor Or, Red, And, Seq, Any, Many, Maybe, Ignore, Not, Look, InstanceOf, One, Ref, Class, Literal;
 
-grammar Parser {
+export grammar Parser {
     start Statement* -> Module ;
     
     Statement       : Import | Export | Definition ;
