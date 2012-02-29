@@ -54,6 +54,6 @@ export test "KEYWORD" {
 export test "start" {
     start Lexer.start;
     
-    assert "id /* comment */ \"literal\" | [0-9] start" -> (ID "id", LITERAL "\"literal\"", SYMBOL "|", RANGE "[0-9]", KEYWORD "start");
+    assert "id /* comment */ \"literal\" | [0-9] start" -> (ID "id", LITERAL "\"literal\"", SYMBOL "|", CLASS "[0-9]", KEYWORD "start");
     assert "id /* comment */ \"literal\" | [0-9] start 123" -> {};
 }

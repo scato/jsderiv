@@ -27,7 +27,7 @@ parser.Import.prototype.toJavascript = function() {
 };
 
 parser.Export.prototype.toJavascript = function() {
-    return '// ' + this.toSource(true) + '\n' + this.value[0].toJavascript('exports');
+    return '// ' + this.toSource(true).replace(/\n/g, '\n// ') + '\n' + this.value[0].toJavascript('exports');
 };
 
 parser.Constructor.prototype.toJavascript = function(exports) {

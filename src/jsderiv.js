@@ -9,6 +9,9 @@ require('./jsderiv/parser-indent');
 require('./jsderiv/parser-to-source');
 require('./jsderiv/parser-to-javascript');
 
+require('./jsderiv/parser-test-to-source');
+require('./jsderiv/parser-test-to-javascript');
+
 exports.parse = function(string) {
     try {
         var tokens = generic.parse(new lexer.Lexer().start(), string, true);
