@@ -46,9 +46,9 @@ var Parser = exports.Parser = function() {};
     var $cache;
     
     exports.Parser.prototype.start = function() {
-        return $cache = $cache || g.Ref(function() {
+        return $cache || ($cache = g.Ref(function() {
             return c.Red(c.Any(this.Statement()), Module);
-        }.bind(this), 'start');
+        }.bind(this), 'start'));
     };
 })();
 
@@ -57,9 +57,9 @@ var Parser = exports.Parser = function() {};
     var $cache;
     
     exports.Parser.prototype.Statement = function() {
-        return $cache = $cache || g.Ref(function() {
+        return $cache || ($cache = g.Ref(function() {
             return c.Or(c.Or(c.Or(this.Import(), this.Export()), this.Definition()), this.Augmentation());
-        }.bind(this), 'Statement');
+        }.bind(this), 'Statement'));
     };
 })();
 
@@ -68,9 +68,9 @@ var Parser = exports.Parser = function() {};
     var $cache;
     
     exports.Parser.prototype.Import = function() {
-        return $cache = $cache || g.Ref(function() {
+        return $cache || ($cache = g.Ref(function() {
             return c.Red(c.Seq(c.Seq(c.Seq(c.Seq(c.Ignore(g.Literal("import")), this.IdentifierList()), c.Ignore(g.Literal("from"))), this.ModuleIdentifier()), c.Ignore(g.Literal(";"))), Import);
-        }.bind(this), 'Import');
+        }.bind(this), 'Import'));
     };
 })();
 
@@ -79,9 +79,9 @@ var Parser = exports.Parser = function() {};
     var $cache;
     
     exports.Parser.prototype.IdentifierList = function() {
-        return $cache = $cache || g.Ref(function() {
+        return $cache || ($cache = g.Ref(function() {
             return c.Or(c.Red(c.Seq(c.Seq(c.Seq(c.Seq(c.Ignore(g.Literal("{")), g.InstanceOf(ID)), c.Maybe(c.Seq(c.Ignore(g.Literal(":")), g.InstanceOf(ID)))), c.Any(c.Seq(c.Seq(c.Ignore(g.Literal(",")), g.InstanceOf(ID)), c.Maybe(c.Seq(c.Ignore(g.Literal(":")), g.InstanceOf(ID)))))), c.Ignore(g.Literal("}"))), List), c.Red(c.Seq(g.InstanceOf(ID), c.Any(c.Seq(c.Ignore(g.Literal(",")), g.InstanceOf(ID)))), List));
-        }.bind(this), 'IdentifierList');
+        }.bind(this), 'IdentifierList'));
     };
 })();
 
@@ -90,9 +90,9 @@ var Parser = exports.Parser = function() {};
     var $cache;
     
     exports.Parser.prototype.ModuleIdentifier = function() {
-        return $cache = $cache || g.Ref(function() {
+        return $cache || ($cache = g.Ref(function() {
             return c.Red(c.Seq(c.Seq(c.Any(g.Literal(".")), g.InstanceOf(ID)), c.Any(c.Seq(g.Literal("."), g.InstanceOf(ID)))), Text);
-        }.bind(this), 'ModuleIdentifier');
+        }.bind(this), 'ModuleIdentifier'));
     };
 })();
 
@@ -101,9 +101,9 @@ var Parser = exports.Parser = function() {};
     var $cache;
     
     exports.Parser.prototype.Export = function() {
-        return $cache = $cache || g.Ref(function() {
+        return $cache || ($cache = g.Ref(function() {
             return c.Red(c.Seq(c.Ignore(g.Literal("export")), this.Definition()), Export);
-        }.bind(this), 'Export');
+        }.bind(this), 'Export'));
     };
 })();
 
@@ -112,9 +112,9 @@ var Parser = exports.Parser = function() {};
     var $cache;
     
     exports.Parser.prototype.Definition = function() {
-        return $cache = $cache || g.Ref(function() {
+        return $cache || ($cache = g.Ref(function() {
             return c.Or(this.Constructor(), this.Grammar());
-        }.bind(this), 'Definition');
+        }.bind(this), 'Definition'));
     };
 })();
 
@@ -123,9 +123,9 @@ var Parser = exports.Parser = function() {};
     var $cache;
     
     exports.Parser.prototype.Constructor = function() {
-        return $cache = $cache || g.Ref(function() {
+        return $cache || ($cache = g.Ref(function() {
             return c.Red(c.Seq(c.Seq(c.Seq(c.Ignore(g.Literal("constructor")), g.InstanceOf(ID)), c.Any(c.Seq(c.Ignore(g.Literal(",")), g.InstanceOf(ID)))), c.Ignore(g.Literal(";"))), Constructor);
-        }.bind(this), 'Constructor');
+        }.bind(this), 'Constructor'));
     };
 })();
 
@@ -134,9 +134,9 @@ var Parser = exports.Parser = function() {};
     var $cache;
     
     exports.Parser.prototype.Grammar = function() {
-        return $cache = $cache || g.Ref(function() {
+        return $cache || ($cache = g.Ref(function() {
             return c.Red(c.Seq(c.Seq(c.Seq(c.Seq(c.Ignore(g.Literal("grammar")), g.InstanceOf(ID)), c.Ignore(g.Literal("{"))), c.Red(c.Any(this.Rule()), List)), c.Ignore(g.Literal("}"))), Grammar);
-        }.bind(this), 'Grammar');
+        }.bind(this), 'Grammar'));
     };
 })();
 
@@ -145,9 +145,9 @@ var Parser = exports.Parser = function() {};
     var $cache;
     
     exports.Parser.prototype.Rule = function() {
-        return $cache = $cache || g.Ref(function() {
+        return $cache || ($cache = g.Ref(function() {
             return c.Or(c.Red(c.Seq(c.Seq(c.Ignore(g.Literal("start")), this.Expression()), c.Ignore(g.Literal(";"))), Start), c.Red(c.Seq(c.Seq(c.Seq(g.InstanceOf(ID), c.Ignore(g.Literal(":"))), this.Expression()), c.Ignore(g.Literal(";"))), Rule));
-        }.bind(this), 'Rule');
+        }.bind(this), 'Rule'));
     };
 })();
 
@@ -156,9 +156,9 @@ var Parser = exports.Parser = function() {};
     var $cache;
     
     exports.Parser.prototype.Augmentation = function() {
-        return $cache = $cache || g.Ref(function() {
+        return $cache || ($cache = g.Ref(function() {
             return c.Red(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Ignore(g.Literal("augment")), c.Ignore(g.Literal("grammar"))), g.InstanceOf(ID)), c.Ignore(g.Literal("{"))), c.Red(c.Any(this.Rule()), List)), c.Ignore(g.Literal("}"))), Augmentation);
-        }.bind(this), 'Augmentation');
+        }.bind(this), 'Augmentation'));
     };
 })();
 
@@ -167,9 +167,9 @@ var Parser = exports.Parser = function() {};
     var $cache;
     
     exports.Parser.prototype.Expression = function() {
-        return $cache = $cache || g.Ref(function() {
+        return $cache || ($cache = g.Ref(function() {
             return this.OrExpr();
-        }.bind(this), 'Expression');
+        }.bind(this), 'Expression'));
     };
 })();
 
@@ -178,9 +178,9 @@ var Parser = exports.Parser = function() {};
     var $cache;
     
     exports.Parser.prototype.OrExpr = function() {
-        return $cache = $cache || g.Ref(function() {
+        return $cache || ($cache = g.Ref(function() {
             return c.Or(c.Red(c.Seq(c.Seq(this.OrExpr(), c.Ignore(g.Literal("|"))), this.RedExpr()), Or), this.RedExpr());
-        }.bind(this), 'OrExpr');
+        }.bind(this), 'OrExpr'));
     };
 })();
 
@@ -189,9 +189,9 @@ var Parser = exports.Parser = function() {};
     var $cache;
     
     exports.Parser.prototype.RedExpr = function() {
-        return $cache = $cache || g.Ref(function() {
+        return $cache || ($cache = g.Ref(function() {
             return c.Or(c.Red(c.Seq(c.Seq(this.RedExpr(), c.Ignore(g.Literal("->"))), g.InstanceOf(ID)), Red), this.AndExpr());
-        }.bind(this), 'RedExpr');
+        }.bind(this), 'RedExpr'));
     };
 })();
 
@@ -200,9 +200,9 @@ var Parser = exports.Parser = function() {};
     var $cache;
     
     exports.Parser.prototype.AndExpr = function() {
-        return $cache = $cache || g.Ref(function() {
+        return $cache || ($cache = g.Ref(function() {
             return c.Or(c.Red(c.Seq(c.Seq(this.AndExpr(), c.Ignore(g.Literal("&"))), this.SeqExpr()), And), this.SeqExpr());
-        }.bind(this), 'AndExpr');
+        }.bind(this), 'AndExpr'));
     };
 })();
 
@@ -211,9 +211,9 @@ var Parser = exports.Parser = function() {};
     var $cache;
     
     exports.Parser.prototype.SeqExpr = function() {
-        return $cache = $cache || g.Ref(function() {
+        return $cache || ($cache = g.Ref(function() {
             return c.Or(c.Red(c.Seq(this.SeqExpr(), this.RightExpr()), Seq), this.RightExpr());
-        }.bind(this), 'SeqExpr');
+        }.bind(this), 'SeqExpr'));
     };
 })();
 
@@ -222,9 +222,9 @@ var Parser = exports.Parser = function() {};
     var $cache;
     
     exports.Parser.prototype.RightExpr = function() {
-        return $cache = $cache || g.Ref(function() {
+        return $cache || ($cache = g.Ref(function() {
             return c.Or(c.Or(c.Or(c.Or(c.Red(c.Seq(this.RightExpr(), c.Ignore(g.Literal("*"))), Any), c.Red(c.Seq(this.RightExpr(), c.Ignore(g.Literal("+"))), Many)), c.Red(c.Seq(this.RightExpr(), c.Ignore(g.Literal("?"))), Maybe)), c.Red(c.Seq(this.RightExpr(), c.Ignore(g.Literal("!"))), Ignore)), this.LeftExpr());
-        }.bind(this), 'RightExpr');
+        }.bind(this), 'RightExpr'));
     };
 })();
 
@@ -233,9 +233,9 @@ var Parser = exports.Parser = function() {};
     var $cache;
     
     exports.Parser.prototype.LeftExpr = function() {
-        return $cache = $cache || g.Ref(function() {
+        return $cache || ($cache = g.Ref(function() {
             return c.Or(c.Or(c.Red(c.Seq(c.Ignore(g.Literal("~")), this.LeftExpr()), Not), c.Red(c.Seq(c.Ignore(g.Literal("?=")), this.LeftExpr()), Look)), this.Terminal());
-        }.bind(this), 'LeftExpr');
+        }.bind(this), 'LeftExpr'));
     };
 })();
 
@@ -244,8 +244,8 @@ var Parser = exports.Parser = function() {};
     var $cache;
     
     exports.Parser.prototype.Terminal = function() {
-        return $cache = $cache || g.Ref(function() {
+        return $cache || ($cache = g.Ref(function() {
             return c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Seq(c.Seq(c.Ignore(g.Literal("(")), this.Expression()), c.Ignore(g.Literal(")"))), c.Red(c.Seq(c.Ignore(g.Literal("@")), g.InstanceOf(ID)), InstanceOf)), c.Red(c.Ignore(g.Literal(".")), One)), c.Red(g.InstanceOf(ID), Ref)), c.Red(g.InstanceOf(CLASS), Class)), c.Red(g.InstanceOf(LITERAL), Literal)), c.Red(c.Ignore(g.Literal("default")), Default));
-        }.bind(this), 'Terminal');
+        }.bind(this), 'Terminal'));
     };
 })();

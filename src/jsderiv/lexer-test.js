@@ -14,8 +14,8 @@ var Lexer   = require('./lexer').Lexer,
     var $cache;
     
     Lexer.prototype.KEYWORD = function() {
-        return $cache = $cache || g.Ref(function() {
+        return $cache || ($cache = g.Ref(function() {
             return c.Or($default.apply(this, []), c.Red(c.Or(g.Literal("test"), g.Literal("assert")), KEYWORD));
-        }.bind(this), 'KEYWORD');
+        }.bind(this), 'KEYWORD'));
     };
 })(Lexer.prototype.KEYWORD);

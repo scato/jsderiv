@@ -20,7 +20,7 @@ var ID      = require('./lexer').ID,
 // 
 //     assert " " -> ();
 // }
-exports["test SPACE"] = function(test) {
+exports["test \"SPACE\""] = function(test) {
     var start = new Lexer().SPACE();
 
     test.deepEqual(g.parse(start, " "), [[]]);
@@ -33,7 +33,7 @@ exports["test SPACE"] = function(test) {
 //     assert "id" -> (ID "id");
 //     assert "start" -> {};
 // }
-exports["test ID"] = function(test) {
+exports["test \"ID\""] = function(test) {
     var start = new Lexer().ID();
 
     test.deepEqual(g.parse(start, "id"), [[ID("id")]]);
@@ -47,7 +47,7 @@ exports["test ID"] = function(test) {
 //     assert "/* comment */" -> ();
 //     assert "// comment" -> ();
 // }
-exports["test COMMENT"] = function(test) {
+exports["test \"COMMENT\""] = function(test) {
     var start = new Lexer().COMMENT();
 
     test.deepEqual(g.parse(start, "/* comment */"), [[]]);
@@ -60,7 +60,7 @@ exports["test COMMENT"] = function(test) {
 // 
 //     assert "\"literal\"" -> (LITERAL "\"literal\"");
 // }
-exports["test LITERAL"] = function(test) {
+exports["test \"LITERAL\""] = function(test) {
     var start = new Lexer().LITERAL();
 
     test.deepEqual(g.parse(start, "\"literal\""), [[LITERAL("\"literal\"")]]);
@@ -72,7 +72,7 @@ exports["test LITERAL"] = function(test) {
 // 
 //     assert "|" -> (SYMBOL "|");
 // }
-exports["test SYMBOL"] = function(test) {
+exports["test \"SYMBOL\""] = function(test) {
     var start = new Lexer().SYMBOL();
 
     test.deepEqual(g.parse(start, "|"), [[SYMBOL("|")]]);
@@ -90,7 +90,7 @@ exports["test SYMBOL"] = function(test) {
 //     assert "[0-]" -> {};
 //     assert "[^]" -> {};
 // }
-exports["test CLASS"] = function(test) {
+exports["test \"CLASS\""] = function(test) {
     var start = new Lexer().CLASS();
 
     test.deepEqual(g.parse(start, "[0-9]"), [[CLASS("[0-9]")]]);
@@ -108,7 +108,7 @@ exports["test CLASS"] = function(test) {
 // 
 //     assert "start" -> (KEYWORD "start");
 // }
-exports["test KEYWORD"] = function(test) {
+exports["test \"KEYWORD\""] = function(test) {
     var start = new Lexer().KEYWORD();
 
     test.deepEqual(g.parse(start, "start"), [[KEYWORD("start")]]);
@@ -121,7 +121,7 @@ exports["test KEYWORD"] = function(test) {
 //     assert "id /* comment */ \"literal\" | [0-9] start" -> (ID "id", LITERAL "\"literal\"", SYMBOL "|", CLASS "[0-9]", KEYWORD "start");
 //     assert "id /* comment */ \"literal\" | [0-9] start 123" -> {};
 // }
-exports["test start"] = function(test) {
+exports["test \"start\""] = function(test) {
     var start = new Lexer().start();
 
     test.deepEqual(g.parse(start, "id /* comment */ \"literal\" | [0-9] start"), [[ID("id"), LITERAL("\"literal\""), SYMBOL("|"), CLASS("[0-9]"), KEYWORD("start")]]);

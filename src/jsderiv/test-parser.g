@@ -62,7 +62,7 @@ export test "Constructor" {
     start Parser.Constructor;
     
     assert (
-        KEYWORD "constructor", ID "Statement", SYMBOL ",", ID "Expression", SYMBOL ";",
+        KEYWORD "constructor", ID "Statement", SYMBOL ",", ID "Expression", SYMBOL ";"
     ) -> (
         Constructor("Statement", "Expression")
     );

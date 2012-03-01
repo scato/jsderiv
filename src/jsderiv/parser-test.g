@@ -15,5 +15,9 @@ augment grammar Parser {
     
     NodeList: "("! (Node (","! Node)*)? ")"! -> NodeList | @LITERAL -> Terminal;
     NodeSet: "{"! (NodeList (","! NodeList)*)? "}"! -> NodeSet | NodeList -> NodeSet;
-    Node: @ID NodeList -> Node;
+    Node: @ID NodeList -> Node | NodeList;
+    
+    // Node: NodeList provides shorthands
+    //       (a, b, c) for List(a, b, c)
+    //       and "abc" for Text "abc"
 }

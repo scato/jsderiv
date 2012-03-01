@@ -6,7 +6,7 @@ test.Test.prototype.toJavascript = function(exports) {
     if(exports === undefined) {
         throw new Error("Cannot convert non-exported test to Javascript");
     } else {
-        var key = this.value[0][0] + 'test ' + this.value[0].substr(1);
+        var key = JSON.stringify('test ' + this.value[0]);
         var prefix = exports + '[' + key + '] = ';
         
         return prefix + 'function(test) {\n' +

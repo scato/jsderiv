@@ -20,9 +20,9 @@ var Lexer = exports.Lexer = function() {};
     var $cache;
     
     exports.Lexer.prototype.start = function() {
-        return $cache = $cache || g.Ref(function() {
+        return $cache || ($cache = g.Ref(function() {
             return c.Any(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(this.SPACE(), this.ID()), this.COMMENT()), this.LITERAL()), this.SYMBOL()), this.CLASS()), this.KEYWORD()));
-        }.bind(this), 'start');
+        }.bind(this), 'start'));
     };
 })();
 
@@ -31,9 +31,9 @@ var Lexer = exports.Lexer = function() {};
     var $cache;
     
     exports.Lexer.prototype.NEWLINE = function() {
-        return $cache = $cache || g.Ref(function() {
+        return $cache || ($cache = g.Ref(function() {
             return c.Or(g.Literal("\r\n"), g.Literal("\n"));
-        }.bind(this), 'NEWLINE');
+        }.bind(this), 'NEWLINE'));
     };
 })();
 
@@ -42,9 +42,9 @@ var Lexer = exports.Lexer = function() {};
     var $cache;
     
     exports.Lexer.prototype.SPACE = function() {
-        return $cache = $cache || g.Ref(function() {
+        return $cache || ($cache = g.Ref(function() {
             return c.Ignore(c.Seq(c.Many(c.Or(c.Or(c.Or(g.Literal(" "), g.Literal("\t")), g.Literal("\r")), g.Literal("\n"))), l.Look(c.Not(c.Or(c.Or(c.Or(g.Literal(" "), g.Literal("\t")), g.Literal("\r")), g.Literal("\n"))))));
-        }.bind(this), 'SPACE');
+        }.bind(this), 'SPACE'));
     };
 })();
 
@@ -53,9 +53,9 @@ var Lexer = exports.Lexer = function() {};
     var $cache;
     
     exports.Lexer.prototype.ID = function() {
-        return $cache = $cache || g.Ref(function() {
+        return $cache || ($cache = g.Ref(function() {
             return c.Red(c.And(c.Seq(c.Many(c.Or(g.Range("A", "Z"), g.Range("a", "z"))), l.Look(c.Not(c.Or(g.Range("A", "Z"), g.Range("a", "z"))))), c.Not(this.KEYWORD())), ID);
-        }.bind(this), 'ID');
+        }.bind(this), 'ID'));
     };
 })();
 
@@ -64,9 +64,9 @@ var Lexer = exports.Lexer = function() {};
     var $cache;
     
     exports.Lexer.prototype.COMMENT = function() {
-        return $cache = $cache || g.Ref(function() {
+        return $cache || ($cache = g.Ref(function() {
             return c.Ignore(c.Or(c.Seq(c.Seq(g.Literal("/*"), c.Any(c.Or(c.And(g.One(), c.Not(g.Char("*"))), c.Seq(g.Literal("*"), l.Look(c.Not(g.Literal("/"))))))), g.Literal("*/")), c.Seq(c.Seq(g.Literal("//"), c.Not(c.Seq(c.Seq(c.Any(g.One()), this.NEWLINE()), c.Any(g.One())))), l.Look(this.NEWLINE()))));
-        }.bind(this), 'COMMENT');
+        }.bind(this), 'COMMENT'));
     };
 })();
 
@@ -75,9 +75,9 @@ var Lexer = exports.Lexer = function() {};
     var $cache;
     
     exports.Lexer.prototype.LITERAL = function() {
-        return $cache = $cache || g.Ref(function() {
+        return $cache || ($cache = g.Ref(function() {
             return c.Red(c.Or(c.Seq(c.Seq(g.Literal("\""), c.Any(c.Or(c.Or(c.Or(c.Or(c.Or(c.And(g.One(), c.Not(c.Or(g.Char("\""), g.Char("\\")))), g.Literal("\\\\")), g.Literal("\\\"")), g.Literal("\\t")), g.Literal("\\r")), g.Literal("\\n")))), g.Literal("\"")), c.Seq(c.Seq(g.Literal('\''), c.Any(c.Or(c.Or(c.Or(c.Or(c.Or(c.And(g.One(), c.Not(c.Or(g.Char("'"), g.Char("\\")))), g.Literal('\\\\')), g.Literal('\\\'')), g.Literal('\\t')), g.Literal('\\r')), g.Literal('\\n')))), g.Literal('\''))), LITERAL);
-        }.bind(this), 'LITERAL');
+        }.bind(this), 'LITERAL'));
     };
 })();
 
@@ -86,9 +86,9 @@ var Lexer = exports.Lexer = function() {};
     var $cache;
     
     exports.Lexer.prototype.SYMBOL = function() {
-        return $cache = $cache || g.Ref(function() {
+        return $cache || ($cache = g.Ref(function() {
             return c.Red(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(g.Literal(":"), g.Literal(";")), g.Literal("(")), g.Literal(")")), g.Literal("*")), g.Literal("+")), g.Literal("?")), g.Literal("&")), g.Literal("|")), g.Literal("~")), g.Literal("?=")), g.Literal("!")), g.Literal("->")), g.Literal("@")), g.Literal("{")), g.Literal("}")), g.Literal(",")), g.Literal(".")), SYMBOL);
-        }.bind(this), 'SYMBOL');
+        }.bind(this), 'SYMBOL'));
     };
 })();
 
@@ -97,9 +97,9 @@ var Lexer = exports.Lexer = function() {};
     var $cache;
     
     exports.Lexer.prototype.RANGE = function() {
-        return $cache = $cache || g.Ref(function() {
+        return $cache || ($cache = g.Ref(function() {
             return c.Seq(c.Seq(this.CHAR(), g.Literal("-")), this.CHAR());
-        }.bind(this), 'RANGE');
+        }.bind(this), 'RANGE'));
     };
 })();
 
@@ -108,9 +108,9 @@ var Lexer = exports.Lexer = function() {};
     var $cache;
     
     exports.Lexer.prototype.CHAR = function() {
-        return $cache = $cache || g.Ref(function() {
+        return $cache || ($cache = g.Ref(function() {
             return c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.And(g.One(), c.Not(c.Or(c.Or(c.Or(g.Char("^"), g.Char("-")), g.Char("\\")), g.Char("]")))), g.Literal("\\^")), g.Literal("\\-")), g.Literal("\\\\")), g.Literal("\\t")), g.Literal("\\r")), g.Literal("\\n")), g.Literal("\\]"));
-        }.bind(this), 'CHAR');
+        }.bind(this), 'CHAR'));
     };
 })();
 
@@ -119,9 +119,9 @@ var Lexer = exports.Lexer = function() {};
     var $cache;
     
     exports.Lexer.prototype.CLASS = function() {
-        return $cache = $cache || g.Ref(function() {
+        return $cache || ($cache = g.Ref(function() {
             return c.Red(c.Seq(c.Seq(c.Seq(g.Literal("["), c.Any(c.Or(this.RANGE(), this.CHAR()))), c.Maybe(c.Seq(g.Literal("^"), c.Many(c.Or(this.RANGE(), this.CHAR()))))), g.Literal("]")), CLASS);
-        }.bind(this), 'CLASS');
+        }.bind(this), 'CLASS'));
     };
 })();
 
@@ -130,8 +130,8 @@ var Lexer = exports.Lexer = function() {};
     var $cache;
     
     exports.Lexer.prototype.KEYWORD = function() {
-        return $cache = $cache || g.Ref(function() {
+        return $cache || ($cache = g.Ref(function() {
             return c.Red(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(g.Literal("grammar"), g.Literal("start")), g.Literal("import")), g.Literal("from")), g.Literal("export")), g.Literal("constructor")), g.Literal("augment")), g.Literal("default")), KEYWORD);
-        }.bind(this), 'KEYWORD');
+        }.bind(this), 'KEYWORD'));
     };
 })();

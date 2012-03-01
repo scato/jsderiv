@@ -68,9 +68,9 @@ function exprToJavascript(id, expr, exports, augmentation) {
         '    var $cache;\n' +
         '    \n' +
         '    ' + exports + '.' + id + ' = function() {\n' +
-        '        return $cache = $cache || g.Ref(function() {\n' +
+        '        return $cache || ($cache = g.Ref(function() {\n' +
         '            return ' + expr.toJavascript() + ';\n' +
-        '        }.bind(this), \'' + id + '\');\n' +
+        '        }.bind(this), \'' + id + '\'));\n' +
         '    };\n' +
         '})(' + value + ');';
 };
