@@ -60,7 +60,7 @@ Array.prototype.fold = Array.prototype.fold || function(lambda) {
     if(this.length === 0) {
         throw new Error('cannot fold empty list');
     } else if(this.length === 1) {
-        return this;
+        return this[0];
     } else {
         var left = this.length - 1;
         

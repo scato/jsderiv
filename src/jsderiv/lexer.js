@@ -37,6 +37,28 @@ var Lexer = exports.Lexer = function() {};
     };
 })();
 
+// CONTROL: "\\t" | "\\r" | "\\n" | "\\v" | "\\f";
+(function() {
+    var $cache;
+    
+    exports.Lexer.prototype.CONTROL = function() {
+        return $cache || ($cache = g.Ref(function() {
+            return c.Or(c.Or(c.Or(c.Or(g.Literal("\\t"), g.Literal("\\r")), g.Literal("\\n")), g.Literal("\\v")), g.Literal("\\f"));
+        }.bind(this), 'CONTROL'));
+    };
+})();
+
+// UNICODE: "\\u" [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F];
+(function() {
+    var $cache;
+    
+    exports.Lexer.prototype.UNICODE = function() {
+        return $cache || ($cache = g.Ref(function() {
+            return c.Seq(c.Seq(c.Seq(c.Seq(g.Literal("\\u"), c.Or(c.Or(g.Range("0", "9"), g.Range("a", "f")), g.Range("A", "F"))), c.Or(c.Or(g.Range("0", "9"), g.Range("a", "f")), g.Range("A", "F"))), c.Or(c.Or(g.Range("0", "9"), g.Range("a", "f")), g.Range("A", "F"))), c.Or(c.Or(g.Range("0", "9"), g.Range("a", "f")), g.Range("A", "F")));
+        }.bind(this), 'UNICODE'));
+    };
+})();
+
 // SPACE: ((" " | "\t" | "\r" | "\n")+ ?= ~ (" " | "\t" | "\r" | "\n"))!;
 (function() {
     var $cache;
@@ -70,13 +92,13 @@ var Lexer = exports.Lexer = function() {};
     };
 })();
 
-// LITERAL: ("\"" ([^"\\] | "\\\\" | "\\\"" | "\\t" | "\\r" | "\\n")* "\"" | '\'' ([^'\\] | '\\\\' | '\\\'' | '\\t' | '\\r' | '\\n')* '\'') -> LITERAL;
+// LITERAL: ("\"" ([^"\\] | "\\\\" | "\\\"" | CONTROL | UNICODE)* "\"" | '\'' ([^'\\] | '\\\\' | '\\\'' | CONTROL | UNICODE)* '\'') -> LITERAL;
 (function() {
     var $cache;
     
     exports.Lexer.prototype.LITERAL = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Red(c.Or(c.Seq(c.Seq(g.Literal("\""), c.Any(c.Or(c.Or(c.Or(c.Or(c.Or(c.And(g.One(), c.Not(c.Or(g.Char("\""), g.Char("\\")))), g.Literal("\\\\")), g.Literal("\\\"")), g.Literal("\\t")), g.Literal("\\r")), g.Literal("\\n")))), g.Literal("\"")), c.Seq(c.Seq(g.Literal('\''), c.Any(c.Or(c.Or(c.Or(c.Or(c.Or(c.And(g.One(), c.Not(c.Or(g.Char("'"), g.Char("\\")))), g.Literal('\\\\')), g.Literal('\\\'')), g.Literal('\\t')), g.Literal('\\r')), g.Literal('\\n')))), g.Literal('\''))), LITERAL);
+            return c.Red(c.Or(c.Seq(c.Seq(g.Literal("\""), c.Any(c.Or(c.Or(c.Or(c.Or(c.And(g.One(), c.Not(c.Or(g.Char("\""), g.Char("\\")))), g.Literal("\\\\")), g.Literal("\\\"")), this.CONTROL()), this.UNICODE()))), g.Literal("\"")), c.Seq(c.Seq(g.Literal('\''), c.Any(c.Or(c.Or(c.Or(c.Or(c.And(g.One(), c.Not(c.Or(g.Char("'"), g.Char("\\")))), g.Literal('\\\\')), g.Literal('\\\'')), this.CONTROL()), this.UNICODE()))), g.Literal('\''))), LITERAL);
         }.bind(this), 'LITERAL'));
     };
 })();
@@ -103,13 +125,24 @@ var Lexer = exports.Lexer = function() {};
     };
 })();
 
-// CHAR: [^\^\-\\\]] | "\\^" | "\\-" | "\\\\" | "\\t" | "\\r" | "\\n" | "\\]";
+// CATEGORY: "\\d" | "\\D" | "\\s" | "\\S" | "\\w" | "\\W" | "\\p{" [A-Za-z_]* "}" | "\\P{" [A-Za-z_]* "}";
+(function() {
+    var $cache;
+    
+    exports.Lexer.prototype.CATEGORY = function() {
+        return $cache || ($cache = g.Ref(function() {
+            return c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(g.Literal("\\d"), g.Literal("\\D")), g.Literal("\\s")), g.Literal("\\S")), g.Literal("\\w")), g.Literal("\\W")), c.Seq(c.Seq(g.Literal("\\p{"), c.Any(c.Or(c.Or(g.Range("A", "Z"), g.Range("a", "z")), g.Char("_")))), g.Literal("}"))), c.Seq(c.Seq(g.Literal("\\P{"), c.Any(c.Or(c.Or(g.Range("A", "Z"), g.Range("a", "z")), g.Char("_")))), g.Literal("}")));
+        }.bind(this), 'CATEGORY'));
+    };
+})();
+
+// CHAR: [^\^\-\\\]] | "\\^" | "\\-" | "\\\\" | CONTROL | UNICODE | CATEGORY | "\\]";
 (function() {
     var $cache;
     
     exports.Lexer.prototype.CHAR = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.And(g.One(), c.Not(c.Or(c.Or(c.Or(g.Char("^"), g.Char("-")), g.Char("\\")), g.Char("]")))), g.Literal("\\^")), g.Literal("\\-")), g.Literal("\\\\")), g.Literal("\\t")), g.Literal("\\r")), g.Literal("\\n")), g.Literal("\\]"));
+            return c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.And(g.One(), c.Not(c.Or(c.Or(c.Or(g.Char("^"), g.Char("-")), g.Char("\\")), g.Char("]")))), g.Literal("\\^")), g.Literal("\\-")), g.Literal("\\\\")), this.CONTROL()), this.UNICODE()), this.CATEGORY()), g.Literal("\\]"));
         }.bind(this), 'CHAR'));
     };
 })();

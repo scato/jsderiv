@@ -1,5 +1,7 @@
 require('./parser-to-source');
 
+var jsderiv = require('./index');
+
 var parser = require('./parser');
 var helper = require('./parser-helper');
 
@@ -138,60 +140,11 @@ parser.Ref.prototype.toJavascript = function() {
 };
 
 parser.Class.prototype.toJavascript = function() {
-    var match;
-    var complement = false;
-    var tokens = {CHAR: [], RANGE: [], NOT_CHAR: [], NOT_RANGE: []};
-    var contents = this.value[0].substr(1, this.value[0].length - 2);
-    var regex = {
-        CHAR: /^([^\^\-\\\]]|\\\^|\\-|\\\\|\\t|\\r|\\n|\\])/,
-        RANGE: /^(?:([^\^\-\\\]]|\\\^|\\-|\\\\|\\t|\\r|\\n|\\])-([^\^\-\\\]]|\\\^|\\-|\\\\|\\t|\\r|\\n|\\]))/,
-        NOT: /^\^/
-    };
-    
-    while(contents.length > 0) {
-        if(match = contents.match(regex.NOT)) {
-            contents = contents.substr(match[0].length);
-            complement = true;
-        } else if(match = contents.match(regex.RANGE)) {
-            contents = contents.substr(match[0].length);
-            (complement ? tokens.NOT_RANGE : tokens.RANGE).push([match[1], match[2]]);
-        } else if(match = contents.match(regex.CHAR)) {
-            contents = contents.substr(match[0].length);
-            (complement ? tokens.NOT_CHAR : tokens.CHAR).push(match[0]);
-        } else {
-            throw new Error('Parse error parsing ' + this.toString() + ' from ' + contents);
-        }
+    try {
+        return jsderiv.parseClass(this.value[0])[0].toJavascript();
+    } catch(ex) {
+        throw new Error("Error parsing class '" + this.value[0] + "': " + ex);
     }
-    
-    var left, right;
-    
-    if(tokens.CHAR.length === 0 && tokens.RANGE.length === 0) {
-        left = 'g.One()';
-    } else {
-        left = tokens.CHAR.map(function(string) {
-            return 'g.Char(' + JSON.stringify(helper.unescapeSlash(string)) + ')';
-        }).concat(tokens.RANGE.map(function(strings) {
-            return 'g.Range(' + JSON.stringify(helper.unescapeSlash(strings[0])) + ', ' + JSON.stringify(helper.unescapeSlash(strings[1])) + ')';
-        })).fold(function(left, right) {
-            return 'c.Or(' + left + ', ' + right + ')';
-        });
-    }
-    
-    if(tokens.NOT_CHAR.length === 0 && tokens.NOT_RANGE.length === 0) {
-        return left;
-    } else {
-        right = tokens.NOT_CHAR.map(function(string) {
-            return 'g.Char(' + JSON.stringify(helper.unescapeSlash(string)) + ')';
-        }).concat(tokens.NOT_RANGE.map(function(strings) {
-            return 'g.Range(' + JSON.stringify(helper.unescapeSlash(strings[0])) + ', ' + JSON.stringify(helper.unescapeSlash(strings[1])) + ')';
-        })).fold(function(left, right) {
-            return 'c.Or(' + left + ', ' + right + ')';
-        });
-        
-        return 'c.And(' + left + ', c.Not(' + right + '))';
-    }
-    
-    return left;
 };
 
 parser.Literal.prototype.toJavascript = function() {
