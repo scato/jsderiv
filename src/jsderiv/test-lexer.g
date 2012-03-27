@@ -12,6 +12,8 @@ export test "ID" {
     
     assert "id" -> (ID "id");
     assert "start" -> {};
+    assert "id2" -> (ID "id2");
+    assert "ID_2" -> (ID "ID_2");
 }
 
 export test "COMMENT" {
@@ -31,6 +33,8 @@ export test "SYMBOL" {
     start Lexer.SYMBOL;
     
     assert "|" -> (SYMBOL "|");
+    assert "<" -> (SYMBOL "<");
+    assert ">" -> (SYMBOL ">");
 }
 
 export test "CLASS" {
@@ -49,6 +53,8 @@ export test "KEYWORD" {
     start Lexer.KEYWORD;
     
     assert "start" -> (KEYWORD "start");
+    assert "extends" -> (KEYWORD "extends");
+    assert "super" -> (KEYWORD "super");
 }
 
 export test "start" {

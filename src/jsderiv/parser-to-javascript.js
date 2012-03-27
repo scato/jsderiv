@@ -24,7 +24,7 @@ parser.Import.prototype.toJavascript = function() {
     
     return '// ' + this.toSource() + '\n' +
         'var ' + this.value[0].map(function(id) {
-            return id + padding(id) + ' = require(\'' + path + '\').' + id;
+            return id + padding(id) + ' = require(' + JSON.stringify(path) + ').' + id;
         }).join(',\n    ') + ';';
 };
 
@@ -44,25 +44,41 @@ parser.Constructor.prototype.toJavascript = function(exports) {
 };
 
 parser.Grammar.prototype.toJavascript = function(exports) {
-    var infix = exports === undefined ? '' : exports + '.' + this.value[0] + ' = ';
-    var cons = exports === undefined ? this.value[0] : exports + '.' + this.value[0];
-    var proto = cons + '.prototype';
+    var id, parent, rules;
     
-    return 'var ' + this.value[0] + ' = ' + infix + 'function() {};\n\n' + 
-        this.value[1].map(function(rule) {
-            return rule.toJavascript(proto);
-        }).join('\n\n');
+    if(this.value.length === 3) {
+        id = this.value[0];
+        parent = this.value[1];
+        rules = this.value[2];
+    } else {
+        id = this.value[0];
+        parent = null;
+        rules = this.value[1];
+    }
+    
+    var infix = exports === undefined ? '' : exports + '.' + id + ' = ';
+    var cons = exports === undefined ? id : exports + '.' + id;
+    var proto = cons + '.prototype';
+    var extend = parent !== null ? proto + ' = Object.create(' + parent + '.prototype);\n'
+                                 + id + '.$super = ' + parent + ';\n'
+                                 + proto + '.constructor = ' + id + ';\n\n' : '';
+    
+    return 'var ' + id + ' = ' + infix + 'function() {};\n\n' +
+        extend + 
+        rules.map(function(rule) {
+            return rule.toJavascript(proto, undefined, this.value[0]);
+        }.bind(this)).join('\n\n');
 };
 
 parser.Augmentation.prototype.toJavascript = function() {
     var proto = this.value[0] + '.prototype';
     
     return this.value[1].map(function(rule) {
-            return rule.toJavascript(proto, true);
-        }).join('\n\n');
+            return rule.toJavascript(proto, true, this.value[0]);
+        }.bind(this)).join('\n\n');
 };
 
-function exprToJavascript(id, expr, exports, augmentation) {
+function exprToJavascript(id, expr, exports, augmentation, grammar, rule) {
     var param = augmentation ? '$default' : '';
     var value = augmentation ? exports + '.' + id : '';
     
@@ -71,86 +87,94 @@ function exprToJavascript(id, expr, exports, augmentation) {
         '    \n' +
         '    ' + exports + '.' + id + ' = function() {\n' +
         '        return $cache || ($cache = g.Ref(function() {\n' +
-        '            return ' + expr.toJavascript() + ';\n' +
+        '            return ' + expr.toJavascript(grammar, rule) + ';\n' +
         '        }.bind(this), \'' + id + '\'));\n' +
         '    };\n' +
         '})(' + value + ');';
 };
 
-parser.Start.prototype.toJavascript = function(exports, augmentation) {
+parser.Start.prototype.toJavascript = function(exports, augmentation, grammar) {
     return '// ' + this.toSource() + '\n' +
-        exprToJavascript('start', this.value[0], exports, augmentation);
+        exprToJavascript('start', this.value[0], exports, augmentation, grammar, 'start');
 };
 
-parser.Rule.prototype.toJavascript = function(exports, augmentation) {
+parser.Rule.prototype.toJavascript = function(exports, augmentation, grammar) {
     return '// ' + this.toSource() + '\n' +
-        exprToJavascript(this.value[0], this.value[1], exports, augmentation);
+        exprToJavascript(this.value[0], this.value[1], exports, augmentation, grammar, this.value[0]);
 };
 
-parser.Or.prototype.toJavascript = function() {
-    return 'c.Or(' + this.value[0].toJavascript() + ', ' + this.value[1].toJavascript() + ')';
+parser.Or.prototype.toJavascript = function(grammar, rule) {
+    return 'c.Or(' + this.value[0].toJavascript(grammar, rule) + ', ' + this.value[1].toJavascript(grammar, rule) + ')';
 };
 
-parser.Red.prototype.toJavascript = function() {
-    return 'c.Red(' + this.value[0].toJavascript() + ', ' + this.value[1] + ')';
+parser.Red.prototype.toJavascript = function(grammar, rule) {
+    return 'c.Red(' + this.value[0].toJavascript(grammar, rule) + ', ' + this.value[1] + ')';
 };
 
-parser.And.prototype.toJavascript = function() {
-    return 'c.And(' + this.value[0].toJavascript() + ', ' + this.value[1].toJavascript() + ')';
+parser.And.prototype.toJavascript = function(grammar, rule) {
+    return 'c.And(' + this.value[0].toJavascript(grammar, rule) + ', ' + this.value[1].toJavascript(grammar, rule) + ')';
 };
 
-parser.Seq.prototype.toJavascript = function() {
-    return 'c.Seq(' + this.value[0].toJavascript() + ', ' + this.value[1].toJavascript() + ')';
+parser.Seq.prototype.toJavascript = function(grammar, rule) {
+    return 'c.Seq(' + this.value[0].toJavascript(grammar, rule) + ', ' + this.value[1].toJavascript(grammar, rule) + ')';
 };
 
-parser.Any.prototype.toJavascript = function() {
-    return 'c.Any(' + this.value[0].toJavascript() + ')';
+parser.Any.prototype.toJavascript = function(grammar, rule) {
+    return 'c.Any(' + this.value[0].toJavascript(grammar, rule) + ')';
 };
 
-parser.Many.prototype.toJavascript = function() {
-    return 'c.Many(' + this.value[0].toJavascript() + ')';
+parser.Many.prototype.toJavascript = function(grammar, rule) {
+    return 'c.Many(' + this.value[0].toJavascript(grammar, rule) + ')';
 };
 
-parser.Maybe.prototype.toJavascript = function() {
-    return 'c.Maybe(' + this.value[0].toJavascript() + ')';
+parser.Maybe.prototype.toJavascript = function(grammar, rule) {
+    return 'c.Maybe(' + this.value[0].toJavascript(grammar, rule) + ')';
 };
 
-parser.Ignore.prototype.toJavascript = function() {
-    return 'c.Ignore(' + this.value[0].toJavascript() + ')';
+parser.Ignore.prototype.toJavascript = function(grammar, rule) {
+    return 'c.Ignore(' + this.value[0].toJavascript(grammar, rule) + ')';
 };
 
-parser.Not.prototype.toJavascript = function() {
-    return 'c.Not(' + this.value[0].toJavascript() + ')';
+parser.Not.prototype.toJavascript = function(grammar, rule) {
+    return 'c.Not(' + this.value[0].toJavascript(grammar, rule) + ')';
 };
 
-parser.Look.prototype.toJavascript = function() {
-    return 'l.Look(' + this.value[0].toJavascript() + ')';
+parser.Look.prototype.toJavascript = function(grammar, rule) {
+    return 'l.Look(' + this.value[0].toJavascript(grammar, rule) + ')';
 };
 
-parser.InstanceOf.prototype.toJavascript = function() {
+parser.InstanceOf.prototype.toJavascript = function(grammar, rule) {
     return 'g.InstanceOf(' + this.value[0] + ')';
 };
 
-parser.One.prototype.toJavascript = function() {
+parser.One.prototype.toJavascript = function(grammar, rule) {
     return 'g.One()';
 };
 
-parser.Ref.prototype.toJavascript = function() {
+parser.Ref.prototype.toJavascript = function(grammar, rule) {
     return 'this.' + this.value[0] + '()';
 };
 
-parser.Class.prototype.toJavascript = function() {
+parser.Class.prototype.toJavascript = function(grammar, rule) {
     try {
-        return jsderiv.parseClass(this.value[0])[0].toJavascript();
+        return jsderiv.parseClass(this.value[0])[0].toJavascript(grammar, rule);
     } catch(ex) {
         throw new Error("Error parsing class '" + this.value[0] + "': " + ex);
     }
 };
 
-parser.Literal.prototype.toJavascript = function() {
+parser.Literal.prototype.toJavascript = function(grammar, rule) {
     return 'g.Literal(' + this.value[0] + ')';
 };
 
-parser.Default.prototype.toJavascript = function() {
+parser.Default.prototype.toJavascript = function(grammar, rule) {
     return '$default.apply(this, [])';
+};
+
+parser.Super.prototype.toJavascript = function(grammar, rule) {
+    return grammar + '.$super.prototype.' + rule + '.apply(this, [])';
+};
+
+parser.Capture.prototype.toJavascript = function(grammar, rule) {
+    return 'g.Capture(' + this.value[0].toJavascript(grammar, rule) + ')';
 };

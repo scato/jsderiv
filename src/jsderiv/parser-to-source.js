@@ -22,10 +22,22 @@ parser.Constructor.prototype.toSource = function() {
 parser.Grammar.prototype.toSource = function(forComment) {
     forComment = forComment || false;
     
-    if(forComment) {
-        return 'grammar ' + this.value[0] + ';';
+    var id, parent, rules;
+    
+    if(this.value.length === 3) {
+        id = this.value[0];
+        parent = this.value[1];
+        rules = this.value[2];
     } else {
-        var padding = helper.padding(this.value[1].map(function(rule) {
+        id = this.value[0];
+        parent = null;
+        rules = this.value[1];
+    }
+    
+    if(forComment) {
+        return 'grammar ' + id + (parent !== null ? 'extends ' + parent : '') + ';';
+    } else {
+        var padding = helper.padding(rules.map(function(rule) {
             if(rule instanceof parser.Start) {
                 return 'start';
             } else {
@@ -33,8 +45,8 @@ parser.Grammar.prototype.toSource = function(forComment) {
             }
         }));
         
-        return 'grammar ' + this.value[0] + ' {\n' +
-            '    ' + this.value[1].map(function(rule) {
+        return 'grammar ' + id + (parent !== null ? 'extends ' + parent : '') + ' {\n' +
+            '    ' + rules.map(function(rule) {
                 return rule.toSource(padding);
             }).join('\n    ') + '\n}';
     }
@@ -139,4 +151,12 @@ parser.Literal.prototype.toSource = function() {
 
 parser.Default.prototype.toSource = function() {
     return 'default';
+};
+
+parser.Super.prototype.toSource = function() {
+    return 'super';
+};
+
+parser.Capture.prototype.toSource = function() {
+    return '<' + this.value[0].toSource() + '>';
 };

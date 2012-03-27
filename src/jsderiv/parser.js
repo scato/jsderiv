@@ -20,7 +20,7 @@ var Start        = exports.Start        = g.Cons("Start");
 var Rule         = exports.Rule         = g.Cons("Rule");
 var Augmentation = exports.Augmentation = g.Cons("Augmentation");
 
-// export constructor Or, Red, And, Seq, Any, Many, Maybe, Ignore, Not, Look, InstanceOf, One, Ref, Class, Literal, Default;
+// export constructor Or, Red, And, Seq, Any, Many, Maybe, Ignore, Not, Look, InstanceOf, One, Ref, Class, Literal, Default, Super, Capture;
 var Or         = exports.Or         = g.Cons("Or");
 var Red        = exports.Red        = g.Cons("Red");
 var And        = exports.And        = g.Cons("And");
@@ -37,6 +37,8 @@ var Ref        = exports.Ref        = g.Cons("Ref");
 var Class      = exports.Class      = g.Cons("Class");
 var Literal    = exports.Literal    = g.Cons("Literal");
 var Default    = exports.Default    = g.Cons("Default");
+var Super      = exports.Super      = g.Cons("Super");
+var Capture    = exports.Capture    = g.Cons("Capture");
 
 // export grammar Parser;
 var Parser = exports.Parser = function() {};
@@ -85,13 +87,13 @@ var Parser = exports.Parser = function() {};
     };
 })();
 
-// ModuleIdentifier: "."* @ID ("." @ID)* -> Text;
+// ModuleIdentifier: "."* (@ID | @LITERAL) ("." (@ID | @LITERAL))* -> Text;
 (function() {
     var $cache;
     
     exports.Parser.prototype.ModuleIdentifier = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Red(c.Seq(c.Seq(c.Any(g.Literal(".")), g.InstanceOf(ID)), c.Any(c.Seq(g.Literal("."), g.InstanceOf(ID)))), Text);
+            return c.Red(c.Seq(c.Seq(c.Any(g.Literal(".")), c.Or(g.InstanceOf(ID), g.InstanceOf(LITERAL))), c.Any(c.Seq(g.Literal("."), c.Or(g.InstanceOf(ID), g.InstanceOf(LITERAL))))), Text);
         }.bind(this), 'ModuleIdentifier'));
     };
 })();
@@ -129,13 +131,13 @@ var Parser = exports.Parser = function() {};
     };
 })();
 
-// Grammar: "grammar"! @ID "{"! (Rule* -> List) "}"! -> Grammar;
+// Grammar: "grammar"! @ID ("extends"! @ID)? "{"! (Rule* -> List) "}"! -> Grammar;
 (function() {
     var $cache;
     
     exports.Parser.prototype.Grammar = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Red(c.Seq(c.Seq(c.Seq(c.Seq(c.Ignore(g.Literal("grammar")), g.InstanceOf(ID)), c.Ignore(g.Literal("{"))), c.Red(c.Any(this.Rule()), List)), c.Ignore(g.Literal("}"))), Grammar);
+            return c.Red(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Ignore(g.Literal("grammar")), g.InstanceOf(ID)), c.Maybe(c.Seq(c.Ignore(g.Literal("extends")), g.InstanceOf(ID)))), c.Ignore(g.Literal("{"))), c.Red(c.Any(this.Rule()), List)), c.Ignore(g.Literal("}"))), Grammar);
         }.bind(this), 'Grammar'));
     };
 })();
@@ -239,13 +241,13 @@ var Parser = exports.Parser = function() {};
     };
 })();
 
-// Terminal: "("! Expression ")"! | "@"! @ID -> InstanceOf | "."! -> One | @ID -> Ref | @CLASS -> Class | @LITERAL -> Literal | "default"! -> Default;
+// Terminal: "("! Expression ")"! | "<"! Expression ">"! -> Capture | "@"! @ID -> InstanceOf | "."! -> One | @ID -> Ref | @CLASS -> Class | @LITERAL -> Literal | "default"! -> Default | "super"! -> Super;
 (function() {
     var $cache;
     
     exports.Parser.prototype.Terminal = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Seq(c.Seq(c.Ignore(g.Literal("(")), this.Expression()), c.Ignore(g.Literal(")"))), c.Red(c.Seq(c.Ignore(g.Literal("@")), g.InstanceOf(ID)), InstanceOf)), c.Red(c.Ignore(g.Literal(".")), One)), c.Red(g.InstanceOf(ID), Ref)), c.Red(g.InstanceOf(CLASS), Class)), c.Red(g.InstanceOf(LITERAL), Literal)), c.Red(c.Ignore(g.Literal("default")), Default));
+            return c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Seq(c.Seq(c.Ignore(g.Literal("(")), this.Expression()), c.Ignore(g.Literal(")"))), c.Red(c.Seq(c.Seq(c.Ignore(g.Literal("<")), this.Expression()), c.Ignore(g.Literal(">"))), Capture)), c.Red(c.Seq(c.Ignore(g.Literal("@")), g.InstanceOf(ID)), InstanceOf)), c.Red(c.Ignore(g.Literal(".")), One)), c.Red(g.InstanceOf(ID), Ref)), c.Red(g.InstanceOf(CLASS), Class)), c.Red(g.InstanceOf(LITERAL), Literal)), c.Red(c.Ignore(g.Literal("default")), Default)), c.Red(c.Ignore(g.Literal("super")), Super));
         }.bind(this), 'Terminal'));
     };
 })();

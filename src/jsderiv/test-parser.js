@@ -24,7 +24,7 @@ var Module      = require('./parser').Module,
     Start       = require('./parser').Start,
     Rule        = require('./parser').Rule;
 
-// import {Or, Red, And, Seq, Any, Many, Maybe, Ignore, Not, Look, Token, One, Ref, Class, Literal, InstanceOf} from .parser;
+// import {Or, Red, And, Seq, Any, Many, Maybe, Ignore, Not, Look, Token, One, Ref, Class, Literal, InstanceOf, Default, Super, Capture} from .parser;
 var Or         = require('./parser').Or,
     Red        = require('./parser').Red,
     And        = require('./parser').And,
@@ -40,29 +40,32 @@ var Or         = require('./parser').Or,
     Ref        = require('./parser').Ref,
     Class      = require('./parser').Class,
     Literal    = require('./parser').Literal,
-    InstanceOf = require('./parser').InstanceOf;
+    InstanceOf = require('./parser').InstanceOf,
+    Default    = require('./parser').Default,
+    Super      = require('./parser').Super,
+    Capture    = require('./parser').Capture;
 
 // export test "start" {
 //     start Parser.start;
 // 
-//     assert (KEYWORD "import", SYMBOL "{", ID "INT", SYMBOL ",", ID "STRING", SYMBOL "}", KEYWORD "from", SYMBOL ".", ID "common", SYMBOL ";", KEYWORD "export", KEYWORD "constructor", ID "Statement", SYMBOL ",", ID "Expression", SYMBOL ";", KEYWORD "export", KEYWORD "grammar", ID "Example", SYMBOL "{", KEYWORD "start", ID "NEWLINE", SYMBOL ";", ID "NEWLINE", SYMBOL ":", LITERAL "\"\\n\"", SYMBOL ";", SYMBOL "}") -> (Module(Import(("INT", "STRING"), ".common"), Export(Constructor("Statement", "Expression")), Export(Grammar("Example", (Start(Ref("NEWLINE")), Rule("NEWLINE", Literal("\"\\n\"")))))));
+//     assert (KEYWORD "import", SYMBOL "{", ID "INT", SYMBOL ",", ID "STRING", SYMBOL "}", KEYWORD "from", SYMBOL ".", ID "common-lib", SYMBOL ";", KEYWORD "export", KEYWORD "constructor", ID "Statement", SYMBOL ",", ID "Expression", SYMBOL ";", KEYWORD "export", KEYWORD "grammar", ID "Example", SYMBOL "{", KEYWORD "start", ID "NEWLINE", SYMBOL ";", ID "NEWLINE", SYMBOL ":", LITERAL "\"\\n\"", SYMBOL ";", SYMBOL "}") -> (Module(Import(("INT", "STRING"), ".common-lib"), Export(Constructor("Statement", "Expression")), Export(Grammar("Example", (Start(Ref("NEWLINE")), Rule("NEWLINE", Literal("\"\\n\"")))))));
 // }
 exports["test \"start\""] = function(test) {
     var start = new Parser().start();
 
-    test.deepEqual(g.parse(start, [KEYWORD("import"), SYMBOL("{"), ID("INT"), SYMBOL(","), ID("STRING"), SYMBOL("}"), KEYWORD("from"), SYMBOL("."), ID("common"), SYMBOL(";"), KEYWORD("export"), KEYWORD("constructor"), ID("Statement"), SYMBOL(","), ID("Expression"), SYMBOL(";"), KEYWORD("export"), KEYWORD("grammar"), ID("Example"), SYMBOL("{"), KEYWORD("start"), ID("NEWLINE"), SYMBOL(";"), ID("NEWLINE"), SYMBOL(":"), LITERAL("\"\\n\""), SYMBOL(";"), SYMBOL("}")]), [[Module([Import([["INT", "STRING"], ".common"]), Export([Constructor(["Statement", "Expression"])]), Export([Grammar(["Example", [Start([Ref(["NEWLINE"])]), Rule(["NEWLINE", Literal(["\"\\n\""])])]])])])]]);
+    test.deepEqual(g.parse(start, [KEYWORD("import"), SYMBOL("{"), ID("INT"), SYMBOL(","), ID("STRING"), SYMBOL("}"), KEYWORD("from"), SYMBOL("."), ID("common-lib"), SYMBOL(";"), KEYWORD("export"), KEYWORD("constructor"), ID("Statement"), SYMBOL(","), ID("Expression"), SYMBOL(";"), KEYWORD("export"), KEYWORD("grammar"), ID("Example"), SYMBOL("{"), KEYWORD("start"), ID("NEWLINE"), SYMBOL(";"), ID("NEWLINE"), SYMBOL(":"), LITERAL("\"\\n\""), SYMBOL(";"), SYMBOL("}")]), [[Module([Import([["INT", "STRING"], ".common-lib"]), Export([Constructor(["Statement", "Expression"])]), Export([Grammar(["Example", [Start([Ref(["NEWLINE"])]), Rule(["NEWLINE", Literal(["\"\\n\""])])]])])])]]);
     test.done();
 };
 
 // export test "Import" {
 //     start Parser.Import;
 // 
-//     assert (KEYWORD "import", SYMBOL "{", ID "INT", SYMBOL ",", ID "STRING", SYMBOL "}", KEYWORD "from", SYMBOL ".", ID "common", SYMBOL ";") -> (Import(("INT", "STRING"), ".common"));
+//     assert (KEYWORD "import", SYMBOL "{", ID "INT", SYMBOL ",", ID "STRING", SYMBOL "}", KEYWORD "from", SYMBOL ".", ID "common-lib", SYMBOL ";") -> (Import(("INT", "STRING"), ".common-lib"));
 // }
 exports["test \"Import\""] = function(test) {
     var start = new Parser().Import();
 
-    test.deepEqual(g.parse(start, [KEYWORD("import"), SYMBOL("{"), ID("INT"), SYMBOL(","), ID("STRING"), SYMBOL("}"), KEYWORD("from"), SYMBOL("."), ID("common"), SYMBOL(";")]), [[Import([["INT", "STRING"], ".common"])]]);
+    test.deepEqual(g.parse(start, [KEYWORD("import"), SYMBOL("{"), ID("INT"), SYMBOL(","), ID("STRING"), SYMBOL("}"), KEYWORD("from"), SYMBOL("."), ID("common-lib"), SYMBOL(";")]), [[Import([["INT", "STRING"], ".common-lib"])]]);
     test.done();
 };
 
@@ -94,11 +97,13 @@ exports["test \"Constructor\""] = function(test) {
 //     start Parser.Grammar;
 // 
 //     assert (KEYWORD "grammar", ID "Example", SYMBOL "{", KEYWORD "start", ID "NEWLINE", SYMBOL ";", ID "NEWLINE", SYMBOL ":", LITERAL "\"\\n\"", SYMBOL ";", SYMBOL "}") -> (Grammar("Example", (Start(Ref("NEWLINE")), Rule("NEWLINE", Literal("\"\\n\"")))));
+//     assert (KEYWORD "grammar", ID "Example2", KEYWORD "extends", ID "Example", SYMBOL "{", ID "NEWLINE", SYMBOL ":", KEYWORD "super", SYMBOL "|", LITERAL "\"\\r\\n\"", SYMBOL ";", SYMBOL "}") -> (Grammar("Example2", "Example", (Rule("NEWLINE", Or(Super(), Literal("\"\\r\\n\""))))));
 // }
 exports["test \"Grammar\""] = function(test) {
     var start = new Parser().Grammar();
 
     test.deepEqual(g.parse(start, [KEYWORD("grammar"), ID("Example"), SYMBOL("{"), KEYWORD("start"), ID("NEWLINE"), SYMBOL(";"), ID("NEWLINE"), SYMBOL(":"), LITERAL("\"\\n\""), SYMBOL(";"), SYMBOL("}")]), [[Grammar(["Example", [Start([Ref(["NEWLINE"])]), Rule(["NEWLINE", Literal(["\"\\n\""])])]])]]);
+    test.deepEqual(g.parse(start, [KEYWORD("grammar"), ID("Example2"), KEYWORD("extends"), ID("Example"), SYMBOL("{"), ID("NEWLINE"), SYMBOL(":"), KEYWORD("super"), SYMBOL("|"), LITERAL("\"\\r\\n\""), SYMBOL(";"), SYMBOL("}")]), [[Grammar(["Example2", "Example", [Rule(["NEWLINE", Or([Super([]), Literal(["\"\\r\\n\""])])])]])]]);
     test.done();
 };
 
@@ -136,23 +141,25 @@ exports["test \"IdentifierList\""] = function(test) {
 //     start Parser.ModuleIdentifier;
 // 
 //     assert (SYMBOL ".", ID "common") -> (".common");
+//     assert (SYMBOL ".", LITERAL "'common-lib'") -> (".'common-lib'");
 // }
 exports["test \"ModuleIdentifier\""] = function(test) {
     var start = new Parser().ModuleIdentifier();
 
     test.deepEqual(g.parse(start, [SYMBOL("."), ID("common")]), [[".common"]]);
+    test.deepEqual(g.parse(start, [SYMBOL("."), LITERAL("'common-lib'")]), [[".'common-lib'"]]);
     test.done();
 };
 
 // export test "Expression" {
 //     start Parser.Expression;
 // 
-//     assert (LITERAL "\"var\"", SYMBOL "!", ID "Identifier", SYMBOL "(", LITERAL "\",\"", SYMBOL "!", ID "Identifier", SYMBOL ")", SYMBOL "*", LITERAL "\";\"", SYMBOL "!", SYMBOL "->", ID "Variable", SYMBOL "|", LITERAL "\"function\"", SYMBOL "!", ID "Identifier", SYMBOL "?", LITERAL "\"(\"", SYMBOL "!", ID "Param", SYMBOL "+", LITERAL "\")\"", SYMBOL "!", SYMBOL "->", ID "Call", SYMBOL "|", SYMBOL "(", SYMBOL "@", ID "INT", SYMBOL "|", SYMBOL "@", ID "STRING", SYMBOL "&", SYMBOL "~", SYMBOL "@", ID "INT", SYMBOL ")", SYMBOL "->", ID "Value") -> (Or(Or(Red(Seq(Seq(Seq(Ignore(Literal("\"var\"")), Ref("Identifier")), Any(Seq(Ignore(Literal("\",\"")), Ref("Identifier")))), Ignore(Literal("\";\""))), "Variable"), Red(Seq(Seq(Seq(Seq(Ignore(Literal("\"function\"")), Maybe(Ref("Identifier"))), Ignore(Literal("\"(\""))), Many(Ref("Param"))), Ignore(Literal("\")\""))), "Call")), Red(Or(InstanceOf("INT"), And(InstanceOf("STRING"), Not(InstanceOf("INT")))), "Value")));
+//     assert (LITERAL "\"var\"", SYMBOL "!", SYMBOL "<", ID "Identifier", SYMBOL "(", LITERAL "\",\"", SYMBOL "!", ID "Identifier", SYMBOL ")", SYMBOL "*", SYMBOL ">", LITERAL "\";\"", SYMBOL "!", SYMBOL "->", ID "Variable", SYMBOL "|", LITERAL "\"function\"", SYMBOL "!", ID "Identifier", SYMBOL "?", LITERAL "\"(\"", SYMBOL "!", ID "Param", SYMBOL "+", LITERAL "\")\"", SYMBOL "!", SYMBOL "->", ID "Call", SYMBOL "|", SYMBOL "(", SYMBOL "@", ID "INT", SYMBOL "|", SYMBOL "@", ID "STRING", SYMBOL "&", SYMBOL "~", SYMBOL "@", ID "INT", SYMBOL ")", SYMBOL "->", ID "Value") -> (Or(Or(Red(Seq(Seq(Ignore(Literal("\"var\"")), Capture(Seq(Ref("Identifier"), Any(Seq(Ignore(Literal("\",\"")), Ref("Identifier")))))), Ignore(Literal("\";\""))), "Variable"), Red(Seq(Seq(Seq(Seq(Ignore(Literal("\"function\"")), Maybe(Ref("Identifier"))), Ignore(Literal("\"(\""))), Many(Ref("Param"))), Ignore(Literal("\")\""))), "Call")), Red(Or(InstanceOf("INT"), And(InstanceOf("STRING"), Not(InstanceOf("INT")))), "Value")));
 // }
 exports["test \"Expression\""] = function(test) {
     var start = new Parser().Expression();
 
-    test.deepEqual(g.parse(start, [LITERAL("\"var\""), SYMBOL("!"), ID("Identifier"), SYMBOL("("), LITERAL("\",\""), SYMBOL("!"), ID("Identifier"), SYMBOL(")"), SYMBOL("*"), LITERAL("\";\""), SYMBOL("!"), SYMBOL("->"), ID("Variable"), SYMBOL("|"), LITERAL("\"function\""), SYMBOL("!"), ID("Identifier"), SYMBOL("?"), LITERAL("\"(\""), SYMBOL("!"), ID("Param"), SYMBOL("+"), LITERAL("\")\""), SYMBOL("!"), SYMBOL("->"), ID("Call"), SYMBOL("|"), SYMBOL("("), SYMBOL("@"), ID("INT"), SYMBOL("|"), SYMBOL("@"), ID("STRING"), SYMBOL("&"), SYMBOL("~"), SYMBOL("@"), ID("INT"), SYMBOL(")"), SYMBOL("->"), ID("Value")]), [[Or([Or([Red([Seq([Seq([Seq([Ignore([Literal(["\"var\""])]), Ref(["Identifier"])]), Any([Seq([Ignore([Literal(["\",\""])]), Ref(["Identifier"])])])]), Ignore([Literal(["\";\""])])]), "Variable"]), Red([Seq([Seq([Seq([Seq([Ignore([Literal(["\"function\""])]), Maybe([Ref(["Identifier"])])]), Ignore([Literal(["\"(\""])])]), Many([Ref(["Param"])])]), Ignore([Literal(["\")\""])])]), "Call"])]), Red([Or([InstanceOf(["INT"]), And([InstanceOf(["STRING"]), Not([InstanceOf(["INT"])])])]), "Value"])])]]);
+    test.deepEqual(g.parse(start, [LITERAL("\"var\""), SYMBOL("!"), SYMBOL("<"), ID("Identifier"), SYMBOL("("), LITERAL("\",\""), SYMBOL("!"), ID("Identifier"), SYMBOL(")"), SYMBOL("*"), SYMBOL(">"), LITERAL("\";\""), SYMBOL("!"), SYMBOL("->"), ID("Variable"), SYMBOL("|"), LITERAL("\"function\""), SYMBOL("!"), ID("Identifier"), SYMBOL("?"), LITERAL("\"(\""), SYMBOL("!"), ID("Param"), SYMBOL("+"), LITERAL("\")\""), SYMBOL("!"), SYMBOL("->"), ID("Call"), SYMBOL("|"), SYMBOL("("), SYMBOL("@"), ID("INT"), SYMBOL("|"), SYMBOL("@"), ID("STRING"), SYMBOL("&"), SYMBOL("~"), SYMBOL("@"), ID("INT"), SYMBOL(")"), SYMBOL("->"), ID("Value")]), [[Or([Or([Red([Seq([Seq([Ignore([Literal(["\"var\""])]), Capture([Seq([Ref(["Identifier"]), Any([Seq([Ignore([Literal(["\",\""])]), Ref(["Identifier"])])])])])]), Ignore([Literal(["\";\""])])]), "Variable"]), Red([Seq([Seq([Seq([Seq([Ignore([Literal(["\"function\""])]), Maybe([Ref(["Identifier"])])]), Ignore([Literal(["\"(\""])])]), Many([Ref(["Param"])])]), Ignore([Literal(["\")\""])])]), "Call"])]), Red([Or([InstanceOf(["INT"]), And([InstanceOf(["STRING"]), Not([InstanceOf(["INT"])])])]), "Value"])])]]);
     test.done();
 };
 
@@ -240,11 +247,14 @@ exports["test \"LeftExpr\""] = function(test) {
 //     start Parser.Terminal;
 // 
 //     assert (SYMBOL "(", ID "id", SYMBOL ")") -> (Ref("id"));
+//     assert (SYMBOL "<", ID "id", SYMBOL ">") -> (Capture(Ref("id")));
 //     assert (SYMBOL "@", ID "STRING") -> (InstanceOf("STRING"));
 //     assert (SYMBOL ".") -> (One());
 //     assert (ID "id") -> (Ref("id"));
 //     assert (CLASS "[a-z]") -> (Class("[a-z]"));
 //     assert (LITERAL "\"literal\"") -> (Literal("\"literal\""));
+//     assert (KEYWORD "default") -> (Default());
+//     assert (KEYWORD "super") -> (Super());
 //     assert (SYMBOL "|") -> {};
 //     assert (KEYWORD "start") -> {};
 // }
@@ -252,11 +262,14 @@ exports["test \"Terminal\""] = function(test) {
     var start = new Parser().Terminal();
 
     test.deepEqual(g.parse(start, [SYMBOL("("), ID("id"), SYMBOL(")")]), [[Ref(["id"])]]);
+    test.deepEqual(g.parse(start, [SYMBOL("<"), ID("id"), SYMBOL(">")]), [[Capture([Ref(["id"])])]]);
     test.deepEqual(g.parse(start, [SYMBOL("@"), ID("STRING")]), [[InstanceOf(["STRING"])]]);
     test.deepEqual(g.parse(start, [SYMBOL(".")]), [[One([])]]);
     test.deepEqual(g.parse(start, [ID("id")]), [[Ref(["id"])]]);
     test.deepEqual(g.parse(start, [CLASS("[a-z]")]), [[Class(["[a-z]"])]]);
     test.deepEqual(g.parse(start, [LITERAL("\"literal\"")]), [[Literal(["\"literal\""])]]);
+    test.deepEqual(g.parse(start, [KEYWORD("default")]), [[Default([])]]);
+    test.deepEqual(g.parse(start, [KEYWORD("super")]), [[Super([])]]);
     test.deepEqual(g.parse(start, [SYMBOL("|")]), []);
     test.deepEqual(g.parse(start, [KEYWORD("start")]), []);
     test.done();

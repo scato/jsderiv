@@ -1,5 +1,5 @@
 /*
- * import {INT, STRING} from .common;
+ * import {INT, STRING} from .common-lib;
  * 
  * export constructor Statement, Expression;
  * 
@@ -14,13 +14,13 @@ import Parser from .parser;
 
 import {ID, LITERAL, SYMBOL, CLASS, KEYWORD} from .lexer;
 import {Module, Import, Export, Constructor, Grammar, Start, Rule} from .parser;
-import {Or, Red, And, Seq, Any, Many, Maybe, Ignore, Not, Look, Token, One, Ref, Class, Literal, InstanceOf} from .parser;
+import {Or, Red, And, Seq, Any, Many, Maybe, Ignore, Not, Look, Token, One, Ref, Class, Literal, InstanceOf, Default, Super, Capture} from .parser;
 
 export test "start" {
     start Parser.start;
     
     assert (
-        KEYWORD "import", SYMBOL "{", ID "INT", SYMBOL ",", ID "STRING", SYMBOL "}", KEYWORD "from", SYMBOL ".", ID "common", SYMBOL ";",
+        KEYWORD "import", SYMBOL "{", ID "INT", SYMBOL ",", ID "STRING", SYMBOL "}", KEYWORD "from", SYMBOL ".", ID "common-lib", SYMBOL ";",
         KEYWORD "export", KEYWORD "constructor", ID "Statement", SYMBOL ",", ID "Expression", SYMBOL ";",
         KEYWORD "export", KEYWORD "grammar", ID "Example", SYMBOL "{",
             KEYWORD "start", ID "NEWLINE", SYMBOL ";",
@@ -28,7 +28,7 @@ export test "start" {
         SYMBOL "}"
     ) -> (
         Module(
-            Import(("INT", "STRING"), ".common"),
+            Import(("INT", "STRING"), ".common-lib"),
             Export(Constructor("Statement", "Expression")),
             Export(Grammar("Example", (
                 Start(Ref("NEWLINE")),
@@ -42,9 +42,9 @@ export test "Import" {
     start Parser.Import;
     
     assert (
-        KEYWORD "import", SYMBOL "{", ID "INT", SYMBOL ",", ID "STRING", SYMBOL "}", KEYWORD "from", SYMBOL ".", ID "common", SYMBOL ";"
+        KEYWORD "import", SYMBOL "{", ID "INT", SYMBOL ",", ID "STRING", SYMBOL "}", KEYWORD "from", SYMBOL ".", ID "common-lib", SYMBOL ";"
     ) -> (
-        Import(("INT", "STRING"), ".common")
+        Import(("INT", "STRING"), ".common-lib")
     );
 }
 
@@ -82,6 +82,16 @@ export test "Grammar" {
             Rule("NEWLINE", Literal("\"\\n\""))
         ))
     );
+    
+    assert (
+        KEYWORD "grammar", ID "Example2", KEYWORD "extends", ID "Example", SYMBOL "{",
+            ID "NEWLINE", SYMBOL ":", KEYWORD "super", SYMBOL "|", LITERAL "\"\\r\\n\"", SYMBOL ";",
+        SYMBOL "}"
+    ) -> (
+        Grammar("Example2", "Example", (
+            Rule("NEWLINE", Or(Super(), Literal("\"\\r\\n\"")))
+        ))
+    );
 }
 
 export test "Rule" {
@@ -104,11 +114,12 @@ export test "ModuleIdentifier" {
     start Parser.ModuleIdentifier;
     
     assert (SYMBOL ".", ID "common") -> (".common");
+    assert (SYMBOL ".", LITERAL "'common-lib'") -> (".'common-lib'");
 }
 
 /*
  * ExpressionExample :
- *       "var"! Identifier (","! Identifier)* ";"! -> Variable
+ *       "var"! < Identifier (","! Identifier)* > ";"! -> Variable
  *     | "function"! Identifier? "("! Param+ ")"! -> Call
  *     | ( @INT | @STRING & ~ @INT ) -> Value ;
  */
@@ -117,9 +128,9 @@ export test "Expression" {
     start Parser.Expression;
     
     assert (
-        LITERAL "\"var\"", SYMBOL "!", ID "Identifier",
+        LITERAL "\"var\"", SYMBOL "!", SYMBOL "<", ID "Identifier",
             SYMBOL "(", LITERAL "\",\"", SYMBOL "!", ID "Identifier", SYMBOL ")",
-            SYMBOL "*", LITERAL "\";\"", SYMBOL "!", SYMBOL "->", ID "Variable",
+            SYMBOL "*", SYMBOL ">", LITERAL "\";\"", SYMBOL "!", SYMBOL "->", ID "Variable",
         SYMBOL "|", LITERAL "\"function\"", SYMBOL "!", ID "Identifier", SYMBOL "?",
             LITERAL "\"(\"", SYMBOL "!", ID "Param", SYMBOL "+", LITERAL "\")\"", SYMBOL "!",
             SYMBOL "->", ID "Call",
@@ -128,10 +139,12 @@ export test "Expression" {
             SYMBOL "->", ID "Value"
     ) -> (
         Or(Or(
-            Red(Seq(Seq(Seq(
+            Red(Seq(Seq(
                 Ignore(Literal("\"var\"")),
-                Ref("Identifier")),
-                Any(Seq(Ignore(Literal("\",\"")), Ref("Identifier")))),
+                Capture(Seq(
+                    Ref("Identifier"),
+                    Any(Seq(Ignore(Literal("\",\"")), Ref("Identifier")))
+                ))),
                 Ignore(Literal("\";\""))
             ), "Variable"),
             Red(Seq(Seq(Seq(Seq(
@@ -246,11 +259,14 @@ export test "Terminal" {
     start Parser.Terminal;
     
     assert (SYMBOL "(", ID "id", SYMBOL ")") -> (Ref("id"));
+    assert (SYMBOL "<", ID "id", SYMBOL ">") -> (Capture(Ref("id")));
     assert (SYMBOL "@", ID "STRING") -> (InstanceOf("STRING"));
     assert (SYMBOL ".") -> (One());
     assert (ID "id") -> (Ref("id"));
     assert (CLASS "[a-z]") -> (Class("[a-z]"));
     assert (LITERAL "\"literal\"") -> (Literal("\"literal\""));
+    assert (KEYWORD "default") -> (Default());
+    assert (KEYWORD "super") -> (Super());
     
     assert (SYMBOL "|") -> {};
     assert (KEYWORD "start") -> {};

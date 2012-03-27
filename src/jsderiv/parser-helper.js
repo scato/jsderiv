@@ -1,6 +1,14 @@
 exports.moduleIdentifierToPath = function(moduleIdentifier) {
     var i = moduleIdentifier.match(/^\.*/)[0].length;
-    var path = moduleIdentifier.substring(i).replace(/\./g, '/');
+    
+    var path = moduleIdentifier.substring(i).split('.').map(function(part) {
+        if(part.match(/^(?:'|")/)) {
+            return JSON.parse(part);
+        } else {
+            return part;
+        }
+    }).join('/');
+    
     var base = './';
     
     if(i === 0) {

@@ -8,7 +8,7 @@ export grammar Lexer {
     UNICODE: "\\u" [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F];
     
     SPACE:      ((" " | "\t" | "\r" | "\n")+ ?= ~(" " | "\t" | "\r" | "\n"))!;
-    ID:         [A-Za-z]+ ?= ~[A-Za-z] & ~KEYWORD -> ID;
+    ID:         [A-Za-z_] [A-Za-z0-9_]* ?= ~[A-Za-z0-9_] & ~KEYWORD -> ID;
     // COMMENT:    ("/*" ([^*] | "*" ?= ~"/")* "*/" | "//" ([^\r\n] | "\r" ?= ~"\n")* ?= NEWLINE)!;
     // COMMENT:    ("/*" ~(.* "*/" .*) "*/" | "//" ([^\r\n] | "\r" ?= ~"\n")* ?= NEWLINE)!;
     COMMENT:    ("/*" ([^*] | "*" ?= ~"/")* "*/" | "//" ~(.* NEWLINE .*) ?= NEWLINE)!;
@@ -23,7 +23,7 @@ export grammar Lexer {
                   | "*" | "+" | "?"
                   | "&" | "|" | "~"
                   | "?=" | "!" | "->" | "@"
-                  | "{" | "}" | "," | "."
+                  | "{" | "}" | "," | "." | "<" | ">"
                 ) -> SYMBOL;
     RANGE:      CHAR "-" CHAR;
     CATEGORY:   "\\d" | "\\D" | "\\s" | "\\S" | "\\w" | "\\W" | "\\p{" [A-Za-z_]* "}" | "\\P{" [A-Za-z_]* "}";
@@ -31,6 +31,6 @@ export grammar Lexer {
     CLASS:      "[" (RANGE | CHAR)* ("^" (RANGE | CHAR)+)? "]" -> CLASS;
     KEYWORD:    (
                     "grammar" | "start" | "import" | "from" | "export" | "constructor"
-                  | "augment" | "default"
+                  | "augment" | "default" | "extends" | "super"
                 ) -> KEYWORD;
 }

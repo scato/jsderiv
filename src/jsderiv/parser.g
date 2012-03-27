@@ -2,7 +2,7 @@ import {ID, CLASS, LITERAL} from .lexer;
 
 export constructor Module, Import, Export, Constructor, Grammar, Start, Rule, Augmentation;
 
-export constructor Or, Red, And, Seq, Any, Many, Maybe, Ignore, Not, Look, InstanceOf, One, Ref, Class, Literal, Default;
+export constructor Or, Red, And, Seq, Any, Many, Maybe, Ignore, Not, Look, InstanceOf, One, Ref, Class, Literal, Default, Super, Capture;
 
 export grammar Parser {
     start Statement* -> Module ;
@@ -12,7 +12,7 @@ export grammar Parser {
     Import          : "import"! IdentifierList "from"! ModuleIdentifier ";"! -> Import ;
     IdentifierList  : "{"! @ID (":"! @ID)? (","! @ID (":"! @ID)?)* "}"! -> List
                     | @ID (","! @ID)* -> List ;
-    ModuleIdentifier: "."* @ID ("." @ID)* -> Text ;
+    ModuleIdentifier: "."* (@ID | @LITERAL) ("." (@ID | @LITERAL))* -> Text ;
     
     Export          : "export"! Definition -> Export ;
     
@@ -20,7 +20,7 @@ export grammar Parser {
     
     Constructor     : "constructor"! @ID (","! @ID)* ";"! -> Constructor ;
     
-    Grammar         : "grammar"! @ID "{"! (Rule* -> List) "}"! -> Grammar ;
+    Grammar         : "grammar"! @ID ("extends"! @ID)? "{"! (Rule* -> List) "}"! -> Grammar ;
     Rule            : "start"! Expression ";"! -> Start
                     | @ID ":"! Expression ";"! -> Rule ;
     
@@ -46,10 +46,12 @@ export grammar Parser {
                 | Terminal ;
     
     Terminal    : "("! Expression ")"!
+                | "<"! Expression ">"! -> Capture
                 | "@"! @ID -> InstanceOf
                 | "."! -> One
                 | @ID -> Ref
                 | @CLASS -> Class
                 | @LITERAL -> Literal
-                | "default"! -> Default ;
+                | "default"! -> Default
+                | "super"! -> Super ;
 }

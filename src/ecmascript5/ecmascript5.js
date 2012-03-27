@@ -5,6 +5,92 @@ var l = require('../../lib/lookahead');
 var List = g.List,
     Text = g.Text;
 
+// export constructor PrimaryExpression, ArrayLiteral, ElementList, Elision, ObjectLiteral, PropertyNameAndValueList, PropertyAssignment, PropertyName, PropertySetParameterList, MemberExpression, NewExpression, CallExpression, Arguments, ArgumentList, LeftHandSideExpression, PostfixExpression, UnaryExpression, MultiplicativeExpression, AdditiveExpression, ShiftExpression, RelationalExpression, RelationalExpressionNoIn, EqualityExpression, EqualityExpressionNoIn, BitwiseANDExpression, BitwiseANDExpressionNoIn, BitwiseXORExpression, BitwiseXORExpressionNoIn, BitwiseORExpression, BitwiseORExpressionNoIn, LogicalANDExpression, LogicalANDExpressionNoIn, LogicalORExpression, LogicalORExpressionNoIn, ConditionalExpression, ConditionalExpressionNoIn, AssignmentExpression, AssignmentExpressionNoIn, AssignmentOperator, Expression, ExpressionNoIn, Statement, Block, StatementList, VariableStatement, VariableDeclarationList, VariableDeclarationListNoIn, VariableDeclaration, VariableDeclarationNoIn, Initialiser, InitialiserNoIn, EmptyStatement, ExpressionStatement, IfStatement, IterationStatement, ContinueStatement, BreakStatement, ReturnStatement, WithStatement, SwitchStatement, CaseBlock, CaseClauses, CaseClause, DefaultClause, LabelledStatement, ThrowStatement, TryStatement, Catch, Finally, DebuggerStatement, FunctionDeclaration, FunctionExpression, FormalParameterList, FunctionBody, Program, SourceElements, SourceElement, JSONText, JSONValue, JSONObject, JSONMember, JSONMemberList, JSONArray, JSONElementList;
+var PrimaryExpression           = exports.PrimaryExpression           = g.Cons("PrimaryExpression");
+var ArrayLiteral                = exports.ArrayLiteral                = g.Cons("ArrayLiteral");
+var ElementList                 = exports.ElementList                 = g.Cons("ElementList");
+var Elision                     = exports.Elision                     = g.Cons("Elision");
+var ObjectLiteral               = exports.ObjectLiteral               = g.Cons("ObjectLiteral");
+var PropertyNameAndValueList    = exports.PropertyNameAndValueList    = g.Cons("PropertyNameAndValueList");
+var PropertyAssignment          = exports.PropertyAssignment          = g.Cons("PropertyAssignment");
+var PropertyName                = exports.PropertyName                = g.Cons("PropertyName");
+var PropertySetParameterList    = exports.PropertySetParameterList    = g.Cons("PropertySetParameterList");
+var MemberExpression            = exports.MemberExpression            = g.Cons("MemberExpression");
+var NewExpression               = exports.NewExpression               = g.Cons("NewExpression");
+var CallExpression              = exports.CallExpression              = g.Cons("CallExpression");
+var Arguments                   = exports.Arguments                   = g.Cons("Arguments");
+var ArgumentList                = exports.ArgumentList                = g.Cons("ArgumentList");
+var LeftHandSideExpression      = exports.LeftHandSideExpression      = g.Cons("LeftHandSideExpression");
+var PostfixExpression           = exports.PostfixExpression           = g.Cons("PostfixExpression");
+var UnaryExpression             = exports.UnaryExpression             = g.Cons("UnaryExpression");
+var MultiplicativeExpression    = exports.MultiplicativeExpression    = g.Cons("MultiplicativeExpression");
+var AdditiveExpression          = exports.AdditiveExpression          = g.Cons("AdditiveExpression");
+var ShiftExpression             = exports.ShiftExpression             = g.Cons("ShiftExpression");
+var RelationalExpression        = exports.RelationalExpression        = g.Cons("RelationalExpression");
+var RelationalExpressionNoIn    = exports.RelationalExpressionNoIn    = g.Cons("RelationalExpressionNoIn");
+var EqualityExpression          = exports.EqualityExpression          = g.Cons("EqualityExpression");
+var EqualityExpressionNoIn      = exports.EqualityExpressionNoIn      = g.Cons("EqualityExpressionNoIn");
+var BitwiseANDExpression        = exports.BitwiseANDExpression        = g.Cons("BitwiseANDExpression");
+var BitwiseANDExpressionNoIn    = exports.BitwiseANDExpressionNoIn    = g.Cons("BitwiseANDExpressionNoIn");
+var BitwiseXORExpression        = exports.BitwiseXORExpression        = g.Cons("BitwiseXORExpression");
+var BitwiseXORExpressionNoIn    = exports.BitwiseXORExpressionNoIn    = g.Cons("BitwiseXORExpressionNoIn");
+var BitwiseORExpression         = exports.BitwiseORExpression         = g.Cons("BitwiseORExpression");
+var BitwiseORExpressionNoIn     = exports.BitwiseORExpressionNoIn     = g.Cons("BitwiseORExpressionNoIn");
+var LogicalANDExpression        = exports.LogicalANDExpression        = g.Cons("LogicalANDExpression");
+var LogicalANDExpressionNoIn    = exports.LogicalANDExpressionNoIn    = g.Cons("LogicalANDExpressionNoIn");
+var LogicalORExpression         = exports.LogicalORExpression         = g.Cons("LogicalORExpression");
+var LogicalORExpressionNoIn     = exports.LogicalORExpressionNoIn     = g.Cons("LogicalORExpressionNoIn");
+var ConditionalExpression       = exports.ConditionalExpression       = g.Cons("ConditionalExpression");
+var ConditionalExpressionNoIn   = exports.ConditionalExpressionNoIn   = g.Cons("ConditionalExpressionNoIn");
+var AssignmentExpression        = exports.AssignmentExpression        = g.Cons("AssignmentExpression");
+var AssignmentExpressionNoIn    = exports.AssignmentExpressionNoIn    = g.Cons("AssignmentExpressionNoIn");
+var AssignmentOperator          = exports.AssignmentOperator          = g.Cons("AssignmentOperator");
+var Expression                  = exports.Expression                  = g.Cons("Expression");
+var ExpressionNoIn              = exports.ExpressionNoIn              = g.Cons("ExpressionNoIn");
+var Statement                   = exports.Statement                   = g.Cons("Statement");
+var Block                       = exports.Block                       = g.Cons("Block");
+var StatementList               = exports.StatementList               = g.Cons("StatementList");
+var VariableStatement           = exports.VariableStatement           = g.Cons("VariableStatement");
+var VariableDeclarationList     = exports.VariableDeclarationList     = g.Cons("VariableDeclarationList");
+var VariableDeclarationListNoIn = exports.VariableDeclarationListNoIn = g.Cons("VariableDeclarationListNoIn");
+var VariableDeclaration         = exports.VariableDeclaration         = g.Cons("VariableDeclaration");
+var VariableDeclarationNoIn     = exports.VariableDeclarationNoIn     = g.Cons("VariableDeclarationNoIn");
+var Initialiser                 = exports.Initialiser                 = g.Cons("Initialiser");
+var InitialiserNoIn             = exports.InitialiserNoIn             = g.Cons("InitialiserNoIn");
+var EmptyStatement              = exports.EmptyStatement              = g.Cons("EmptyStatement");
+var ExpressionStatement         = exports.ExpressionStatement         = g.Cons("ExpressionStatement");
+var IfStatement                 = exports.IfStatement                 = g.Cons("IfStatement");
+var IterationStatement          = exports.IterationStatement          = g.Cons("IterationStatement");
+var ContinueStatement           = exports.ContinueStatement           = g.Cons("ContinueStatement");
+var BreakStatement              = exports.BreakStatement              = g.Cons("BreakStatement");
+var ReturnStatement             = exports.ReturnStatement             = g.Cons("ReturnStatement");
+var WithStatement               = exports.WithStatement               = g.Cons("WithStatement");
+var SwitchStatement             = exports.SwitchStatement             = g.Cons("SwitchStatement");
+var CaseBlock                   = exports.CaseBlock                   = g.Cons("CaseBlock");
+var CaseClauses                 = exports.CaseClauses                 = g.Cons("CaseClauses");
+var CaseClause                  = exports.CaseClause                  = g.Cons("CaseClause");
+var DefaultClause               = exports.DefaultClause               = g.Cons("DefaultClause");
+var LabelledStatement           = exports.LabelledStatement           = g.Cons("LabelledStatement");
+var ThrowStatement              = exports.ThrowStatement              = g.Cons("ThrowStatement");
+var TryStatement                = exports.TryStatement                = g.Cons("TryStatement");
+var Catch                       = exports.Catch                       = g.Cons("Catch");
+var Finally                     = exports.Finally                     = g.Cons("Finally");
+var DebuggerStatement           = exports.DebuggerStatement           = g.Cons("DebuggerStatement");
+var FunctionDeclaration         = exports.FunctionDeclaration         = g.Cons("FunctionDeclaration");
+var FunctionExpression          = exports.FunctionExpression          = g.Cons("FunctionExpression");
+var FormalParameterList         = exports.FormalParameterList         = g.Cons("FormalParameterList");
+var FunctionBody                = exports.FunctionBody                = g.Cons("FunctionBody");
+var Program                     = exports.Program                     = g.Cons("Program");
+var SourceElements              = exports.SourceElements              = g.Cons("SourceElements");
+var SourceElement               = exports.SourceElement               = g.Cons("SourceElement");
+var JSONText                    = exports.JSONText                    = g.Cons("JSONText");
+var JSONValue                   = exports.JSONValue                   = g.Cons("JSONValue");
+var JSONObject                  = exports.JSONObject                  = g.Cons("JSONObject");
+var JSONMember                  = exports.JSONMember                  = g.Cons("JSONMember");
+var JSONMemberList              = exports.JSONMemberList              = g.Cons("JSONMemberList");
+var JSONArray                   = exports.JSONArray                   = g.Cons("JSONArray");
+var JSONElementList             = exports.JSONElementList             = g.Cons("JSONElementList");
+
 // export grammar Lexical;
 var Lexical = exports.Lexical = function() {};
 
@@ -998,116 +1084,6 @@ var Lexical = exports.Lexical = function() {};
     };
 })();
 
-// JSONWhiteSpace: "\t" | "\r" | "\n" | " ";
-(function() {
-    var $cache;
-    
-    exports.Lexical.prototype.JSONWhiteSpace = function() {
-        return $cache || ($cache = g.Ref(function() {
-            return c.Or(c.Or(c.Or(g.Literal("\t"), g.Literal("\r")), g.Literal("\n")), g.Literal(" "));
-        }.bind(this), 'JSONWhiteSpace'));
-    };
-})();
-
-// JSONString: "\"" JSONStringCharacters? "\"";
-(function() {
-    var $cache;
-    
-    exports.Lexical.prototype.JSONString = function() {
-        return $cache || ($cache = g.Ref(function() {
-            return c.Seq(c.Seq(g.Literal("\""), c.Maybe(this.JSONStringCharacters())), g.Literal("\""));
-        }.bind(this), 'JSONString'));
-    };
-})();
-
-// JSONStringCharacters: JSONStringCharacter JSONStringCharacters?;
-(function() {
-    var $cache;
-    
-    exports.Lexical.prototype.JSONStringCharacters = function() {
-        return $cache || ($cache = g.Ref(function() {
-            return c.Seq(this.JSONStringCharacter(), c.Maybe(this.JSONStringCharacters()));
-        }.bind(this), 'JSONStringCharacters'));
-    };
-})();
-
-// JSONStringCharacter: SourceCharacter & ~ ("\"" | "\\" | [\u0000-\u001f]) | "\\" JSONEscapeSequence;
-(function() {
-    var $cache;
-    
-    exports.Lexical.prototype.JSONStringCharacter = function() {
-        return $cache || ($cache = g.Ref(function() {
-            return c.Or(c.And(this.SourceCharacter(), c.Not(c.Or(c.Or(g.Literal("\""), g.Literal("\\")), g.Range("\\u0000", "\\u001f")))), c.Seq(g.Literal("\\"), this.JSONEscapeSequence()));
-        }.bind(this), 'JSONStringCharacter'));
-    };
-})();
-
-// JSONEscapeSequence: JSONEscapeCharacter | UnicodeEscapeSequence;
-(function() {
-    var $cache;
-    
-    exports.Lexical.prototype.JSONEscapeSequence = function() {
-        return $cache || ($cache = g.Ref(function() {
-            return c.Or(this.JSONEscapeCharacter(), this.UnicodeEscapeSequence());
-        }.bind(this), 'JSONEscapeSequence'));
-    };
-})();
-
-// JSONEscapeCharacter: "\"" | "/" | "\\" | "b" | "f" | "n" | "r" | "t";
-(function() {
-    var $cache;
-    
-    exports.Lexical.prototype.JSONEscapeCharacter = function() {
-        return $cache || ($cache = g.Ref(function() {
-            return c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(g.Literal("\""), g.Literal("/")), g.Literal("\\")), g.Literal("b")), g.Literal("f")), g.Literal("n")), g.Literal("r")), g.Literal("t"));
-        }.bind(this), 'JSONEscapeCharacter'));
-    };
-})();
-
-// JSONNumber: "-"? DecimalIntegerLiteral JSONFraction? ExponentPart?;
-(function() {
-    var $cache;
-    
-    exports.Lexical.prototype.JSONNumber = function() {
-        return $cache || ($cache = g.Ref(function() {
-            return c.Seq(c.Seq(c.Seq(c.Maybe(g.Literal("-")), this.DecimalIntegerLiteral()), c.Maybe(this.JSONFraction())), c.Maybe(this.ExponentPart()));
-        }.bind(this), 'JSONNumber'));
-    };
-})();
-
-// JSONFraction: "." DecimalDigits;
-(function() {
-    var $cache;
-    
-    exports.Lexical.prototype.JSONFraction = function() {
-        return $cache || ($cache = g.Ref(function() {
-            return c.Seq(g.Literal("."), this.DecimalDigits());
-        }.bind(this), 'JSONFraction'));
-    };
-})();
-
-// JSONNullLiteral: NullLiteral;
-(function() {
-    var $cache;
-    
-    exports.Lexical.prototype.JSONNullLiteral = function() {
-        return $cache || ($cache = g.Ref(function() {
-            return this.NullLiteral();
-        }.bind(this), 'JSONNullLiteral'));
-    };
-})();
-
-// JSONBooleanLiteral: BooleanLiteral;
-(function() {
-    var $cache;
-    
-    exports.Lexical.prototype.JSONBooleanLiteral = function() {
-        return $cache || ($cache = g.Ref(function() {
-            return this.BooleanLiteral();
-        }.bind(this), 'JSONBooleanLiteral'));
-    };
-})();
-
 // NumericLiteral: DecimalLiteral | HexIntegerLiteral | OctalIntegerLiteral;
 (function() {
     var $cache;
@@ -1185,1163 +1161,856 @@ var Lexical = exports.Lexical = function() {};
     };
 })();
 
-// export grammar Syntactic;
+// export grammar Syntacticextends Lexical;
 var Syntactic = exports.Syntactic = function() {};
 
-// PrimaryExpression: "this" | Identifier | Literal | ArrayLiteral | ObjectLiteral | "(" LT*! Expression LT*! ")";
+exports.Syntactic.prototype = Object.create(Lexical.prototype);
+Syntactic.$super = Lexical;
+exports.Syntactic.prototype.constructor = Syntactic;
+
+// PrimaryExpression: ("this" | <Identifier> -> Text | <Literal> -> Text | ArrayLiteral | ObjectLiteral | ("(" -> Text) <LineTerminator>*! Expression <LineTerminator>*! (")" -> Text)) -> PrimaryExpression;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.PrimaryExpression = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Or(c.Or(c.Or(c.Or(c.Or(g.Literal("this"), this.Identifier()), this.Literal()), this.ArrayLiteral()), this.ObjectLiteral()), c.Seq(c.Seq(c.Seq(c.Seq(g.Literal("("), c.Ignore(c.Any(this.LT()))), this.Expression()), c.Ignore(c.Any(this.LT()))), g.Literal(")")));
+            return c.Red(c.Or(c.Or(c.Or(c.Or(c.Or(g.Literal("this"), c.Red(g.Capture(this.Identifier()), Text)), c.Red(g.Capture(this.Literal()), Text)), this.ArrayLiteral()), this.ObjectLiteral()), c.Seq(c.Seq(c.Seq(c.Seq(c.Red(g.Literal("("), Text), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.Expression()), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal(")"), Text))), PrimaryExpression);
         }.bind(this), 'PrimaryExpression'));
     };
 })();
 
-// ArrayLiteral: "[" LT*! Elision? LT*! "]" | "[" LT*! ElementList LT*! "]" | "[" LT*! ElementList LT*! "," LT*! Elision? LT*! "]";
+// ArrayLiteral: (("[" -> Text) <LineTerminator>*! Elision? <LineTerminator>*! ("]" -> Text) | ("[" -> Text) <LineTerminator>*! ElementList <LineTerminator>*! ("]" -> Text) | ("[" -> Text) <LineTerminator>*! ElementList <LineTerminator>*! ("," -> Text) <LineTerminator>*! Elision? <LineTerminator>*! ("]" -> Text)) -> ArrayLiteral;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.ArrayLiteral = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Or(c.Or(c.Seq(c.Seq(c.Seq(c.Seq(g.Literal("["), c.Ignore(c.Any(this.LT()))), c.Maybe(this.Elision())), c.Ignore(c.Any(this.LT()))), g.Literal("]")), c.Seq(c.Seq(c.Seq(c.Seq(g.Literal("["), c.Ignore(c.Any(this.LT()))), this.ElementList()), c.Ignore(c.Any(this.LT()))), g.Literal("]"))), c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(g.Literal("["), c.Ignore(c.Any(this.LT()))), this.ElementList()), c.Ignore(c.Any(this.LT()))), g.Literal(",")), c.Ignore(c.Any(this.LT()))), c.Maybe(this.Elision())), c.Ignore(c.Any(this.LT()))), g.Literal("]")));
+            return c.Red(c.Or(c.Or(c.Seq(c.Seq(c.Seq(c.Seq(c.Red(g.Literal("["), Text), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Maybe(this.Elision())), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("]"), Text)), c.Seq(c.Seq(c.Seq(c.Seq(c.Red(g.Literal("["), Text), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.ElementList()), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("]"), Text))), c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Red(g.Literal("["), Text), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.ElementList()), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal(","), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Maybe(this.Elision())), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("]"), Text))), ArrayLiteral);
         }.bind(this), 'ArrayLiteral'));
     };
 })();
 
-// ElementList: Elision? LT*! AssignmentExpression | ElementList LT*! "," LT*! Elision? LT*! AssignmentExpression;
+// ElementList: (Elision? <LineTerminator>*! AssignmentExpression | ElementList <LineTerminator>*! ("," -> Text) <LineTerminator>*! Elision? <LineTerminator>*! AssignmentExpression) -> ElementList;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.ElementList = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Or(c.Seq(c.Seq(c.Maybe(this.Elision()), c.Ignore(c.Any(this.LT()))), this.AssignmentExpression()), c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(this.ElementList(), c.Ignore(c.Any(this.LT()))), g.Literal(",")), c.Ignore(c.Any(this.LT()))), c.Maybe(this.Elision())), c.Ignore(c.Any(this.LT()))), this.AssignmentExpression()));
+            return c.Red(c.Or(c.Seq(c.Seq(c.Maybe(this.Elision()), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.AssignmentExpression()), c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(this.ElementList(), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal(","), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Maybe(this.Elision())), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.AssignmentExpression())), ElementList);
         }.bind(this), 'ElementList'));
     };
 })();
 
-// Elision: "," | Elision LT*! ",";
+// Elision: ("," | Elision <LineTerminator>*! ("," -> Text)) -> Elision;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.Elision = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Or(g.Literal(","), c.Seq(c.Seq(this.Elision(), c.Ignore(c.Any(this.LT()))), g.Literal(",")));
+            return c.Red(c.Or(g.Literal(","), c.Seq(c.Seq(this.Elision(), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal(","), Text))), Elision);
         }.bind(this), 'Elision'));
     };
 })();
 
-// ObjectLiteral: "{" LT*! "}" | "{" LT*! PropertyNameAndValueList LT*! "}" | "{" LT*! PropertyNameAndValueList LT*! "," LT*! "}";
+// ObjectLiteral: (("{" -> Text) <LineTerminator>*! ("}" -> Text) | ("{" -> Text) <LineTerminator>*! PropertyNameAndValueList <LineTerminator>*! ("}" -> Text) | ("{" -> Text) <LineTerminator>*! PropertyNameAndValueList <LineTerminator>*! ("," -> Text) <LineTerminator>*! ("}" -> Text)) -> ObjectLiteral;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.ObjectLiteral = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Or(c.Or(c.Seq(c.Seq(g.Literal("{"), c.Ignore(c.Any(this.LT()))), g.Literal("}")), c.Seq(c.Seq(c.Seq(c.Seq(g.Literal("{"), c.Ignore(c.Any(this.LT()))), this.PropertyNameAndValueList()), c.Ignore(c.Any(this.LT()))), g.Literal("}"))), c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(g.Literal("{"), c.Ignore(c.Any(this.LT()))), this.PropertyNameAndValueList()), c.Ignore(c.Any(this.LT()))), g.Literal(",")), c.Ignore(c.Any(this.LT()))), g.Literal("}")));
+            return c.Red(c.Or(c.Or(c.Seq(c.Seq(c.Red(g.Literal("{"), Text), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("}"), Text)), c.Seq(c.Seq(c.Seq(c.Seq(c.Red(g.Literal("{"), Text), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.PropertyNameAndValueList()), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("}"), Text))), c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Red(g.Literal("{"), Text), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.PropertyNameAndValueList()), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal(","), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("}"), Text))), ObjectLiteral);
         }.bind(this), 'ObjectLiteral'));
     };
 })();
 
-// PropertyNameAndValueList: PropertyAssignment | PropertyNameAndValueList LT*! "," LT*! PropertyAssignment;
+// PropertyNameAndValueList: (PropertyAssignment | PropertyNameAndValueList <LineTerminator>*! ("," -> Text) <LineTerminator>*! PropertyAssignment) -> PropertyNameAndValueList;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.PropertyNameAndValueList = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Or(this.PropertyAssignment(), c.Seq(c.Seq(c.Seq(c.Seq(this.PropertyNameAndValueList(), c.Ignore(c.Any(this.LT()))), g.Literal(",")), c.Ignore(c.Any(this.LT()))), this.PropertyAssignment()));
+            return c.Red(c.Or(this.PropertyAssignment(), c.Seq(c.Seq(c.Seq(c.Seq(this.PropertyNameAndValueList(), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal(","), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.PropertyAssignment())), PropertyNameAndValueList);
         }.bind(this), 'PropertyNameAndValueList'));
     };
 })();
 
-// PropertyAssignment: PropertyName LT*! ":" LT*! AssignmentExpression | "get" LT*! PropertyName LT*! "(" LT*! ")" LT*! "{" LT*! FunctionBody LT*! "}" | "set" LT*! PropertyName LT*! "(" LT*! PropertySetParameterList LT*! ")" LT*! "{" LT*! FunctionBody LT*! "}";
+// PropertyAssignment: (PropertyName <LineTerminator>*! (":" -> Text) <LineTerminator>*! AssignmentExpression | ("get" -> Text) <LineTerminator>*! PropertyName <LineTerminator>*! ("(" -> Text) <LineTerminator>*! (")" -> Text) <LineTerminator>*! ("{" -> Text) <LineTerminator>*! FunctionBody <LineTerminator>*! ("}" -> Text) | ("set" -> Text) <LineTerminator>*! PropertyName <LineTerminator>*! ("(" -> Text) <LineTerminator>*! PropertySetParameterList <LineTerminator>*! (")" -> Text) <LineTerminator>*! ("{" -> Text) <LineTerminator>*! FunctionBody <LineTerminator>*! ("}" -> Text)) -> PropertyAssignment;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.PropertyAssignment = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Or(c.Or(c.Seq(c.Seq(c.Seq(c.Seq(this.PropertyName(), c.Ignore(c.Any(this.LT()))), g.Literal(":")), c.Ignore(c.Any(this.LT()))), this.AssignmentExpression()), c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(g.Literal("get"), c.Ignore(c.Any(this.LT()))), this.PropertyName()), c.Ignore(c.Any(this.LT()))), g.Literal("(")), c.Ignore(c.Any(this.LT()))), g.Literal(")")), c.Ignore(c.Any(this.LT()))), g.Literal("{")), c.Ignore(c.Any(this.LT()))), this.FunctionBody()), c.Ignore(c.Any(this.LT()))), g.Literal("}"))), c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(g.Literal("set"), c.Ignore(c.Any(this.LT()))), this.PropertyName()), c.Ignore(c.Any(this.LT()))), g.Literal("(")), c.Ignore(c.Any(this.LT()))), this.PropertySetParameterList()), c.Ignore(c.Any(this.LT()))), g.Literal(")")), c.Ignore(c.Any(this.LT()))), g.Literal("{")), c.Ignore(c.Any(this.LT()))), this.FunctionBody()), c.Ignore(c.Any(this.LT()))), g.Literal("}")));
+            return c.Red(c.Or(c.Or(c.Seq(c.Seq(c.Seq(c.Seq(this.PropertyName(), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal(":"), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.AssignmentExpression()), c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Red(g.Literal("get"), Text), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.PropertyName()), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("("), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal(")"), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("{"), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.FunctionBody()), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("}"), Text))), c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Red(g.Literal("set"), Text), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.PropertyName()), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("("), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.PropertySetParameterList()), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal(")"), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("{"), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.FunctionBody()), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("}"), Text))), PropertyAssignment);
         }.bind(this), 'PropertyAssignment'));
     };
 })();
 
-// PropertyName: IdentifierName | StringLiteral | NumericLiteral;
+// PropertyName: (<IdentifierName> -> Text | <StringLiteral> -> Text | <NumericLiteral> -> Text) -> PropertyName;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.PropertyName = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Or(c.Or(this.IdentifierName(), this.StringLiteral()), this.NumericLiteral());
+            return c.Red(c.Or(c.Or(c.Red(g.Capture(this.IdentifierName()), Text), c.Red(g.Capture(this.StringLiteral()), Text)), c.Red(g.Capture(this.NumericLiteral()), Text)), PropertyName);
         }.bind(this), 'PropertyName'));
     };
 })();
 
-// PropertySetParameterList: Identifier;
+// PropertySetParameterList: <Identifier> -> Text -> PropertySetParameterList;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.PropertySetParameterList = function() {
         return $cache || ($cache = g.Ref(function() {
-            return this.Identifier();
+            return c.Red(c.Red(g.Capture(this.Identifier()), Text), PropertySetParameterList);
         }.bind(this), 'PropertySetParameterList'));
     };
 })();
 
-// MemberExpression: PrimaryExpression | FunctionExpression | MemberExpression LT*! "[" LT*! Expression LT*! "]" | MemberExpression LT*! "." LT*! IdentifierName | "new" LT*! MemberExpression LT*! Arguments;
+// MemberExpression: (PrimaryExpression | FunctionExpression | MemberExpression <LineTerminator>*! ("[" -> Text) <LineTerminator>*! Expression <LineTerminator>*! ("]" -> Text) | MemberExpression <LineTerminator>*! ("." -> Text) <LineTerminator>*! (<IdentifierName> -> Text) | ("new" -> Text) <LineTerminator>*! MemberExpression <LineTerminator>*! Arguments) -> MemberExpression;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.MemberExpression = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Or(c.Or(c.Or(c.Or(this.PrimaryExpression(), this.FunctionExpression()), c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(this.MemberExpression(), c.Ignore(c.Any(this.LT()))), g.Literal("[")), c.Ignore(c.Any(this.LT()))), this.Expression()), c.Ignore(c.Any(this.LT()))), g.Literal("]"))), c.Seq(c.Seq(c.Seq(c.Seq(this.MemberExpression(), c.Ignore(c.Any(this.LT()))), g.Literal(".")), c.Ignore(c.Any(this.LT()))), this.IdentifierName())), c.Seq(c.Seq(c.Seq(c.Seq(g.Literal("new"), c.Ignore(c.Any(this.LT()))), this.MemberExpression()), c.Ignore(c.Any(this.LT()))), this.Arguments()));
+            return c.Red(c.Or(c.Or(c.Or(c.Or(this.PrimaryExpression(), this.FunctionExpression()), c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(this.MemberExpression(), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("["), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.Expression()), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("]"), Text))), c.Seq(c.Seq(c.Seq(c.Seq(this.MemberExpression(), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("."), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Capture(this.IdentifierName()), Text))), c.Seq(c.Seq(c.Seq(c.Seq(c.Red(g.Literal("new"), Text), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.MemberExpression()), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.Arguments())), MemberExpression);
         }.bind(this), 'MemberExpression'));
     };
 })();
 
-// NewExpression: MemberExpression | "new" LT*! NewExpression;
+// NewExpression: (MemberExpression | ("new" -> Text) <LineTerminator>*! NewExpression) -> NewExpression;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.NewExpression = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Or(this.MemberExpression(), c.Seq(c.Seq(g.Literal("new"), c.Ignore(c.Any(this.LT()))), this.NewExpression()));
+            return c.Red(c.Or(this.MemberExpression(), c.Seq(c.Seq(c.Red(g.Literal("new"), Text), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.NewExpression())), NewExpression);
         }.bind(this), 'NewExpression'));
     };
 })();
 
-// CallExpression: MemberExpression LT*! Arguments | CallExpression LT*! Arguments | CallExpression LT*! "[" LT*! Expression LT*! "]" | CallExpression LT*! "." LT*! IdentifierName;
+// CallExpression: (MemberExpression <LineTerminator>*! Arguments | CallExpression <LineTerminator>*! Arguments | CallExpression <LineTerminator>*! ("[" -> Text) <LineTerminator>*! Expression <LineTerminator>*! ("]" -> Text) | CallExpression <LineTerminator>*! ("." -> Text) <LineTerminator>*! (<IdentifierName> -> Text)) -> CallExpression;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.CallExpression = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Or(c.Or(c.Or(c.Seq(c.Seq(this.MemberExpression(), c.Ignore(c.Any(this.LT()))), this.Arguments()), c.Seq(c.Seq(this.CallExpression(), c.Ignore(c.Any(this.LT()))), this.Arguments())), c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(this.CallExpression(), c.Ignore(c.Any(this.LT()))), g.Literal("[")), c.Ignore(c.Any(this.LT()))), this.Expression()), c.Ignore(c.Any(this.LT()))), g.Literal("]"))), c.Seq(c.Seq(c.Seq(c.Seq(this.CallExpression(), c.Ignore(c.Any(this.LT()))), g.Literal(".")), c.Ignore(c.Any(this.LT()))), this.IdentifierName()));
+            return c.Red(c.Or(c.Or(c.Or(c.Seq(c.Seq(this.MemberExpression(), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.Arguments()), c.Seq(c.Seq(this.CallExpression(), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.Arguments())), c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(this.CallExpression(), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("["), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.Expression()), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("]"), Text))), c.Seq(c.Seq(c.Seq(c.Seq(this.CallExpression(), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("."), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Capture(this.IdentifierName()), Text))), CallExpression);
         }.bind(this), 'CallExpression'));
     };
 })();
 
-// Arguments: "(" LT*! ")" | "(" LT*! ArgumentList LT*! ")";
+// Arguments: (("(" -> Text) <LineTerminator>*! (")" -> Text) | ("(" -> Text) <LineTerminator>*! ArgumentList <LineTerminator>*! (")" -> Text)) -> Arguments;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.Arguments = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Or(c.Seq(c.Seq(g.Literal("("), c.Ignore(c.Any(this.LT()))), g.Literal(")")), c.Seq(c.Seq(c.Seq(c.Seq(g.Literal("("), c.Ignore(c.Any(this.LT()))), this.ArgumentList()), c.Ignore(c.Any(this.LT()))), g.Literal(")")));
+            return c.Red(c.Or(c.Seq(c.Seq(c.Red(g.Literal("("), Text), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal(")"), Text)), c.Seq(c.Seq(c.Seq(c.Seq(c.Red(g.Literal("("), Text), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.ArgumentList()), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal(")"), Text))), Arguments);
         }.bind(this), 'Arguments'));
     };
 })();
 
-// ArgumentList: AssignmentExpression | ArgumentList LT*! "," LT*! AssignmentExpression;
+// ArgumentList: (AssignmentExpression | ArgumentList <LineTerminator>*! ("," -> Text) <LineTerminator>*! AssignmentExpression) -> ArgumentList;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.ArgumentList = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Or(this.AssignmentExpression(), c.Seq(c.Seq(c.Seq(c.Seq(this.ArgumentList(), c.Ignore(c.Any(this.LT()))), g.Literal(",")), c.Ignore(c.Any(this.LT()))), this.AssignmentExpression()));
+            return c.Red(c.Or(this.AssignmentExpression(), c.Seq(c.Seq(c.Seq(c.Seq(this.ArgumentList(), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal(","), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.AssignmentExpression())), ArgumentList);
         }.bind(this), 'ArgumentList'));
     };
 })();
 
-// LeftHandSideExpression: NewExpression | CallExpression;
+// LeftHandSideExpression: (NewExpression | CallExpression) -> LeftHandSideExpression;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.LeftHandSideExpression = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Or(this.NewExpression(), this.CallExpression());
+            return c.Red(c.Or(this.NewExpression(), this.CallExpression()), LeftHandSideExpression);
         }.bind(this), 'LeftHandSideExpression'));
     };
 })();
 
-// PostfixExpression: LeftHandSideExpression | LeftHandSideExpression (LT & ~ LineTerminator)*! "++" | LeftHandSideExpression (LT & ~ LineTerminator)*! "--";
+// PostfixExpression: (LeftHandSideExpression | LeftHandSideExpression ("++" -> Text) | LeftHandSideExpression ("--" -> Text)) -> PostfixExpression;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.PostfixExpression = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Or(c.Or(this.LeftHandSideExpression(), c.Seq(c.Seq(this.LeftHandSideExpression(), c.Ignore(c.Any(c.And(this.LT(), c.Not(this.LineTerminator()))))), g.Literal("++"))), c.Seq(c.Seq(this.LeftHandSideExpression(), c.Ignore(c.Any(c.And(this.LT(), c.Not(this.LineTerminator()))))), g.Literal("--")));
+            return c.Red(c.Or(c.Or(this.LeftHandSideExpression(), c.Seq(this.LeftHandSideExpression(), c.Red(g.Literal("++"), Text))), c.Seq(this.LeftHandSideExpression(), c.Red(g.Literal("--"), Text))), PostfixExpression);
         }.bind(this), 'PostfixExpression'));
     };
 })();
 
-// UnaryExpression: PostfixExpression | "delete" LT*! UnaryExpression | "void" LT*! UnaryExpression | "typeof" LT*! UnaryExpression | "++" LT*! UnaryExpression | "--" LT*! UnaryExpression | "+" LT*! UnaryExpression | "-" LT*! UnaryExpression | "~" LT*! UnaryExpression | "!" LT*! UnaryExpression;
+// UnaryExpression: (PostfixExpression | ("delete" -> Text) <LineTerminator>*! UnaryExpression | ("void" -> Text) <LineTerminator>*! UnaryExpression | ("typeof" -> Text) <LineTerminator>*! UnaryExpression | ("++" -> Text) <LineTerminator>*! UnaryExpression | ("--" -> Text) <LineTerminator>*! UnaryExpression | ("+" -> Text) <LineTerminator>*! UnaryExpression | ("-" -> Text) <LineTerminator>*! UnaryExpression | ("~" -> Text) <LineTerminator>*! UnaryExpression | ("!" -> Text) <LineTerminator>*! UnaryExpression) -> UnaryExpression;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.UnaryExpression = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(this.PostfixExpression(), c.Seq(c.Seq(g.Literal("delete"), c.Ignore(c.Any(this.LT()))), this.UnaryExpression())), c.Seq(c.Seq(g.Literal("void"), c.Ignore(c.Any(this.LT()))), this.UnaryExpression())), c.Seq(c.Seq(g.Literal("typeof"), c.Ignore(c.Any(this.LT()))), this.UnaryExpression())), c.Seq(c.Seq(g.Literal("++"), c.Ignore(c.Any(this.LT()))), this.UnaryExpression())), c.Seq(c.Seq(g.Literal("--"), c.Ignore(c.Any(this.LT()))), this.UnaryExpression())), c.Seq(c.Seq(g.Literal("+"), c.Ignore(c.Any(this.LT()))), this.UnaryExpression())), c.Seq(c.Seq(g.Literal("-"), c.Ignore(c.Any(this.LT()))), this.UnaryExpression())), c.Seq(c.Seq(g.Literal("~"), c.Ignore(c.Any(this.LT()))), this.UnaryExpression())), c.Seq(c.Seq(g.Literal("!"), c.Ignore(c.Any(this.LT()))), this.UnaryExpression()));
+            return c.Red(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(this.PostfixExpression(), c.Seq(c.Seq(c.Red(g.Literal("delete"), Text), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.UnaryExpression())), c.Seq(c.Seq(c.Red(g.Literal("void"), Text), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.UnaryExpression())), c.Seq(c.Seq(c.Red(g.Literal("typeof"), Text), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.UnaryExpression())), c.Seq(c.Seq(c.Red(g.Literal("++"), Text), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.UnaryExpression())), c.Seq(c.Seq(c.Red(g.Literal("--"), Text), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.UnaryExpression())), c.Seq(c.Seq(c.Red(g.Literal("+"), Text), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.UnaryExpression())), c.Seq(c.Seq(c.Red(g.Literal("-"), Text), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.UnaryExpression())), c.Seq(c.Seq(c.Red(g.Literal("~"), Text), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.UnaryExpression())), c.Seq(c.Seq(c.Red(g.Literal("!"), Text), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.UnaryExpression())), UnaryExpression);
         }.bind(this), 'UnaryExpression'));
     };
 })();
 
-// MultiplicativeExpression: UnaryExpression | MultiplicativeExpression LT*! "*" LT*! UnaryExpression | MultiplicativeExpression LT*! "/" LT*! UnaryExpression | MultiplicativeExpression LT*! "%" LT*! UnaryExpression;
+// MultiplicativeExpression: (UnaryExpression | MultiplicativeExpression <LineTerminator>*! ("*" -> Text) <LineTerminator>*! UnaryExpression | MultiplicativeExpression <LineTerminator>*! ("/" -> Text) <LineTerminator>*! UnaryExpression | MultiplicativeExpression <LineTerminator>*! ("%" -> Text) <LineTerminator>*! UnaryExpression) -> MultiplicativeExpression;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.MultiplicativeExpression = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Or(c.Or(c.Or(this.UnaryExpression(), c.Seq(c.Seq(c.Seq(c.Seq(this.MultiplicativeExpression(), c.Ignore(c.Any(this.LT()))), g.Literal("*")), c.Ignore(c.Any(this.LT()))), this.UnaryExpression())), c.Seq(c.Seq(c.Seq(c.Seq(this.MultiplicativeExpression(), c.Ignore(c.Any(this.LT()))), g.Literal("/")), c.Ignore(c.Any(this.LT()))), this.UnaryExpression())), c.Seq(c.Seq(c.Seq(c.Seq(this.MultiplicativeExpression(), c.Ignore(c.Any(this.LT()))), g.Literal("%")), c.Ignore(c.Any(this.LT()))), this.UnaryExpression()));
+            return c.Red(c.Or(c.Or(c.Or(this.UnaryExpression(), c.Seq(c.Seq(c.Seq(c.Seq(this.MultiplicativeExpression(), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("*"), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.UnaryExpression())), c.Seq(c.Seq(c.Seq(c.Seq(this.MultiplicativeExpression(), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("/"), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.UnaryExpression())), c.Seq(c.Seq(c.Seq(c.Seq(this.MultiplicativeExpression(), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("%"), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.UnaryExpression())), MultiplicativeExpression);
         }.bind(this), 'MultiplicativeExpression'));
     };
 })();
 
-// AdditiveExpression: MultiplicativeExpression | AdditiveExpression LT*! "+" LT*! MultiplicativeExpression | AdditiveExpression LT*! "-" LT*! MultiplicativeExpression;
+// AdditiveExpression: (MultiplicativeExpression | AdditiveExpression <LineTerminator>*! ("+" -> Text) <LineTerminator>*! MultiplicativeExpression | AdditiveExpression <LineTerminator>*! ("-" -> Text) <LineTerminator>*! MultiplicativeExpression) -> AdditiveExpression;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.AdditiveExpression = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Or(c.Or(this.MultiplicativeExpression(), c.Seq(c.Seq(c.Seq(c.Seq(this.AdditiveExpression(), c.Ignore(c.Any(this.LT()))), g.Literal("+")), c.Ignore(c.Any(this.LT()))), this.MultiplicativeExpression())), c.Seq(c.Seq(c.Seq(c.Seq(this.AdditiveExpression(), c.Ignore(c.Any(this.LT()))), g.Literal("-")), c.Ignore(c.Any(this.LT()))), this.MultiplicativeExpression()));
+            return c.Red(c.Or(c.Or(this.MultiplicativeExpression(), c.Seq(c.Seq(c.Seq(c.Seq(this.AdditiveExpression(), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("+"), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.MultiplicativeExpression())), c.Seq(c.Seq(c.Seq(c.Seq(this.AdditiveExpression(), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("-"), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.MultiplicativeExpression())), AdditiveExpression);
         }.bind(this), 'AdditiveExpression'));
     };
 })();
 
-// ShiftExpression: AdditiveExpression | ShiftExpression LT*! "<<" LT*! AdditiveExpression | ShiftExpression LT*! ">>" LT*! AdditiveExpression | ShiftExpression LT*! ">>>" LT*! AdditiveExpression;
+// ShiftExpression: (AdditiveExpression | ShiftExpression <LineTerminator>*! ("<<" -> Text) <LineTerminator>*! AdditiveExpression | ShiftExpression <LineTerminator>*! (">>" -> Text) <LineTerminator>*! AdditiveExpression | ShiftExpression <LineTerminator>*! (">>>" -> Text) <LineTerminator>*! AdditiveExpression) -> ShiftExpression;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.ShiftExpression = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Or(c.Or(c.Or(this.AdditiveExpression(), c.Seq(c.Seq(c.Seq(c.Seq(this.ShiftExpression(), c.Ignore(c.Any(this.LT()))), g.Literal("<<")), c.Ignore(c.Any(this.LT()))), this.AdditiveExpression())), c.Seq(c.Seq(c.Seq(c.Seq(this.ShiftExpression(), c.Ignore(c.Any(this.LT()))), g.Literal(">>")), c.Ignore(c.Any(this.LT()))), this.AdditiveExpression())), c.Seq(c.Seq(c.Seq(c.Seq(this.ShiftExpression(), c.Ignore(c.Any(this.LT()))), g.Literal(">>>")), c.Ignore(c.Any(this.LT()))), this.AdditiveExpression()));
+            return c.Red(c.Or(c.Or(c.Or(this.AdditiveExpression(), c.Seq(c.Seq(c.Seq(c.Seq(this.ShiftExpression(), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("<<"), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.AdditiveExpression())), c.Seq(c.Seq(c.Seq(c.Seq(this.ShiftExpression(), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal(">>"), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.AdditiveExpression())), c.Seq(c.Seq(c.Seq(c.Seq(this.ShiftExpression(), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal(">>>"), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.AdditiveExpression())), ShiftExpression);
         }.bind(this), 'ShiftExpression'));
     };
 })();
 
-// RelationalExpression: ShiftExpression | RelationalExpression LT*! "<" LT*! ShiftExpression | RelationalExpression LT*! ">" LT*! ShiftExpression | RelationalExpression LT*! "<=" LT*! ShiftExpression | RelationalExpression LT*! ">=" LT*! ShiftExpression | RelationalExpression LT*! "instanceof" LT*! ShiftExpression | RelationalExpression LT*! "in" LT*! ShiftExpression;
+// RelationalExpression: (ShiftExpression | RelationalExpression <LineTerminator>*! ("<" -> Text) <LineTerminator>*! ShiftExpression | RelationalExpression <LineTerminator>*! (">" -> Text) <LineTerminator>*! ShiftExpression | RelationalExpression <LineTerminator>*! ("<=" -> Text) <LineTerminator>*! ShiftExpression | RelationalExpression <LineTerminator>*! (">=" -> Text) <LineTerminator>*! ShiftExpression | RelationalExpression <LineTerminator>*! ("instanceof" -> Text) <LineTerminator>*! ShiftExpression | RelationalExpression <LineTerminator>*! ("in" -> Text) <LineTerminator>*! ShiftExpression) -> RelationalExpression;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.RelationalExpression = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(this.ShiftExpression(), c.Seq(c.Seq(c.Seq(c.Seq(this.RelationalExpression(), c.Ignore(c.Any(this.LT()))), g.Literal("<")), c.Ignore(c.Any(this.LT()))), this.ShiftExpression())), c.Seq(c.Seq(c.Seq(c.Seq(this.RelationalExpression(), c.Ignore(c.Any(this.LT()))), g.Literal(">")), c.Ignore(c.Any(this.LT()))), this.ShiftExpression())), c.Seq(c.Seq(c.Seq(c.Seq(this.RelationalExpression(), c.Ignore(c.Any(this.LT()))), g.Literal("<=")), c.Ignore(c.Any(this.LT()))), this.ShiftExpression())), c.Seq(c.Seq(c.Seq(c.Seq(this.RelationalExpression(), c.Ignore(c.Any(this.LT()))), g.Literal(">=")), c.Ignore(c.Any(this.LT()))), this.ShiftExpression())), c.Seq(c.Seq(c.Seq(c.Seq(this.RelationalExpression(), c.Ignore(c.Any(this.LT()))), g.Literal("instanceof")), c.Ignore(c.Any(this.LT()))), this.ShiftExpression())), c.Seq(c.Seq(c.Seq(c.Seq(this.RelationalExpression(), c.Ignore(c.Any(this.LT()))), g.Literal("in")), c.Ignore(c.Any(this.LT()))), this.ShiftExpression()));
+            return c.Red(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(this.ShiftExpression(), c.Seq(c.Seq(c.Seq(c.Seq(this.RelationalExpression(), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("<"), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.ShiftExpression())), c.Seq(c.Seq(c.Seq(c.Seq(this.RelationalExpression(), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal(">"), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.ShiftExpression())), c.Seq(c.Seq(c.Seq(c.Seq(this.RelationalExpression(), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("<="), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.ShiftExpression())), c.Seq(c.Seq(c.Seq(c.Seq(this.RelationalExpression(), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal(">="), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.ShiftExpression())), c.Seq(c.Seq(c.Seq(c.Seq(this.RelationalExpression(), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("instanceof"), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.ShiftExpression())), c.Seq(c.Seq(c.Seq(c.Seq(this.RelationalExpression(), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("in"), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.ShiftExpression())), RelationalExpression);
         }.bind(this), 'RelationalExpression'));
     };
 })();
 
-// RelationalExpressionNoIn: ShiftExpression | RelationalExpressionNoIn LT*! "<" LT*! ShiftExpression | RelationalExpressionNoIn LT*! ">" LT*! ShiftExpression | RelationalExpressionNoIn LT*! "<=" LT*! ShiftExpression | RelationalExpressionNoIn LT*! ">=" LT*! ShiftExpression | RelationalExpressionNoIn LT*! "instanceof" LT*! ShiftExpression;
+// RelationalExpressionNoIn: (ShiftExpression | RelationalExpressionNoIn <LineTerminator>*! ("<" -> Text) <LineTerminator>*! ShiftExpression | RelationalExpressionNoIn <LineTerminator>*! (">" -> Text) <LineTerminator>*! ShiftExpression | RelationalExpressionNoIn <LineTerminator>*! ("<=" -> Text) <LineTerminator>*! ShiftExpression | RelationalExpressionNoIn <LineTerminator>*! (">=" -> Text) <LineTerminator>*! ShiftExpression | RelationalExpressionNoIn <LineTerminator>*! ("instanceof" -> Text) <LineTerminator>*! ShiftExpression) -> RelationalExpressionNoIn;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.RelationalExpressionNoIn = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Or(c.Or(c.Or(c.Or(c.Or(this.ShiftExpression(), c.Seq(c.Seq(c.Seq(c.Seq(this.RelationalExpressionNoIn(), c.Ignore(c.Any(this.LT()))), g.Literal("<")), c.Ignore(c.Any(this.LT()))), this.ShiftExpression())), c.Seq(c.Seq(c.Seq(c.Seq(this.RelationalExpressionNoIn(), c.Ignore(c.Any(this.LT()))), g.Literal(">")), c.Ignore(c.Any(this.LT()))), this.ShiftExpression())), c.Seq(c.Seq(c.Seq(c.Seq(this.RelationalExpressionNoIn(), c.Ignore(c.Any(this.LT()))), g.Literal("<=")), c.Ignore(c.Any(this.LT()))), this.ShiftExpression())), c.Seq(c.Seq(c.Seq(c.Seq(this.RelationalExpressionNoIn(), c.Ignore(c.Any(this.LT()))), g.Literal(">=")), c.Ignore(c.Any(this.LT()))), this.ShiftExpression())), c.Seq(c.Seq(c.Seq(c.Seq(this.RelationalExpressionNoIn(), c.Ignore(c.Any(this.LT()))), g.Literal("instanceof")), c.Ignore(c.Any(this.LT()))), this.ShiftExpression()));
+            return c.Red(c.Or(c.Or(c.Or(c.Or(c.Or(this.ShiftExpression(), c.Seq(c.Seq(c.Seq(c.Seq(this.RelationalExpressionNoIn(), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("<"), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.ShiftExpression())), c.Seq(c.Seq(c.Seq(c.Seq(this.RelationalExpressionNoIn(), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal(">"), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.ShiftExpression())), c.Seq(c.Seq(c.Seq(c.Seq(this.RelationalExpressionNoIn(), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("<="), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.ShiftExpression())), c.Seq(c.Seq(c.Seq(c.Seq(this.RelationalExpressionNoIn(), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal(">="), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.ShiftExpression())), c.Seq(c.Seq(c.Seq(c.Seq(this.RelationalExpressionNoIn(), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("instanceof"), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.ShiftExpression())), RelationalExpressionNoIn);
         }.bind(this), 'RelationalExpressionNoIn'));
     };
 })();
 
-// EqualityExpression: RelationalExpression | EqualityExpression LT*! "==" LT*! RelationalExpression | EqualityExpression LT*! "!=" LT*! RelationalExpression | EqualityExpression LT*! "===" LT*! RelationalExpression | EqualityExpression LT*! "!==" LT*! RelationalExpression;
+// EqualityExpression: (RelationalExpression | EqualityExpression <LineTerminator>*! ("==" -> Text) <LineTerminator>*! RelationalExpression | EqualityExpression <LineTerminator>*! ("!=" -> Text) <LineTerminator>*! RelationalExpression | EqualityExpression <LineTerminator>*! ("===" -> Text) <LineTerminator>*! RelationalExpression | EqualityExpression <LineTerminator>*! ("!==" -> Text) <LineTerminator>*! RelationalExpression) -> EqualityExpression;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.EqualityExpression = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Or(c.Or(c.Or(c.Or(this.RelationalExpression(), c.Seq(c.Seq(c.Seq(c.Seq(this.EqualityExpression(), c.Ignore(c.Any(this.LT()))), g.Literal("==")), c.Ignore(c.Any(this.LT()))), this.RelationalExpression())), c.Seq(c.Seq(c.Seq(c.Seq(this.EqualityExpression(), c.Ignore(c.Any(this.LT()))), g.Literal("!=")), c.Ignore(c.Any(this.LT()))), this.RelationalExpression())), c.Seq(c.Seq(c.Seq(c.Seq(this.EqualityExpression(), c.Ignore(c.Any(this.LT()))), g.Literal("===")), c.Ignore(c.Any(this.LT()))), this.RelationalExpression())), c.Seq(c.Seq(c.Seq(c.Seq(this.EqualityExpression(), c.Ignore(c.Any(this.LT()))), g.Literal("!==")), c.Ignore(c.Any(this.LT()))), this.RelationalExpression()));
+            return c.Red(c.Or(c.Or(c.Or(c.Or(this.RelationalExpression(), c.Seq(c.Seq(c.Seq(c.Seq(this.EqualityExpression(), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("=="), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.RelationalExpression())), c.Seq(c.Seq(c.Seq(c.Seq(this.EqualityExpression(), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("!="), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.RelationalExpression())), c.Seq(c.Seq(c.Seq(c.Seq(this.EqualityExpression(), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("==="), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.RelationalExpression())), c.Seq(c.Seq(c.Seq(c.Seq(this.EqualityExpression(), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("!=="), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.RelationalExpression())), EqualityExpression);
         }.bind(this), 'EqualityExpression'));
     };
 })();
 
-// EqualityExpressionNoIn: RelationalExpressionNoIn | EqualityExpressionNoIn LT*! "==" LT*! RelationalExpressionNoIn | EqualityExpressionNoIn LT*! "!=" LT*! RelationalExpressionNoIn | EqualityExpressionNoIn LT*! "===" LT*! RelationalExpressionNoIn | EqualityExpressionNoIn LT*! "!==" LT*! RelationalExpressionNoIn;
+// EqualityExpressionNoIn: (RelationalExpressionNoIn | EqualityExpressionNoIn <LineTerminator>*! ("==" -> Text) <LineTerminator>*! RelationalExpressionNoIn | EqualityExpressionNoIn <LineTerminator>*! ("!=" -> Text) <LineTerminator>*! RelationalExpressionNoIn | EqualityExpressionNoIn <LineTerminator>*! ("===" -> Text) <LineTerminator>*! RelationalExpressionNoIn | EqualityExpressionNoIn <LineTerminator>*! ("!==" -> Text) <LineTerminator>*! RelationalExpressionNoIn) -> EqualityExpressionNoIn;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.EqualityExpressionNoIn = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Or(c.Or(c.Or(c.Or(this.RelationalExpressionNoIn(), c.Seq(c.Seq(c.Seq(c.Seq(this.EqualityExpressionNoIn(), c.Ignore(c.Any(this.LT()))), g.Literal("==")), c.Ignore(c.Any(this.LT()))), this.RelationalExpressionNoIn())), c.Seq(c.Seq(c.Seq(c.Seq(this.EqualityExpressionNoIn(), c.Ignore(c.Any(this.LT()))), g.Literal("!=")), c.Ignore(c.Any(this.LT()))), this.RelationalExpressionNoIn())), c.Seq(c.Seq(c.Seq(c.Seq(this.EqualityExpressionNoIn(), c.Ignore(c.Any(this.LT()))), g.Literal("===")), c.Ignore(c.Any(this.LT()))), this.RelationalExpressionNoIn())), c.Seq(c.Seq(c.Seq(c.Seq(this.EqualityExpressionNoIn(), c.Ignore(c.Any(this.LT()))), g.Literal("!==")), c.Ignore(c.Any(this.LT()))), this.RelationalExpressionNoIn()));
+            return c.Red(c.Or(c.Or(c.Or(c.Or(this.RelationalExpressionNoIn(), c.Seq(c.Seq(c.Seq(c.Seq(this.EqualityExpressionNoIn(), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("=="), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.RelationalExpressionNoIn())), c.Seq(c.Seq(c.Seq(c.Seq(this.EqualityExpressionNoIn(), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("!="), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.RelationalExpressionNoIn())), c.Seq(c.Seq(c.Seq(c.Seq(this.EqualityExpressionNoIn(), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("==="), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.RelationalExpressionNoIn())), c.Seq(c.Seq(c.Seq(c.Seq(this.EqualityExpressionNoIn(), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("!=="), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.RelationalExpressionNoIn())), EqualityExpressionNoIn);
         }.bind(this), 'EqualityExpressionNoIn'));
     };
 })();
 
-// BitwiseANDExpression: EqualityExpression | BitwiseANDExpression LT*! "&" LT*! EqualityExpression;
+// BitwiseANDExpression: (EqualityExpression | BitwiseANDExpression <LineTerminator>*! ("&" -> Text) <LineTerminator>*! EqualityExpression) -> BitwiseANDExpression;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.BitwiseANDExpression = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Or(this.EqualityExpression(), c.Seq(c.Seq(c.Seq(c.Seq(this.BitwiseANDExpression(), c.Ignore(c.Any(this.LT()))), g.Literal("&")), c.Ignore(c.Any(this.LT()))), this.EqualityExpression()));
+            return c.Red(c.Or(this.EqualityExpression(), c.Seq(c.Seq(c.Seq(c.Seq(this.BitwiseANDExpression(), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("&"), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.EqualityExpression())), BitwiseANDExpression);
         }.bind(this), 'BitwiseANDExpression'));
     };
 })();
 
-// BitwiseANDExpressionNoIn: EqualityExpressionNoIn | BitwiseANDExpressionNoIn LT*! "&" LT*! EqualityExpressionNoIn;
+// BitwiseANDExpressionNoIn: (EqualityExpressionNoIn | BitwiseANDExpressionNoIn <LineTerminator>*! ("&" -> Text) <LineTerminator>*! EqualityExpressionNoIn) -> BitwiseANDExpressionNoIn;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.BitwiseANDExpressionNoIn = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Or(this.EqualityExpressionNoIn(), c.Seq(c.Seq(c.Seq(c.Seq(this.BitwiseANDExpressionNoIn(), c.Ignore(c.Any(this.LT()))), g.Literal("&")), c.Ignore(c.Any(this.LT()))), this.EqualityExpressionNoIn()));
+            return c.Red(c.Or(this.EqualityExpressionNoIn(), c.Seq(c.Seq(c.Seq(c.Seq(this.BitwiseANDExpressionNoIn(), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("&"), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.EqualityExpressionNoIn())), BitwiseANDExpressionNoIn);
         }.bind(this), 'BitwiseANDExpressionNoIn'));
     };
 })();
 
-// BitwiseXORExpression: BitwiseANDExpression | BitwiseXORExpression LT*! "^" LT*! BitwiseANDExpression;
+// BitwiseXORExpression: (BitwiseANDExpression | BitwiseXORExpression <LineTerminator>*! ("^" -> Text) <LineTerminator>*! BitwiseANDExpression) -> BitwiseXORExpression;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.BitwiseXORExpression = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Or(this.BitwiseANDExpression(), c.Seq(c.Seq(c.Seq(c.Seq(this.BitwiseXORExpression(), c.Ignore(c.Any(this.LT()))), g.Literal("^")), c.Ignore(c.Any(this.LT()))), this.BitwiseANDExpression()));
+            return c.Red(c.Or(this.BitwiseANDExpression(), c.Seq(c.Seq(c.Seq(c.Seq(this.BitwiseXORExpression(), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("^"), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.BitwiseANDExpression())), BitwiseXORExpression);
         }.bind(this), 'BitwiseXORExpression'));
     };
 })();
 
-// BitwiseXORExpressionNoIn: BitwiseANDExpressionNoIn | BitwiseXORExpressionNoIn LT*! "^" LT*! BitwiseANDExpressionNoIn;
+// BitwiseXORExpressionNoIn: (BitwiseANDExpressionNoIn | BitwiseXORExpressionNoIn <LineTerminator>*! ("^" -> Text) <LineTerminator>*! BitwiseANDExpressionNoIn) -> BitwiseXORExpressionNoIn;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.BitwiseXORExpressionNoIn = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Or(this.BitwiseANDExpressionNoIn(), c.Seq(c.Seq(c.Seq(c.Seq(this.BitwiseXORExpressionNoIn(), c.Ignore(c.Any(this.LT()))), g.Literal("^")), c.Ignore(c.Any(this.LT()))), this.BitwiseANDExpressionNoIn()));
+            return c.Red(c.Or(this.BitwiseANDExpressionNoIn(), c.Seq(c.Seq(c.Seq(c.Seq(this.BitwiseXORExpressionNoIn(), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("^"), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.BitwiseANDExpressionNoIn())), BitwiseXORExpressionNoIn);
         }.bind(this), 'BitwiseXORExpressionNoIn'));
     };
 })();
 
-// BitwiseORExpression: BitwiseXORExpression | BitwiseORExpression LT*! "|" LT*! BitwiseXORExpression;
+// BitwiseORExpression: (BitwiseXORExpression | BitwiseORExpression <LineTerminator>*! ("|" -> Text) <LineTerminator>*! BitwiseXORExpression) -> BitwiseORExpression;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.BitwiseORExpression = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Or(this.BitwiseXORExpression(), c.Seq(c.Seq(c.Seq(c.Seq(this.BitwiseORExpression(), c.Ignore(c.Any(this.LT()))), g.Literal("|")), c.Ignore(c.Any(this.LT()))), this.BitwiseXORExpression()));
+            return c.Red(c.Or(this.BitwiseXORExpression(), c.Seq(c.Seq(c.Seq(c.Seq(this.BitwiseORExpression(), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("|"), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.BitwiseXORExpression())), BitwiseORExpression);
         }.bind(this), 'BitwiseORExpression'));
     };
 })();
 
-// BitwiseORExpressionNoIn: BitwiseXORExpressionNoIn | BitwiseORExpressionNoIn LT*! "|" LT*! BitwiseXORExpressionNoIn;
+// BitwiseORExpressionNoIn: (BitwiseXORExpressionNoIn | BitwiseORExpressionNoIn <LineTerminator>*! ("|" -> Text) <LineTerminator>*! BitwiseXORExpressionNoIn) -> BitwiseORExpressionNoIn;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.BitwiseORExpressionNoIn = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Or(this.BitwiseXORExpressionNoIn(), c.Seq(c.Seq(c.Seq(c.Seq(this.BitwiseORExpressionNoIn(), c.Ignore(c.Any(this.LT()))), g.Literal("|")), c.Ignore(c.Any(this.LT()))), this.BitwiseXORExpressionNoIn()));
+            return c.Red(c.Or(this.BitwiseXORExpressionNoIn(), c.Seq(c.Seq(c.Seq(c.Seq(this.BitwiseORExpressionNoIn(), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("|"), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.BitwiseXORExpressionNoIn())), BitwiseORExpressionNoIn);
         }.bind(this), 'BitwiseORExpressionNoIn'));
     };
 })();
 
-// LogicalANDExpression: BitwiseORExpression | LogicalANDExpression LT*! "&&" LT*! BitwiseORExpression;
+// LogicalANDExpression: (BitwiseORExpression | LogicalANDExpression <LineTerminator>*! ("&&" -> Text) <LineTerminator>*! BitwiseORExpression) -> LogicalANDExpression;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.LogicalANDExpression = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Or(this.BitwiseORExpression(), c.Seq(c.Seq(c.Seq(c.Seq(this.LogicalANDExpression(), c.Ignore(c.Any(this.LT()))), g.Literal("&&")), c.Ignore(c.Any(this.LT()))), this.BitwiseORExpression()));
+            return c.Red(c.Or(this.BitwiseORExpression(), c.Seq(c.Seq(c.Seq(c.Seq(this.LogicalANDExpression(), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("&&"), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.BitwiseORExpression())), LogicalANDExpression);
         }.bind(this), 'LogicalANDExpression'));
     };
 })();
 
-// LogicalANDExpressionNoIn: BitwiseORExpressionNoIn | LogicalANDExpressionNoIn LT*! "&&" LT*! BitwiseORExpressionNoIn;
+// LogicalANDExpressionNoIn: (BitwiseORExpressionNoIn | LogicalANDExpressionNoIn <LineTerminator>*! ("&&" -> Text) <LineTerminator>*! BitwiseORExpressionNoIn) -> LogicalANDExpressionNoIn;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.LogicalANDExpressionNoIn = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Or(this.BitwiseORExpressionNoIn(), c.Seq(c.Seq(c.Seq(c.Seq(this.LogicalANDExpressionNoIn(), c.Ignore(c.Any(this.LT()))), g.Literal("&&")), c.Ignore(c.Any(this.LT()))), this.BitwiseORExpressionNoIn()));
+            return c.Red(c.Or(this.BitwiseORExpressionNoIn(), c.Seq(c.Seq(c.Seq(c.Seq(this.LogicalANDExpressionNoIn(), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("&&"), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.BitwiseORExpressionNoIn())), LogicalANDExpressionNoIn);
         }.bind(this), 'LogicalANDExpressionNoIn'));
     };
 })();
 
-// LogicalORExpression: LogicalANDExpression | LogicalORExpression LT*! "||" LT*! LogicalANDExpression;
+// LogicalORExpression: (LogicalANDExpression | LogicalORExpression <LineTerminator>*! ("||" -> Text) <LineTerminator>*! LogicalANDExpression) -> LogicalORExpression;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.LogicalORExpression = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Or(this.LogicalANDExpression(), c.Seq(c.Seq(c.Seq(c.Seq(this.LogicalORExpression(), c.Ignore(c.Any(this.LT()))), g.Literal("||")), c.Ignore(c.Any(this.LT()))), this.LogicalANDExpression()));
+            return c.Red(c.Or(this.LogicalANDExpression(), c.Seq(c.Seq(c.Seq(c.Seq(this.LogicalORExpression(), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("||"), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.LogicalANDExpression())), LogicalORExpression);
         }.bind(this), 'LogicalORExpression'));
     };
 })();
 
-// LogicalORExpressionNoIn: LogicalANDExpressionNoIn | LogicalORExpressionNoIn LT*! "||" LT*! LogicalANDExpressionNoIn;
+// LogicalORExpressionNoIn: (LogicalANDExpressionNoIn | LogicalORExpressionNoIn <LineTerminator>*! ("||" -> Text) <LineTerminator>*! LogicalANDExpressionNoIn) -> LogicalORExpressionNoIn;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.LogicalORExpressionNoIn = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Or(this.LogicalANDExpressionNoIn(), c.Seq(c.Seq(c.Seq(c.Seq(this.LogicalORExpressionNoIn(), c.Ignore(c.Any(this.LT()))), g.Literal("||")), c.Ignore(c.Any(this.LT()))), this.LogicalANDExpressionNoIn()));
+            return c.Red(c.Or(this.LogicalANDExpressionNoIn(), c.Seq(c.Seq(c.Seq(c.Seq(this.LogicalORExpressionNoIn(), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("||"), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.LogicalANDExpressionNoIn())), LogicalORExpressionNoIn);
         }.bind(this), 'LogicalORExpressionNoIn'));
     };
 })();
 
-// ConditionalExpression: LogicalORExpression | LogicalORExpression LT*! "?" LT*! AssignmentExpression LT*! ":" LT*! AssignmentExpression;
+// ConditionalExpression: (LogicalORExpression | LogicalORExpression <LineTerminator>*! ("?" -> Text) <LineTerminator>*! AssignmentExpression <LineTerminator>*! (":" -> Text) <LineTerminator>*! AssignmentExpression) -> ConditionalExpression;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.ConditionalExpression = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Or(this.LogicalORExpression(), c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(this.LogicalORExpression(), c.Ignore(c.Any(this.LT()))), g.Literal("?")), c.Ignore(c.Any(this.LT()))), this.AssignmentExpression()), c.Ignore(c.Any(this.LT()))), g.Literal(":")), c.Ignore(c.Any(this.LT()))), this.AssignmentExpression()));
+            return c.Red(c.Or(this.LogicalORExpression(), c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(this.LogicalORExpression(), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("?"), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.AssignmentExpression()), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal(":"), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.AssignmentExpression())), ConditionalExpression);
         }.bind(this), 'ConditionalExpression'));
     };
 })();
 
-// ConditionalExpressionNoIn: LogicalORExpressionNoIn | LogicalORExpressionNoIn LT*! "?" LT*! AssignmentExpressionNoIn LT*! ":" LT*! AssignmentExpressionNoIn;
+// ConditionalExpressionNoIn: (LogicalORExpressionNoIn | LogicalORExpressionNoIn <LineTerminator>*! ("?" -> Text) <LineTerminator>*! AssignmentExpressionNoIn <LineTerminator>*! (":" -> Text) <LineTerminator>*! AssignmentExpressionNoIn) -> ConditionalExpressionNoIn;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.ConditionalExpressionNoIn = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Or(this.LogicalORExpressionNoIn(), c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(this.LogicalORExpressionNoIn(), c.Ignore(c.Any(this.LT()))), g.Literal("?")), c.Ignore(c.Any(this.LT()))), this.AssignmentExpressionNoIn()), c.Ignore(c.Any(this.LT()))), g.Literal(":")), c.Ignore(c.Any(this.LT()))), this.AssignmentExpressionNoIn()));
+            return c.Red(c.Or(this.LogicalORExpressionNoIn(), c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(this.LogicalORExpressionNoIn(), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("?"), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.AssignmentExpressionNoIn()), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal(":"), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.AssignmentExpressionNoIn())), ConditionalExpressionNoIn);
         }.bind(this), 'ConditionalExpressionNoIn'));
     };
 })();
 
-// AssignmentExpression: ConditionalExpression | LeftHandSideExpression LT*! AssignmentOperator LT*! AssignmentExpression;
+// AssignmentExpression: (ConditionalExpression | LeftHandSideExpression <LineTerminator>*! AssignmentOperator <LineTerminator>*! AssignmentExpression) -> AssignmentExpression;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.AssignmentExpression = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Or(this.ConditionalExpression(), c.Seq(c.Seq(c.Seq(c.Seq(this.LeftHandSideExpression(), c.Ignore(c.Any(this.LT()))), this.AssignmentOperator()), c.Ignore(c.Any(this.LT()))), this.AssignmentExpression()));
+            return c.Red(c.Or(this.ConditionalExpression(), c.Seq(c.Seq(c.Seq(c.Seq(this.LeftHandSideExpression(), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.AssignmentOperator()), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.AssignmentExpression())), AssignmentExpression);
         }.bind(this), 'AssignmentExpression'));
     };
 })();
 
-// AssignmentExpressionNoIn: ConditionalExpressionNoIn | LeftHandSideExpression LT*! AssignmentOperator LT*! AssignmentExpressionNoIn;
+// AssignmentExpressionNoIn: (ConditionalExpressionNoIn | LeftHandSideExpression <LineTerminator>*! AssignmentOperator <LineTerminator>*! AssignmentExpressionNoIn) -> AssignmentExpressionNoIn;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.AssignmentExpressionNoIn = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Or(this.ConditionalExpressionNoIn(), c.Seq(c.Seq(c.Seq(c.Seq(this.LeftHandSideExpression(), c.Ignore(c.Any(this.LT()))), this.AssignmentOperator()), c.Ignore(c.Any(this.LT()))), this.AssignmentExpressionNoIn()));
+            return c.Red(c.Or(this.ConditionalExpressionNoIn(), c.Seq(c.Seq(c.Seq(c.Seq(this.LeftHandSideExpression(), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.AssignmentOperator()), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.AssignmentExpressionNoIn())), AssignmentExpressionNoIn);
         }.bind(this), 'AssignmentExpressionNoIn'));
     };
 })();
 
-// AssignmentOperator: "=" | "*=" | "/=" | "%=" | "+=" | "-=" | "<<=" | ">>=" | ">>>=" | "&=" | "^=" | "|=";
+// AssignmentOperator: ("=" | "*=" | "/=" | "%=" | "+=" | "-=" | "<<=" | ">>=" | ">>>=" | "&=" | "^=" | "|=") -> AssignmentOperator;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.AssignmentOperator = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(g.Literal("="), g.Literal("*=")), g.Literal("/=")), g.Literal("%=")), g.Literal("+=")), g.Literal("-=")), g.Literal("<<=")), g.Literal(">>=")), g.Literal(">>>=")), g.Literal("&=")), g.Literal("^=")), g.Literal("|="));
+            return c.Red(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(g.Literal("="), g.Literal("*=")), g.Literal("/=")), g.Literal("%=")), g.Literal("+=")), g.Literal("-=")), g.Literal("<<=")), g.Literal(">>=")), g.Literal(">>>=")), g.Literal("&=")), g.Literal("^=")), g.Literal("|=")), AssignmentOperator);
         }.bind(this), 'AssignmentOperator'));
     };
 })();
 
-// Expression: AssignmentExpression | Expression LT*! "," LT*! AssignmentExpression;
+// Expression: (AssignmentExpression | Expression <LineTerminator>*! ("," -> Text) <LineTerminator>*! AssignmentExpression) -> Expression;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.Expression = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Or(this.AssignmentExpression(), c.Seq(c.Seq(c.Seq(c.Seq(this.Expression(), c.Ignore(c.Any(this.LT()))), g.Literal(",")), c.Ignore(c.Any(this.LT()))), this.AssignmentExpression()));
+            return c.Red(c.Or(this.AssignmentExpression(), c.Seq(c.Seq(c.Seq(c.Seq(this.Expression(), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal(","), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.AssignmentExpression())), Expression);
         }.bind(this), 'Expression'));
     };
 })();
 
-// ExpressionNoIn: AssignmentExpressionNoIn | ExpressionNoIn LT*! "," LT*! AssignmentExpressionNoIn;
+// ExpressionNoIn: (AssignmentExpressionNoIn | ExpressionNoIn <LineTerminator>*! ("," -> Text) <LineTerminator>*! AssignmentExpressionNoIn) -> ExpressionNoIn;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.ExpressionNoIn = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Or(this.AssignmentExpressionNoIn(), c.Seq(c.Seq(c.Seq(c.Seq(this.ExpressionNoIn(), c.Ignore(c.Any(this.LT()))), g.Literal(",")), c.Ignore(c.Any(this.LT()))), this.AssignmentExpressionNoIn()));
+            return c.Red(c.Or(this.AssignmentExpressionNoIn(), c.Seq(c.Seq(c.Seq(c.Seq(this.ExpressionNoIn(), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal(","), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.AssignmentExpressionNoIn())), ExpressionNoIn);
         }.bind(this), 'ExpressionNoIn'));
     };
 })();
 
-// Statement: Block | VariableStatement | EmptyStatement | ExpressionStatement | IfStatement | IterationStatement | ContinueStatement | BreakStatement | ReturnStatement | WithStatement | LabelledStatement | SwitchStatement | ThrowStatement | TryStatement | DebuggerStatement;
+// Statement: (Block | VariableStatement | EmptyStatement | ExpressionStatement | IfStatement | IterationStatement | ContinueStatement | BreakStatement | ReturnStatement | WithStatement | LabelledStatement | SwitchStatement | ThrowStatement | TryStatement | DebuggerStatement) -> Statement;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.Statement = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(this.Block(), this.VariableStatement()), this.EmptyStatement()), this.ExpressionStatement()), this.IfStatement()), this.IterationStatement()), this.ContinueStatement()), this.BreakStatement()), this.ReturnStatement()), this.WithStatement()), this.LabelledStatement()), this.SwitchStatement()), this.ThrowStatement()), this.TryStatement()), this.DebuggerStatement());
+            return c.Red(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(this.Block(), this.VariableStatement()), this.EmptyStatement()), this.ExpressionStatement()), this.IfStatement()), this.IterationStatement()), this.ContinueStatement()), this.BreakStatement()), this.ReturnStatement()), this.WithStatement()), this.LabelledStatement()), this.SwitchStatement()), this.ThrowStatement()), this.TryStatement()), this.DebuggerStatement()), Statement);
         }.bind(this), 'Statement'));
     };
 })();
 
-// Block: "{" LT*! StatementList? LT*! "}";
+// Block: ("{" -> Text) <LineTerminator>*! StatementList? <LineTerminator>*! ("}" -> Text) -> Block;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.Block = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Seq(c.Seq(c.Seq(c.Seq(g.Literal("{"), c.Ignore(c.Any(this.LT()))), c.Maybe(this.StatementList())), c.Ignore(c.Any(this.LT()))), g.Literal("}"));
+            return c.Red(c.Seq(c.Seq(c.Seq(c.Seq(c.Red(g.Literal("{"), Text), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Maybe(this.StatementList())), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("}"), Text)), Block);
         }.bind(this), 'Block'));
     };
 })();
 
-// StatementList: Statement | StatementList LT*! Statement;
+// StatementList: (Statement | StatementList <LineTerminator>*! Statement) -> StatementList;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.StatementList = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Or(this.Statement(), c.Seq(c.Seq(this.StatementList(), c.Ignore(c.Any(this.LT()))), this.Statement()));
+            return c.Red(c.Or(this.Statement(), c.Seq(c.Seq(this.StatementList(), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.Statement())), StatementList);
         }.bind(this), 'StatementList'));
     };
 })();
 
-// VariableStatement: "var" LT*! VariableDeclarationList LT*! ";";
+// VariableStatement: ("var" -> Text) <LineTerminator>*! VariableDeclarationList <LineTerminator>*! (";" -> Text) -> VariableStatement;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.VariableStatement = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Seq(c.Seq(c.Seq(c.Seq(g.Literal("var"), c.Ignore(c.Any(this.LT()))), this.VariableDeclarationList()), c.Ignore(c.Any(this.LT()))), g.Literal(";"));
+            return c.Red(c.Seq(c.Seq(c.Seq(c.Seq(c.Red(g.Literal("var"), Text), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.VariableDeclarationList()), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal(";"), Text)), VariableStatement);
         }.bind(this), 'VariableStatement'));
     };
 })();
 
-// VariableDeclarationList: VariableDeclaration | VariableDeclarationList LT*! "," LT*! VariableDeclaration;
+// VariableDeclarationList: (VariableDeclaration | VariableDeclarationList <LineTerminator>*! ("," -> Text) <LineTerminator>*! VariableDeclaration) -> VariableDeclarationList;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.VariableDeclarationList = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Or(this.VariableDeclaration(), c.Seq(c.Seq(c.Seq(c.Seq(this.VariableDeclarationList(), c.Ignore(c.Any(this.LT()))), g.Literal(",")), c.Ignore(c.Any(this.LT()))), this.VariableDeclaration()));
+            return c.Red(c.Or(this.VariableDeclaration(), c.Seq(c.Seq(c.Seq(c.Seq(this.VariableDeclarationList(), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal(","), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.VariableDeclaration())), VariableDeclarationList);
         }.bind(this), 'VariableDeclarationList'));
     };
 })();
 
-// VariableDeclarationListNoIn: VariableDeclarationNoIn | VariableDeclarationListNoIn LT*! "," LT*! VariableDeclarationNoIn;
+// VariableDeclarationListNoIn: (VariableDeclarationNoIn | VariableDeclarationListNoIn <LineTerminator>*! ("," -> Text) <LineTerminator>*! VariableDeclarationNoIn) -> VariableDeclarationListNoIn;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.VariableDeclarationListNoIn = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Or(this.VariableDeclarationNoIn(), c.Seq(c.Seq(c.Seq(c.Seq(this.VariableDeclarationListNoIn(), c.Ignore(c.Any(this.LT()))), g.Literal(",")), c.Ignore(c.Any(this.LT()))), this.VariableDeclarationNoIn()));
+            return c.Red(c.Or(this.VariableDeclarationNoIn(), c.Seq(c.Seq(c.Seq(c.Seq(this.VariableDeclarationListNoIn(), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal(","), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.VariableDeclarationNoIn())), VariableDeclarationListNoIn);
         }.bind(this), 'VariableDeclarationListNoIn'));
     };
 })();
 
-// VariableDeclaration: Identifier LT*! Initialiser?;
+// VariableDeclaration: (<Identifier> -> Text) <LineTerminator>*! Initialiser? -> VariableDeclaration;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.VariableDeclaration = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Seq(c.Seq(this.Identifier(), c.Ignore(c.Any(this.LT()))), c.Maybe(this.Initialiser()));
+            return c.Red(c.Seq(c.Seq(c.Red(g.Capture(this.Identifier()), Text), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Maybe(this.Initialiser())), VariableDeclaration);
         }.bind(this), 'VariableDeclaration'));
     };
 })();
 
-// VariableDeclarationNoIn: Identifier LT*! InitialiserNoIn?;
+// VariableDeclarationNoIn: (<Identifier> -> Text) <LineTerminator>*! InitialiserNoIn? -> VariableDeclarationNoIn;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.VariableDeclarationNoIn = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Seq(c.Seq(this.Identifier(), c.Ignore(c.Any(this.LT()))), c.Maybe(this.InitialiserNoIn()));
+            return c.Red(c.Seq(c.Seq(c.Red(g.Capture(this.Identifier()), Text), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Maybe(this.InitialiserNoIn())), VariableDeclarationNoIn);
         }.bind(this), 'VariableDeclarationNoIn'));
     };
 })();
 
-// Initialiser: "=" LT*! AssignmentExpression;
+// Initialiser: ("=" -> Text) <LineTerminator>*! AssignmentExpression -> Initialiser;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.Initialiser = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Seq(c.Seq(g.Literal("="), c.Ignore(c.Any(this.LT()))), this.AssignmentExpression());
+            return c.Red(c.Seq(c.Seq(c.Red(g.Literal("="), Text), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.AssignmentExpression()), Initialiser);
         }.bind(this), 'Initialiser'));
     };
 })();
 
-// InitialiserNoIn: "=" LT*! AssignmentExpressionNoIn;
+// InitialiserNoIn: ("=" -> Text) <LineTerminator>*! AssignmentExpressionNoIn -> InitialiserNoIn;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.InitialiserNoIn = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Seq(c.Seq(g.Literal("="), c.Ignore(c.Any(this.LT()))), this.AssignmentExpressionNoIn());
+            return c.Red(c.Seq(c.Seq(c.Red(g.Literal("="), Text), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.AssignmentExpressionNoIn()), InitialiserNoIn);
         }.bind(this), 'InitialiserNoIn'));
     };
 })();
 
-// EmptyStatement: ";";
+// EmptyStatement: ";" -> EmptyStatement;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.EmptyStatement = function() {
         return $cache || ($cache = g.Ref(function() {
-            return g.Literal(";");
+            return c.Red(g.Literal(";"), EmptyStatement);
         }.bind(this), 'EmptyStatement'));
     };
 })();
 
-// ExpressionStatement: ?= ~ ("{" | "function") LT*! Expression LT*! ";";
+// ExpressionStatement: ?= ~ ("{" | "function") <LineTerminator>*! Expression <LineTerminator>*! (";" -> Text) -> ExpressionStatement;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.ExpressionStatement = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Seq(c.Seq(c.Seq(c.Seq(l.Look(c.Not(c.Or(g.Literal("{"), g.Literal("function")))), c.Ignore(c.Any(this.LT()))), this.Expression()), c.Ignore(c.Any(this.LT()))), g.Literal(";"));
+            return c.Red(c.Seq(c.Seq(c.Seq(c.Seq(l.Look(c.Not(c.Or(g.Literal("{"), g.Literal("function")))), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.Expression()), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal(";"), Text)), ExpressionStatement);
         }.bind(this), 'ExpressionStatement'));
     };
 })();
 
-// IfStatement: "if" LT*! "(" LT*! Expression LT*! ")" LT*! Statement LT*! "else" LT*! Statement | "if" LT*! "(" LT*! Expression LT*! ")" LT*! Statement;
+// IfStatement: (("if" -> Text) <LineTerminator>*! ("(" -> Text) <LineTerminator>*! Expression <LineTerminator>*! (")" -> Text) <LineTerminator>*! Statement <LineTerminator>*! ("else" -> Text) <LineTerminator>*! Statement | ("if" -> Text) <LineTerminator>*! ("(" -> Text) <LineTerminator>*! Expression <LineTerminator>*! (")" -> Text) <LineTerminator>*! Statement) -> IfStatement;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.IfStatement = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Or(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(g.Literal("if"), c.Ignore(c.Any(this.LT()))), g.Literal("(")), c.Ignore(c.Any(this.LT()))), this.Expression()), c.Ignore(c.Any(this.LT()))), g.Literal(")")), c.Ignore(c.Any(this.LT()))), this.Statement()), c.Ignore(c.Any(this.LT()))), g.Literal("else")), c.Ignore(c.Any(this.LT()))), this.Statement()), c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(g.Literal("if"), c.Ignore(c.Any(this.LT()))), g.Literal("(")), c.Ignore(c.Any(this.LT()))), this.Expression()), c.Ignore(c.Any(this.LT()))), g.Literal(")")), c.Ignore(c.Any(this.LT()))), this.Statement()));
+            return c.Red(c.Or(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Red(g.Literal("if"), Text), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("("), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.Expression()), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal(")"), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.Statement()), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("else"), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.Statement()), c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Red(g.Literal("if"), Text), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("("), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.Expression()), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal(")"), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.Statement())), IfStatement);
         }.bind(this), 'IfStatement'));
     };
 })();
 
-// IterationStatement: "do" LT*! Statement LT*! "while" LT*! "(" LT*! Expression LT*! ");" | "while" LT*! "(" LT*! Expression LT*! ")" LT*! Statement | "for" LT*! "(" LT*! ExpressionNoIn? LT*! ";" LT*! Expression? LT*! ";" LT*! Expression? LT*! ")" LT*! Statement | "for" LT*! "(" LT*! "var" LT*! VariableDeclarationListNoIn LT*! ";" LT*! Expression? LT*! ";" LT*! Expression? LT*! ")" LT*! Statement | "for" LT*! "(" LT*! LeftHandSideExpression LT*! "in" LT*! Expression LT*! ")" LT*! Statement | "for" LT*! "(" LT*! "var" LT*! VariableDeclarationNoIn LT*! "in" LT*! Expression LT*! ")" LT*! Statement;
+// IterationStatement: (("do" -> Text) <LineTerminator>*! Statement <LineTerminator>*! ("while" -> Text) <LineTerminator>*! ("(" -> Text) <LineTerminator>*! Expression <LineTerminator>*! (");" -> Text) | ("while" -> Text) <LineTerminator>*! ("(" -> Text) <LineTerminator>*! Expression <LineTerminator>*! (")" -> Text) <LineTerminator>*! Statement | ("for" -> Text) <LineTerminator>*! ("(" -> Text) <LineTerminator>*! ExpressionNoIn? <LineTerminator>*! (";" -> Text) <LineTerminator>*! Expression? <LineTerminator>*! (";" -> Text) <LineTerminator>*! Expression? <LineTerminator>*! (")" -> Text) <LineTerminator>*! Statement | ("for" -> Text) <LineTerminator>*! ("(" -> Text) <LineTerminator>*! ("var" -> Text) <LineTerminator>*! VariableDeclarationListNoIn <LineTerminator>*! (";" -> Text) <LineTerminator>*! Expression? <LineTerminator>*! (";" -> Text) <LineTerminator>*! Expression? <LineTerminator>*! (")" -> Text) <LineTerminator>*! Statement | ("for" -> Text) <LineTerminator>*! ("(" -> Text) <LineTerminator>*! LeftHandSideExpression <LineTerminator>*! ("in" -> Text) <LineTerminator>*! Expression <LineTerminator>*! (")" -> Text) <LineTerminator>*! Statement | ("for" -> Text) <LineTerminator>*! ("(" -> Text) <LineTerminator>*! ("var" -> Text) <LineTerminator>*! VariableDeclarationNoIn <LineTerminator>*! ("in" -> Text) <LineTerminator>*! Expression <LineTerminator>*! (")" -> Text) <LineTerminator>*! Statement) -> IterationStatement;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.IterationStatement = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Or(c.Or(c.Or(c.Or(c.Or(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(g.Literal("do"), c.Ignore(c.Any(this.LT()))), this.Statement()), c.Ignore(c.Any(this.LT()))), g.Literal("while")), c.Ignore(c.Any(this.LT()))), g.Literal("(")), c.Ignore(c.Any(this.LT()))), this.Expression()), c.Ignore(c.Any(this.LT()))), g.Literal(");")), c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(g.Literal("while"), c.Ignore(c.Any(this.LT()))), g.Literal("(")), c.Ignore(c.Any(this.LT()))), this.Expression()), c.Ignore(c.Any(this.LT()))), g.Literal(")")), c.Ignore(c.Any(this.LT()))), this.Statement())), c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(g.Literal("for"), c.Ignore(c.Any(this.LT()))), g.Literal("(")), c.Ignore(c.Any(this.LT()))), c.Maybe(this.ExpressionNoIn())), c.Ignore(c.Any(this.LT()))), g.Literal(";")), c.Ignore(c.Any(this.LT()))), c.Maybe(this.Expression())), c.Ignore(c.Any(this.LT()))), g.Literal(";")), c.Ignore(c.Any(this.LT()))), c.Maybe(this.Expression())), c.Ignore(c.Any(this.LT()))), g.Literal(")")), c.Ignore(c.Any(this.LT()))), this.Statement())), c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(g.Literal("for"), c.Ignore(c.Any(this.LT()))), g.Literal("(")), c.Ignore(c.Any(this.LT()))), g.Literal("var")), c.Ignore(c.Any(this.LT()))), this.VariableDeclarationListNoIn()), c.Ignore(c.Any(this.LT()))), g.Literal(";")), c.Ignore(c.Any(this.LT()))), c.Maybe(this.Expression())), c.Ignore(c.Any(this.LT()))), g.Literal(";")), c.Ignore(c.Any(this.LT()))), c.Maybe(this.Expression())), c.Ignore(c.Any(this.LT()))), g.Literal(")")), c.Ignore(c.Any(this.LT()))), this.Statement())), c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(g.Literal("for"), c.Ignore(c.Any(this.LT()))), g.Literal("(")), c.Ignore(c.Any(this.LT()))), this.LeftHandSideExpression()), c.Ignore(c.Any(this.LT()))), g.Literal("in")), c.Ignore(c.Any(this.LT()))), this.Expression()), c.Ignore(c.Any(this.LT()))), g.Literal(")")), c.Ignore(c.Any(this.LT()))), this.Statement())), c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(g.Literal("for"), c.Ignore(c.Any(this.LT()))), g.Literal("(")), c.Ignore(c.Any(this.LT()))), g.Literal("var")), c.Ignore(c.Any(this.LT()))), this.VariableDeclarationNoIn()), c.Ignore(c.Any(this.LT()))), g.Literal("in")), c.Ignore(c.Any(this.LT()))), this.Expression()), c.Ignore(c.Any(this.LT()))), g.Literal(")")), c.Ignore(c.Any(this.LT()))), this.Statement()));
+            return c.Red(c.Or(c.Or(c.Or(c.Or(c.Or(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Red(g.Literal("do"), Text), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.Statement()), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("while"), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("("), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.Expression()), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal(");"), Text)), c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Red(g.Literal("while"), Text), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("("), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.Expression()), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal(")"), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.Statement())), c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Red(g.Literal("for"), Text), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("("), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Maybe(this.ExpressionNoIn())), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal(";"), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Maybe(this.Expression())), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal(";"), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Maybe(this.Expression())), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal(")"), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.Statement())), c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Red(g.Literal("for"), Text), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("("), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("var"), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.VariableDeclarationListNoIn()), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal(";"), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Maybe(this.Expression())), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal(";"), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Maybe(this.Expression())), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal(")"), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.Statement())), c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Red(g.Literal("for"), Text), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("("), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.LeftHandSideExpression()), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("in"), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.Expression()), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal(")"), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.Statement())), c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Red(g.Literal("for"), Text), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("("), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("var"), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.VariableDeclarationNoIn()), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("in"), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.Expression()), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal(")"), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.Statement())), IterationStatement);
         }.bind(this), 'IterationStatement'));
     };
 })();
 
-// ContinueStatement: "continue" (LT & ~ LineTerminator)*! Identifier? LT*! ";";
+// ContinueStatement: ("continue" -> Text) (<Identifier> -> Text)? <LineTerminator>*! (";" -> Text) -> ContinueStatement;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.ContinueStatement = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Seq(c.Seq(c.Seq(c.Seq(g.Literal("continue"), c.Ignore(c.Any(c.And(this.LT(), c.Not(this.LineTerminator()))))), c.Maybe(this.Identifier())), c.Ignore(c.Any(this.LT()))), g.Literal(";"));
+            return c.Red(c.Seq(c.Seq(c.Seq(c.Red(g.Literal("continue"), Text), c.Maybe(c.Red(g.Capture(this.Identifier()), Text))), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal(";"), Text)), ContinueStatement);
         }.bind(this), 'ContinueStatement'));
     };
 })();
 
-// BreakStatement: "break" (LT & ~ LineTerminator)*! Identifier? LT*! ";";
+// BreakStatement: ("break" -> Text) (<Identifier> -> Text)? <LineTerminator>*! (";" -> Text) -> BreakStatement;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.BreakStatement = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Seq(c.Seq(c.Seq(c.Seq(g.Literal("break"), c.Ignore(c.Any(c.And(this.LT(), c.Not(this.LineTerminator()))))), c.Maybe(this.Identifier())), c.Ignore(c.Any(this.LT()))), g.Literal(";"));
+            return c.Red(c.Seq(c.Seq(c.Seq(c.Red(g.Literal("break"), Text), c.Maybe(c.Red(g.Capture(this.Identifier()), Text))), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal(";"), Text)), BreakStatement);
         }.bind(this), 'BreakStatement'));
     };
 })();
 
-// ReturnStatement: "return" (LT & ~ LineTerminator)*! Expression? LT*! ";";
+// ReturnStatement: ("return" -> Text) Expression? <LineTerminator>*! (";" -> Text) -> ReturnStatement;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.ReturnStatement = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Seq(c.Seq(c.Seq(c.Seq(g.Literal("return"), c.Ignore(c.Any(c.And(this.LT(), c.Not(this.LineTerminator()))))), c.Maybe(this.Expression())), c.Ignore(c.Any(this.LT()))), g.Literal(";"));
+            return c.Red(c.Seq(c.Seq(c.Seq(c.Red(g.Literal("return"), Text), c.Maybe(this.Expression())), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal(";"), Text)), ReturnStatement);
         }.bind(this), 'ReturnStatement'));
     };
 })();
 
-// WithStatement: "with" LT*! "(" LT*! Expression LT*! ")" LT*! Statement;
+// WithStatement: ("with" -> Text) <LineTerminator>*! ("(" -> Text) <LineTerminator>*! Expression <LineTerminator>*! (")" -> Text) <LineTerminator>*! Statement -> WithStatement;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.WithStatement = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(g.Literal("with"), c.Ignore(c.Any(this.LT()))), g.Literal("(")), c.Ignore(c.Any(this.LT()))), this.Expression()), c.Ignore(c.Any(this.LT()))), g.Literal(")")), c.Ignore(c.Any(this.LT()))), this.Statement());
+            return c.Red(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Red(g.Literal("with"), Text), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("("), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.Expression()), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal(")"), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.Statement()), WithStatement);
         }.bind(this), 'WithStatement'));
     };
 })();
 
-// SwitchStatement: "switch" LT*! "(" LT*! Expression LT*! ")" LT*! CaseBlock;
+// SwitchStatement: ("switch" -> Text) <LineTerminator>*! ("(" -> Text) <LineTerminator>*! Expression <LineTerminator>*! (")" -> Text) <LineTerminator>*! CaseBlock -> SwitchStatement;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.SwitchStatement = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(g.Literal("switch"), c.Ignore(c.Any(this.LT()))), g.Literal("(")), c.Ignore(c.Any(this.LT()))), this.Expression()), c.Ignore(c.Any(this.LT()))), g.Literal(")")), c.Ignore(c.Any(this.LT()))), this.CaseBlock());
+            return c.Red(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Red(g.Literal("switch"), Text), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("("), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.Expression()), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal(")"), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.CaseBlock()), SwitchStatement);
         }.bind(this), 'SwitchStatement'));
     };
 })();
 
-// CaseBlock: "{" LT*! CaseClauses? LT*! "}" | "{" LT*! CaseClauses? LT*! DefaultClause LT*! CaseClauses? LT*! "}";
+// CaseBlock: (("{" -> Text) <LineTerminator>*! CaseClauses? <LineTerminator>*! ("}" -> Text) | ("{" -> Text) <LineTerminator>*! CaseClauses? <LineTerminator>*! DefaultClause <LineTerminator>*! CaseClauses? <LineTerminator>*! ("}" -> Text)) -> CaseBlock;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.CaseBlock = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Or(c.Seq(c.Seq(c.Seq(c.Seq(g.Literal("{"), c.Ignore(c.Any(this.LT()))), c.Maybe(this.CaseClauses())), c.Ignore(c.Any(this.LT()))), g.Literal("}")), c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(g.Literal("{"), c.Ignore(c.Any(this.LT()))), c.Maybe(this.CaseClauses())), c.Ignore(c.Any(this.LT()))), this.DefaultClause()), c.Ignore(c.Any(this.LT()))), c.Maybe(this.CaseClauses())), c.Ignore(c.Any(this.LT()))), g.Literal("}")));
+            return c.Red(c.Or(c.Seq(c.Seq(c.Seq(c.Seq(c.Red(g.Literal("{"), Text), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Maybe(this.CaseClauses())), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("}"), Text)), c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Red(g.Literal("{"), Text), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Maybe(this.CaseClauses())), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.DefaultClause()), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Maybe(this.CaseClauses())), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("}"), Text))), CaseBlock);
         }.bind(this), 'CaseBlock'));
     };
 })();
 
-// CaseClauses: CaseClause | CaseClauses LT*! CaseClause;
+// CaseClauses: (CaseClause | CaseClauses <LineTerminator>*! CaseClause) -> CaseClauses;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.CaseClauses = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Or(this.CaseClause(), c.Seq(c.Seq(this.CaseClauses(), c.Ignore(c.Any(this.LT()))), this.CaseClause()));
+            return c.Red(c.Or(this.CaseClause(), c.Seq(c.Seq(this.CaseClauses(), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.CaseClause())), CaseClauses);
         }.bind(this), 'CaseClauses'));
     };
 })();
 
-// CaseClause: "case" LT*! Expression LT*! ":" LT*! StatementList?;
+// CaseClause: ("case" -> Text) <LineTerminator>*! Expression <LineTerminator>*! (":" -> Text) <LineTerminator>*! StatementList? -> CaseClause;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.CaseClause = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(g.Literal("case"), c.Ignore(c.Any(this.LT()))), this.Expression()), c.Ignore(c.Any(this.LT()))), g.Literal(":")), c.Ignore(c.Any(this.LT()))), c.Maybe(this.StatementList()));
+            return c.Red(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Red(g.Literal("case"), Text), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.Expression()), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal(":"), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Maybe(this.StatementList())), CaseClause);
         }.bind(this), 'CaseClause'));
     };
 })();
 
-// DefaultClause: "default" LT*! ":" LT*! StatementList?;
+// DefaultClause: ("default" -> Text) <LineTerminator>*! (":" -> Text) <LineTerminator>*! StatementList? -> DefaultClause;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.DefaultClause = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Seq(c.Seq(c.Seq(c.Seq(g.Literal("default"), c.Ignore(c.Any(this.LT()))), g.Literal(":")), c.Ignore(c.Any(this.LT()))), c.Maybe(this.StatementList()));
+            return c.Red(c.Seq(c.Seq(c.Seq(c.Seq(c.Red(g.Literal("default"), Text), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal(":"), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Maybe(this.StatementList())), DefaultClause);
         }.bind(this), 'DefaultClause'));
     };
 })();
 
-// LabelledStatement: Identifier LT*! ":" LT*! Statement;
+// LabelledStatement: (<Identifier> -> Text) <LineTerminator>*! (":" -> Text) <LineTerminator>*! Statement -> LabelledStatement;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.LabelledStatement = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Seq(c.Seq(c.Seq(c.Seq(this.Identifier(), c.Ignore(c.Any(this.LT()))), g.Literal(":")), c.Ignore(c.Any(this.LT()))), this.Statement());
+            return c.Red(c.Seq(c.Seq(c.Seq(c.Seq(c.Red(g.Capture(this.Identifier()), Text), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal(":"), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.Statement()), LabelledStatement);
         }.bind(this), 'LabelledStatement'));
     };
 })();
 
-// ThrowStatement: "throw" (LT & ~ LineTerminator)*! Expression LT*! ";";
+// ThrowStatement: ("throw" -> Text) Expression <LineTerminator>*! (";" -> Text) -> ThrowStatement;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.ThrowStatement = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Seq(c.Seq(c.Seq(c.Seq(g.Literal("throw"), c.Ignore(c.Any(c.And(this.LT(), c.Not(this.LineTerminator()))))), this.Expression()), c.Ignore(c.Any(this.LT()))), g.Literal(";"));
+            return c.Red(c.Seq(c.Seq(c.Seq(c.Red(g.Literal("throw"), Text), this.Expression()), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal(";"), Text)), ThrowStatement);
         }.bind(this), 'ThrowStatement'));
     };
 })();
 
-// TryStatement: "try" LT*! Block LT*! Catch | "try" LT*! Block LT*! Finally | "try" LT*! Block LT*! Catch LT*! Finally;
+// TryStatement: (("try" -> Text) <LineTerminator>*! Block <LineTerminator>*! Catch | ("try" -> Text) <LineTerminator>*! Block <LineTerminator>*! Finally | ("try" -> Text) <LineTerminator>*! Block <LineTerminator>*! Catch <LineTerminator>*! Finally) -> TryStatement;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.TryStatement = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Or(c.Or(c.Seq(c.Seq(c.Seq(c.Seq(g.Literal("try"), c.Ignore(c.Any(this.LT()))), this.Block()), c.Ignore(c.Any(this.LT()))), this.Catch()), c.Seq(c.Seq(c.Seq(c.Seq(g.Literal("try"), c.Ignore(c.Any(this.LT()))), this.Block()), c.Ignore(c.Any(this.LT()))), this.Finally())), c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(g.Literal("try"), c.Ignore(c.Any(this.LT()))), this.Block()), c.Ignore(c.Any(this.LT()))), this.Catch()), c.Ignore(c.Any(this.LT()))), this.Finally()));
+            return c.Red(c.Or(c.Or(c.Seq(c.Seq(c.Seq(c.Seq(c.Red(g.Literal("try"), Text), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.Block()), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.Catch()), c.Seq(c.Seq(c.Seq(c.Seq(c.Red(g.Literal("try"), Text), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.Block()), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.Finally())), c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Red(g.Literal("try"), Text), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.Block()), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.Catch()), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.Finally())), TryStatement);
         }.bind(this), 'TryStatement'));
     };
 })();
 
-// Catch: "catch" LT*! "(" LT*! Identifier LT*! ")" LT*! Block;
+// Catch: ("catch" -> Text) <LineTerminator>*! ("(" -> Text) <LineTerminator>*! (<Identifier> -> Text) <LineTerminator>*! (")" -> Text) <LineTerminator>*! Block -> Catch;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.Catch = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(g.Literal("catch"), c.Ignore(c.Any(this.LT()))), g.Literal("(")), c.Ignore(c.Any(this.LT()))), this.Identifier()), c.Ignore(c.Any(this.LT()))), g.Literal(")")), c.Ignore(c.Any(this.LT()))), this.Block());
+            return c.Red(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Red(g.Literal("catch"), Text), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("("), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Capture(this.Identifier()), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal(")"), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.Block()), Catch);
         }.bind(this), 'Catch'));
     };
 })();
 
-// Finally: "finally" LT*! Block;
+// Finally: ("finally" -> Text) <LineTerminator>*! Block -> Finally;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.Finally = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Seq(c.Seq(g.Literal("finally"), c.Ignore(c.Any(this.LT()))), this.Block());
+            return c.Red(c.Seq(c.Seq(c.Red(g.Literal("finally"), Text), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.Block()), Finally);
         }.bind(this), 'Finally'));
     };
 })();
 
-// DebuggerStatement: "debugger" LT*! ";";
+// DebuggerStatement: ("debugger" -> Text) <LineTerminator>*! (";" -> Text) -> DebuggerStatement;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.DebuggerStatement = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Seq(c.Seq(g.Literal("debugger"), c.Ignore(c.Any(this.LT()))), g.Literal(";"));
+            return c.Red(c.Seq(c.Seq(c.Red(g.Literal("debugger"), Text), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal(";"), Text)), DebuggerStatement);
         }.bind(this), 'DebuggerStatement'));
     };
 })();
 
-// FunctionDeclaration: "function" LT*! Identifier LT*! "(" LT*! FormalParameterList? LT*! ")" LT*! "{" LT*! FunctionBody LT*! "}";
+// FunctionDeclaration: ("function" -> Text) <LineTerminator>*! (<Identifier> -> Text) <LineTerminator>*! ("(" -> Text) <LineTerminator>*! FormalParameterList? <LineTerminator>*! (")" -> Text) <LineTerminator>*! ("{" -> Text) <LineTerminator>*! FunctionBody <LineTerminator>*! ("}" -> Text) -> FunctionDeclaration;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.FunctionDeclaration = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(g.Literal("function"), c.Ignore(c.Any(this.LT()))), this.Identifier()), c.Ignore(c.Any(this.LT()))), g.Literal("(")), c.Ignore(c.Any(this.LT()))), c.Maybe(this.FormalParameterList())), c.Ignore(c.Any(this.LT()))), g.Literal(")")), c.Ignore(c.Any(this.LT()))), g.Literal("{")), c.Ignore(c.Any(this.LT()))), this.FunctionBody()), c.Ignore(c.Any(this.LT()))), g.Literal("}"));
+            return c.Red(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Red(g.Literal("function"), Text), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Capture(this.Identifier()), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("("), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Maybe(this.FormalParameterList())), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal(")"), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("{"), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.FunctionBody()), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("}"), Text)), FunctionDeclaration);
         }.bind(this), 'FunctionDeclaration'));
     };
 })();
 
-// FunctionExpression: "function" LT*! Identifier? LT*! "(" LT*! FormalParameterList? LT*! ")" LT*! "{" LT*! FunctionBody LT*! "}";
+// FunctionExpression: ("function" -> Text) <LineTerminator>*! (<Identifier> -> Text)? <LineTerminator>*! ("(" -> Text) <LineTerminator>*! FormalParameterList? <LineTerminator>*! (")" -> Text) <LineTerminator>*! ("{" -> Text) <LineTerminator>*! FunctionBody <LineTerminator>*! ("}" -> Text) -> FunctionExpression;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.FunctionExpression = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(g.Literal("function"), c.Ignore(c.Any(this.LT()))), c.Maybe(this.Identifier())), c.Ignore(c.Any(this.LT()))), g.Literal("(")), c.Ignore(c.Any(this.LT()))), c.Maybe(this.FormalParameterList())), c.Ignore(c.Any(this.LT()))), g.Literal(")")), c.Ignore(c.Any(this.LT()))), g.Literal("{")), c.Ignore(c.Any(this.LT()))), this.FunctionBody()), c.Ignore(c.Any(this.LT()))), g.Literal("}"));
+            return c.Red(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Red(g.Literal("function"), Text), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Maybe(c.Red(g.Capture(this.Identifier()), Text))), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("("), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Maybe(this.FormalParameterList())), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal(")"), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("{"), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.FunctionBody()), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal("}"), Text)), FunctionExpression);
         }.bind(this), 'FunctionExpression'));
     };
 })();
 
-// FormalParameterList: Identifier | FormalParameterList LT*! "," LT*! Identifier;
+// FormalParameterList: (<Identifier> -> Text | FormalParameterList <LineTerminator>*! ("," -> Text) <LineTerminator>*! (<Identifier> -> Text)) -> FormalParameterList;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.FormalParameterList = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Or(this.Identifier(), c.Seq(c.Seq(c.Seq(c.Seq(this.FormalParameterList(), c.Ignore(c.Any(this.LT()))), g.Literal(",")), c.Ignore(c.Any(this.LT()))), this.Identifier()));
+            return c.Red(c.Or(c.Red(g.Capture(this.Identifier()), Text), c.Seq(c.Seq(c.Seq(c.Seq(this.FormalParameterList(), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Literal(","), Text)), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), c.Red(g.Capture(this.Identifier()), Text))), FormalParameterList);
         }.bind(this), 'FormalParameterList'));
     };
 })();
 
-// FunctionBody: SourceElements?;
+// FunctionBody: SourceElements? -> FunctionBody;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.FunctionBody = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Maybe(this.SourceElements());
+            return c.Red(c.Maybe(this.SourceElements()), FunctionBody);
         }.bind(this), 'FunctionBody'));
     };
 })();
 
-// Program: SourceElements?;
+// Program: SourceElements? -> Program;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.Program = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Maybe(this.SourceElements());
+            return c.Red(c.Maybe(this.SourceElements()), Program);
         }.bind(this), 'Program'));
     };
 })();
 
-// SourceElements: SourceElement | SourceElements LT*! SourceElement;
+// SourceElements: (SourceElement | SourceElements <LineTerminator>*! SourceElement) -> SourceElements;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.SourceElements = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Or(this.SourceElement(), c.Seq(c.Seq(this.SourceElements(), c.Ignore(c.Any(this.LT()))), this.SourceElement()));
+            return c.Red(c.Or(this.SourceElement(), c.Seq(c.Seq(this.SourceElements(), c.Ignore(c.Any(g.Capture(this.LineTerminator())))), this.SourceElement())), SourceElements);
         }.bind(this), 'SourceElements'));
     };
 })();
 
-// SourceElement: Statement | FunctionDeclaration;
+// SourceElement: (Statement | FunctionDeclaration) -> SourceElement;
 (function() {
     var $cache;
     
     exports.Syntactic.prototype.SourceElement = function() {
         return $cache || ($cache = g.Ref(function() {
-            return c.Or(this.Statement(), this.FunctionDeclaration());
+            return c.Red(c.Or(this.Statement(), this.FunctionDeclaration()), SourceElement);
         }.bind(this), 'SourceElement'));
-    };
-})();
-
-// JSONText: JSONValue;
-(function() {
-    var $cache;
-    
-    exports.Syntactic.prototype.JSONText = function() {
-        return $cache || ($cache = g.Ref(function() {
-            return this.JSONValue();
-        }.bind(this), 'JSONText'));
-    };
-})();
-
-// JSONValue: JSONNullLiteral | JSONBooleanLiteral | JSONObject | JSONArray | JSONString | JSONNumber;
-(function() {
-    var $cache;
-    
-    exports.Syntactic.prototype.JSONValue = function() {
-        return $cache || ($cache = g.Ref(function() {
-            return c.Or(c.Or(c.Or(c.Or(c.Or(this.JSONNullLiteral(), this.JSONBooleanLiteral()), this.JSONObject()), this.JSONArray()), this.JSONString()), this.JSONNumber());
-        }.bind(this), 'JSONValue'));
-    };
-})();
-
-// JSONObject: "{" LT*! "}" | "{" LT*! JSONMemberList LT*! "}";
-(function() {
-    var $cache;
-    
-    exports.Syntactic.prototype.JSONObject = function() {
-        return $cache || ($cache = g.Ref(function() {
-            return c.Or(c.Seq(c.Seq(g.Literal("{"), c.Ignore(c.Any(this.LT()))), g.Literal("}")), c.Seq(c.Seq(c.Seq(c.Seq(g.Literal("{"), c.Ignore(c.Any(this.LT()))), this.JSONMemberList()), c.Ignore(c.Any(this.LT()))), g.Literal("}")));
-        }.bind(this), 'JSONObject'));
-    };
-})();
-
-// JSONMember: JSONString LT*! ":" LT*! JSONValue;
-(function() {
-    var $cache;
-    
-    exports.Syntactic.prototype.JSONMember = function() {
-        return $cache || ($cache = g.Ref(function() {
-            return c.Seq(c.Seq(c.Seq(c.Seq(this.JSONString(), c.Ignore(c.Any(this.LT()))), g.Literal(":")), c.Ignore(c.Any(this.LT()))), this.JSONValue());
-        }.bind(this), 'JSONMember'));
-    };
-})();
-
-// JSONMemberList: JSONMember | JSONMemberList LT*! "," LT*! JSONMember;
-(function() {
-    var $cache;
-    
-    exports.Syntactic.prototype.JSONMemberList = function() {
-        return $cache || ($cache = g.Ref(function() {
-            return c.Or(this.JSONMember(), c.Seq(c.Seq(c.Seq(c.Seq(this.JSONMemberList(), c.Ignore(c.Any(this.LT()))), g.Literal(",")), c.Ignore(c.Any(this.LT()))), this.JSONMember()));
-        }.bind(this), 'JSONMemberList'));
-    };
-})();
-
-// JSONArray: "[" LT*! "]" | "[" LT*! JSONElementList LT*! "]";
-(function() {
-    var $cache;
-    
-    exports.Syntactic.prototype.JSONArray = function() {
-        return $cache || ($cache = g.Ref(function() {
-            return c.Or(c.Seq(c.Seq(g.Literal("["), c.Ignore(c.Any(this.LT()))), g.Literal("]")), c.Seq(c.Seq(c.Seq(c.Seq(g.Literal("["), c.Ignore(c.Any(this.LT()))), this.JSONElementList()), c.Ignore(c.Any(this.LT()))), g.Literal("]")));
-        }.bind(this), 'JSONArray'));
-    };
-})();
-
-// JSONElementList: JSONValue | JSONElementList LT*! "," LT*! JSONValue;
-(function() {
-    var $cache;
-    
-    exports.Syntactic.prototype.JSONElementList = function() {
-        return $cache || ($cache = g.Ref(function() {
-            return c.Or(this.JSONValue(), c.Seq(c.Seq(c.Seq(c.Seq(this.JSONElementList(), c.Ignore(c.Any(this.LT()))), g.Literal(",")), c.Ignore(c.Any(this.LT()))), this.JSONValue()));
-        }.bind(this), 'JSONElementList'));
-    };
-})();
-
-// export grammar String;
-var String = exports.String = function() {};
-
-// StringNumericLiteral: StrWhiteSpace? | StrWhiteSpace? StrNumericLiteral StrWhiteSpace?;
-(function() {
-    var $cache;
-    
-    exports.String.prototype.StringNumericLiteral = function() {
-        return $cache || ($cache = g.Ref(function() {
-            return c.Or(c.Maybe(this.StrWhiteSpace()), c.Seq(c.Seq(c.Maybe(this.StrWhiteSpace()), this.StrNumericLiteral()), c.Maybe(this.StrWhiteSpace())));
-        }.bind(this), 'StringNumericLiteral'));
-    };
-})();
-
-// StrWhiteSpace: StrWhiteSpaceChar StrWhiteSpace?;
-(function() {
-    var $cache;
-    
-    exports.String.prototype.StrWhiteSpace = function() {
-        return $cache || ($cache = g.Ref(function() {
-            return c.Seq(this.StrWhiteSpaceChar(), c.Maybe(this.StrWhiteSpace()));
-        }.bind(this), 'StrWhiteSpace'));
-    };
-})();
-
-// StrWhiteSpaceChar: WhiteSpace | LineTerminator;
-(function() {
-    var $cache;
-    
-    exports.String.prototype.StrWhiteSpaceChar = function() {
-        return $cache || ($cache = g.Ref(function() {
-            return c.Or(this.WhiteSpace(), this.LineTerminator());
-        }.bind(this), 'StrWhiteSpaceChar'));
-    };
-})();
-
-// StrNumericLiteral: StrDecimalLiteral | HexIntegerLiteral;
-(function() {
-    var $cache;
-    
-    exports.String.prototype.StrNumericLiteral = function() {
-        return $cache || ($cache = g.Ref(function() {
-            return c.Or(this.StrDecimalLiteral(), this.HexIntegerLiteral());
-        }.bind(this), 'StrNumericLiteral'));
-    };
-})();
-
-// StrDecimalLiteral: StrUnsignedDecimalLiteral | "+" StrUnsignedDecimalLiteral | "-" StrUnsignedDecimalLiteral;
-(function() {
-    var $cache;
-    
-    exports.String.prototype.StrDecimalLiteral = function() {
-        return $cache || ($cache = g.Ref(function() {
-            return c.Or(c.Or(this.StrUnsignedDecimalLiteral(), c.Seq(g.Literal("+"), this.StrUnsignedDecimalLiteral())), c.Seq(g.Literal("-"), this.StrUnsignedDecimalLiteral()));
-        }.bind(this), 'StrDecimalLiteral'));
-    };
-})();
-
-// StrUnsignedDecimalLiteral: "Infinity" | DecimalDigits "." DecimalDigits? ExponentPart? | "." DecimalDigits ExponentPart? | DecimalDigits ExponentPart?;
-(function() {
-    var $cache;
-    
-    exports.String.prototype.StrUnsignedDecimalLiteral = function() {
-        return $cache || ($cache = g.Ref(function() {
-            return c.Or(c.Or(c.Or(g.Literal("Infinity"), c.Seq(c.Seq(c.Seq(this.DecimalDigits(), g.Literal(".")), c.Maybe(this.DecimalDigits())), c.Maybe(this.ExponentPart()))), c.Seq(c.Seq(g.Literal("."), this.DecimalDigits()), c.Maybe(this.ExponentPart()))), c.Seq(this.DecimalDigits(), c.Maybe(this.ExponentPart())));
-        }.bind(this), 'StrUnsignedDecimalLiteral'));
-    };
-})();
-
-// DecimalDigits: DecimalDigit | DecimalDigits DecimalDigit;
-(function() {
-    var $cache;
-    
-    exports.String.prototype.DecimalDigits = function() {
-        return $cache || ($cache = g.Ref(function() {
-            return c.Or(this.DecimalDigit(), c.Seq(this.DecimalDigits(), this.DecimalDigit()));
-        }.bind(this), 'DecimalDigits'));
-    };
-})();
-
-// DecimalDigit: "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9";
-(function() {
-    var $cache;
-    
-    exports.String.prototype.DecimalDigit = function() {
-        return $cache || ($cache = g.Ref(function() {
-            return c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(g.Literal("0"), g.Literal("1")), g.Literal("2")), g.Literal("3")), g.Literal("4")), g.Literal("5")), g.Literal("6")), g.Literal("7")), g.Literal("8")), g.Literal("9"));
-        }.bind(this), 'DecimalDigit'));
-    };
-})();
-
-// ExponentPart: ExponentIndicator SignedInteger;
-(function() {
-    var $cache;
-    
-    exports.String.prototype.ExponentPart = function() {
-        return $cache || ($cache = g.Ref(function() {
-            return c.Seq(this.ExponentIndicator(), this.SignedInteger());
-        }.bind(this), 'ExponentPart'));
-    };
-})();
-
-// ExponentIndicator: "e" | "E";
-(function() {
-    var $cache;
-    
-    exports.String.prototype.ExponentIndicator = function() {
-        return $cache || ($cache = g.Ref(function() {
-            return c.Or(g.Literal("e"), g.Literal("E"));
-        }.bind(this), 'ExponentIndicator'));
-    };
-})();
-
-// SignedInteger: DecimalDigits | "+" DecimalDigits | "-" DecimalDigits;
-(function() {
-    var $cache;
-    
-    exports.String.prototype.SignedInteger = function() {
-        return $cache || ($cache = g.Ref(function() {
-            return c.Or(c.Or(this.DecimalDigits(), c.Seq(g.Literal("+"), this.DecimalDigits())), c.Seq(g.Literal("-"), this.DecimalDigits()));
-        }.bind(this), 'SignedInteger'));
-    };
-})();
-
-// HexIntegerLiteral: "0x" HexDigit | "0X" HexDigit | HexIntegerLiteral HexDigit;
-(function() {
-    var $cache;
-    
-    exports.String.prototype.HexIntegerLiteral = function() {
-        return $cache || ($cache = g.Ref(function() {
-            return c.Or(c.Or(c.Seq(g.Literal("0x"), this.HexDigit()), c.Seq(g.Literal("0X"), this.HexDigit())), c.Seq(this.HexIntegerLiteral(), this.HexDigit()));
-        }.bind(this), 'HexIntegerLiteral'));
-    };
-})();
-
-// HexDigit: "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "a" | "b" | "c" | "d" | "e" | "f" | "A" | "B" | "C" | "D" | "E" | "F";
-(function() {
-    var $cache;
-    
-    exports.String.prototype.HexDigit = function() {
-        return $cache || ($cache = g.Ref(function() {
-            return c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(g.Literal("0"), g.Literal("1")), g.Literal("2")), g.Literal("3")), g.Literal("4")), g.Literal("5")), g.Literal("6")), g.Literal("7")), g.Literal("8")), g.Literal("9")), g.Literal("a")), g.Literal("b")), g.Literal("c")), g.Literal("d")), g.Literal("e")), g.Literal("f")), g.Literal("A")), g.Literal("B")), g.Literal("C")), g.Literal("D")), g.Literal("E")), g.Literal("F"));
-        }.bind(this), 'HexDigit'));
-    };
-})();
-
-// uri: uriCharacters?;
-(function() {
-    var $cache;
-    
-    exports.String.prototype.uri = function() {
-        return $cache || ($cache = g.Ref(function() {
-            return c.Maybe(this.uriCharacters());
-        }.bind(this), 'uri'));
-    };
-})();
-
-// uriCharacters: uriCharacter uriCharacters?;
-(function() {
-    var $cache;
-    
-    exports.String.prototype.uriCharacters = function() {
-        return $cache || ($cache = g.Ref(function() {
-            return c.Seq(this.uriCharacter(), c.Maybe(this.uriCharacters()));
-        }.bind(this), 'uriCharacters'));
-    };
-})();
-
-// uriCharacter: uriReserved | uriUnescaped | uriEscaped;
-(function() {
-    var $cache;
-    
-    exports.String.prototype.uriCharacter = function() {
-        return $cache || ($cache = g.Ref(function() {
-            return c.Or(c.Or(this.uriReserved(), this.uriUnescaped()), this.uriEscaped());
-        }.bind(this), 'uriCharacter'));
-    };
-})();
-
-// uriReserved: ";" | "/" | "?" | ":" | "@" | "&" | "=" | "+" | "$" | ",";
-(function() {
-    var $cache;
-    
-    exports.String.prototype.uriReserved = function() {
-        return $cache || ($cache = g.Ref(function() {
-            return c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(g.Literal(";"), g.Literal("/")), g.Literal("?")), g.Literal(":")), g.Literal("@")), g.Literal("&")), g.Literal("=")), g.Literal("+")), g.Literal("$")), g.Literal(","));
-        }.bind(this), 'uriReserved'));
-    };
-})();
-
-// uriUnescaped: uriAlpha | DecimalDigit | uriMark;
-(function() {
-    var $cache;
-    
-    exports.String.prototype.uriUnescaped = function() {
-        return $cache || ($cache = g.Ref(function() {
-            return c.Or(c.Or(this.uriAlpha(), this.DecimalDigit()), this.uriMark());
-        }.bind(this), 'uriUnescaped'));
-    };
-})();
-
-// uriEscaped: "%" HexDigit HexDigit;
-(function() {
-    var $cache;
-    
-    exports.String.prototype.uriEscaped = function() {
-        return $cache || ($cache = g.Ref(function() {
-            return c.Seq(c.Seq(g.Literal("%"), this.HexDigit()), this.HexDigit());
-        }.bind(this), 'uriEscaped'));
-    };
-})();
-
-// uriAlpha: "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j" | "k" | "l" | "m" | "n" | "o" | "p" | "q" | "r" | "s" | "t" | "u" | "v" | "w" | "x" | "y" | "z" | "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H" | "I" | "J" | "K" | "L" | "M" | "N" | "O" | "P" | "Q" | "R" | "S" | "T" | "U" | "V" | "W" | "X" | "Y" | "Z";
-(function() {
-    var $cache;
-    
-    exports.String.prototype.uriAlpha = function() {
-        return $cache || ($cache = g.Ref(function() {
-            return c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(g.Literal("a"), g.Literal("b")), g.Literal("c")), g.Literal("d")), g.Literal("e")), g.Literal("f")), g.Literal("g")), g.Literal("h")), g.Literal("i")), g.Literal("j")), g.Literal("k")), g.Literal("l")), g.Literal("m")), g.Literal("n")), g.Literal("o")), g.Literal("p")), g.Literal("q")), g.Literal("r")), g.Literal("s")), g.Literal("t")), g.Literal("u")), g.Literal("v")), g.Literal("w")), g.Literal("x")), g.Literal("y")), g.Literal("z")), g.Literal("A")), g.Literal("B")), g.Literal("C")), g.Literal("D")), g.Literal("E")), g.Literal("F")), g.Literal("G")), g.Literal("H")), g.Literal("I")), g.Literal("J")), g.Literal("K")), g.Literal("L")), g.Literal("M")), g.Literal("N")), g.Literal("O")), g.Literal("P")), g.Literal("Q")), g.Literal("R")), g.Literal("S")), g.Literal("T")), g.Literal("U")), g.Literal("V")), g.Literal("W")), g.Literal("X")), g.Literal("Y")), g.Literal("Z"));
-        }.bind(this), 'uriAlpha'));
-    };
-})();
-
-// uriMark: "-" | "_" | "." | "!" | "~" | "*" | "`" | "(" | ")";
-(function() {
-    var $cache;
-    
-    exports.String.prototype.uriMark = function() {
-        return $cache || ($cache = g.Ref(function() {
-            return c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(g.Literal("-"), g.Literal("_")), g.Literal(".")), g.Literal("!")), g.Literal("~")), g.Literal("*")), g.Literal("`")), g.Literal("(")), g.Literal(")"));
-        }.bind(this), 'uriMark'));
     };
 })();

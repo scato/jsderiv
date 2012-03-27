@@ -32,12 +32,16 @@ exports["test \"SPACE\""] = function(test) {
 // 
 //     assert "id" -> (ID "id");
 //     assert "start" -> {};
+//     assert "id2" -> (ID "id2");
+//     assert "ID_2" -> (ID "ID_2");
 // }
 exports["test \"ID\""] = function(test) {
     var start = new Lexer().ID();
 
     test.deepEqual(g.parse(start, "id"), [[ID("id")]]);
     test.deepEqual(g.parse(start, "start"), []);
+    test.deepEqual(g.parse(start, "id2"), [[ID("id2")]]);
+    test.deepEqual(g.parse(start, "ID_2"), [[ID("ID_2")]]);
     test.done();
 };
 
@@ -71,11 +75,15 @@ exports["test \"LITERAL\""] = function(test) {
 //     start Lexer.SYMBOL;
 // 
 //     assert "|" -> (SYMBOL "|");
+//     assert "<" -> (SYMBOL "<");
+//     assert ">" -> (SYMBOL ">");
 // }
 exports["test \"SYMBOL\""] = function(test) {
     var start = new Lexer().SYMBOL();
 
     test.deepEqual(g.parse(start, "|"), [[SYMBOL("|")]]);
+    test.deepEqual(g.parse(start, "<"), [[SYMBOL("<")]]);
+    test.deepEqual(g.parse(start, ">"), [[SYMBOL(">")]]);
     test.done();
 };
 
@@ -107,11 +115,15 @@ exports["test \"CLASS\""] = function(test) {
 //     start Lexer.KEYWORD;
 // 
 //     assert "start" -> (KEYWORD "start");
+//     assert "extends" -> (KEYWORD "extends");
+//     assert "super" -> (KEYWORD "super");
 // }
 exports["test \"KEYWORD\""] = function(test) {
     var start = new Lexer().KEYWORD();
 
     test.deepEqual(g.parse(start, "start"), [[KEYWORD("start")]]);
+    test.deepEqual(g.parse(start, "extends"), [[KEYWORD("extends")]]);
+    test.deepEqual(g.parse(start, "super"), [[KEYWORD("super")]]);
     test.done();
 };
 
