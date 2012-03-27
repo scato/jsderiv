@@ -36,6 +36,7 @@ ecma.Grammar.prototype.toJsderiv = function(strict) {
         }).join('') + '}';
     
     var syntacticGrammar = 'export grammar Syntactic extends Lexical {\n' +
+        '    start <LineTerminator>*! Program <LineTerminator>*!;\n\n' +
         syntacticRules.map(function(rule) {
             return '    ' + rule.toJsderiv(strict, '<LineTerminator>', capture, true) + '\n';
         }).join('') + '}';

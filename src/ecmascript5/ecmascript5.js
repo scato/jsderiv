@@ -1168,6 +1168,17 @@ exports.Syntactic.prototype = Object.create(Lexical.prototype);
 Syntactic.$super = Lexical;
 exports.Syntactic.prototype.constructor = Syntactic;
 
+// start <LineTerminator>*! Program <LineTerminator>*!;
+(function() {
+    var $cache;
+    
+    exports.Syntactic.prototype.start = function() {
+        return $cache || ($cache = g.Ref(function() {
+            return c.Seq(c.Seq(c.Ignore(c.Any(g.Capture(this.LineTerminator()))), this.Program()), c.Ignore(c.Any(g.Capture(this.LineTerminator()))));
+        }.bind(this), 'start'));
+    };
+})();
+
 // PrimaryExpression: ("this" | <Identifier> -> Text | <Literal> -> Text | ArrayLiteral | ObjectLiteral | ("(" -> Text) <LineTerminator>*! Expression <LineTerminator>*! (")" -> Text)) -> PrimaryExpression;
 (function() {
     var $cache;

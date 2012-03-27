@@ -101,6 +101,8 @@ export grammar Lexical {
 }
 
 export grammar Syntactic extends Lexical {
+    start <LineTerminator>*! Program <LineTerminator>*!;
+
     PrimaryExpression: ("this" | (<Identifier> -> Text) | (<Literal> -> Text) | ArrayLiteral | ObjectLiteral | ("(" -> Text) <LineTerminator>*! Expression <LineTerminator>*! (")" -> Text)) -> PrimaryExpression;
     ArrayLiteral: (("[" -> Text) <LineTerminator>*! Elision? <LineTerminator>*! ("]" -> Text) | ("[" -> Text) <LineTerminator>*! ElementList <LineTerminator>*! ("]" -> Text) | ("[" -> Text) <LineTerminator>*! ElementList <LineTerminator>*! ("," -> Text) <LineTerminator>*! Elision? <LineTerminator>*! ("]" -> Text)) -> ArrayLiteral;
     ElementList: (Elision? <LineTerminator>*! AssignmentExpression | ElementList <LineTerminator>*! ("," -> Text) <LineTerminator>*! Elision? <LineTerminator>*! AssignmentExpression) -> ElementList;

@@ -168,11 +168,11 @@ parser.Literal.prototype.toJavascript = function(grammar, rule) {
 };
 
 parser.Default.prototype.toJavascript = function(grammar, rule) {
-    return '$default.apply(this, [])';
+    return '$default.apply(this, []).func()';
 };
 
 parser.Super.prototype.toJavascript = function(grammar, rule) {
-    return grammar + '.$super.prototype.' + rule + '.apply(this, [])';
+    return grammar + '.$super.prototype.' + rule + '.apply(this, []).func()';
 };
 
 parser.Capture.prototype.toJavascript = function(grammar, rule) {

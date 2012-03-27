@@ -12,7 +12,7 @@ exports.parse = function(string) {
     var tokens = [];
     var lexer = new ecmascript5.Lexical();
     var parser = new ecmascript5.Syntactic();
-    var expr = parser.Program();
+    var expr = parser.start();
     
     sys.puts('start: ' + expr);
     
@@ -39,7 +39,7 @@ exports.parse = function(string) {
         }
         
         if(token === undefined) {
-            throw new Error('parse error');
+            throw new Error('parse error, unexpected character ' + JSON.stringify(string[0]));
         } else {
             string = string.substr(token.length);
         }
@@ -52,19 +52,24 @@ exports.parse = function(string) {
             sys.puts('[ignore]');
         }
         
+        if(expr.equals(Void())) {
+            throw new Error('parse error, unexpected token ' + JSON.stringify(token.join('')));
+        }
+        
         sys.puts('');
         sys.puts('continue: ' + expr);
     }
     
     var result = expr.parseNull();
     
-    sys.puts(result[0][0].toAST());
+    return result;
 };
 
 // debug
-exports.parse("\
-var ecmascript5 = require('./ecmascript5', 2);\r\n\
-var ecmascript5 = new Test();\r\n\
-var a, b = a++;\
-a = ~!1 % 2 ^ 3 & 4 && 5 * (6 - 7 + 8[9] ? 10 : 11 | 12 || 13 / 14 <= b.x), 15;\
-");
+//var result = exports.parse("\
+//var ecmascript5 = require('./ecmascript5', 2);\r\n\
+//var ecmascript5 = new Test();\r\n\
+//var a, b = a++;\
+//a = ~!1 % 2 ^ 3 & 4 && 5 * (6 - 7 + 8[9] ? 10 : 11 | 12 || 13 / 14 <= b.x), 15;\
+//");
+//sys.puts(result[0][0].toAST());
