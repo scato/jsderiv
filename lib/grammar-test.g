@@ -1,3 +1,9 @@
+import Lexer, KEYWORD from .lexer;
+
+augment grammar Lexer {
+    KEYWORD: default | ("test" | "assert") -> KEYWORD;
+}
+
 import Parser, Literal from .parser;
 import ID, LITERAL from .lexer;
 
