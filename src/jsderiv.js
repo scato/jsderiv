@@ -1,7 +1,8 @@
 // http://www.ccs.neu.edu/home/turon/re-deriv.pdf
 // http://arxiv.org/PS_cache/arxiv/pdf/1010/1010.5023v1.pdf
 
-var util = require('util');
+var util    = require('util'),
+    unicode = require('./unicode');
 
 function trim(treeset) {
     var found = [];
@@ -536,213 +537,6 @@ function Many(expr) {
 function Ignore(expr) {
     return Red(expr, function() { return undefined; });
 }
-
-function Ref(id) {
-    if(this.constructor === Ref) {
-        throw new Error('Cannot instantiate abstract class Ref');
-    } else {
-        this.id = id;
-        
-        this.fixed = {
-            derive: undefined,
-            delta: undefined,
-            toString: undefined,
-            parseNull: undefined
-        };
-    }
-};
-
-util.inherits(Ref, Expr);
-
-Ref.prototype.resolve = function() {
-    var self = this.constructor;
-    
-    if(self.definitions[this.id] === undefined) {
-        throw new Error("Could not resolve reference to '" + this.id + "', no definition found.");
-    } else {
-        return self.definitions[this.id];
-    }
-};
-
-Ref.prototype.derive = function(element, metadata) {
-    var self = this.constructor;
-    
-    if(this.fixed.derive !== undefined) {
-        return this.fixed.derive;
-    } else {
-        // We could use every existing definition as fixed points,
-        // but simplify() doesn't work good enough for us to use
-        // equals() to conclude that these two expressions are equal:
-        // A := A | C    and    B := B | C
-        
-        var found = undefined;
-        
-        [Void(), Null()].forEach(function(fixed) {
-            if(found === undefined) {
-                this.fixed.derive = fixed;
-                
-                if(this.resolve().derive(element, metadata).equals(fixed)) {
-                    found = fixed;
-                }
-                
-                this.fixed.derive = undefined;
-            }
-        }.bind(this));
-        
-        if(found !== undefined) {
-            return found;
-        } else {
-            var id = this.id + "_" + element.toString();
-            
-            this.fixed.derive = self(id);
-            
-            self.define(id, this.resolve().derive(element, metadata), null);
-            
-            this.fixed.derive = undefined;
-            
-            return self(id);
-        }
-    }
-};
-
-Ref.prototype.delta = function(char) {
-    if(this.fixed.delta !== undefined) {
-        return this.fixed.delta;
-    } else {
-        var found = undefined;
-        
-        [Void(), Null()].forEach(function(fixed) {
-            if(found === undefined) {
-                this.fixed.delta = fixed;
-                
-                if(this.resolve().delta().equals(fixed)) {
-                    found = fixed;
-                }
-                
-                this.fixed.delta = undefined;
-            }
-        }.bind(this));
-        
-        if(found === undefined) {
-            throw new Error('Unable to find fixed point for delta on ' + this.id + '.');
-        } else {
-            return found;
-        }
-    }
-};
-
-// write out one layer of recursion for references
-Ref.prototype.toString = function() {
-    if(this.fixed.toString !== undefined) {
-        return this.fixed.toString;
-    } else {
-        this.fixed.toString = 'Ref("' + this.id + '")';
-        
-        var result = this.resolve().toString();
-        
-        this.fixed.toString = undefined;
-        
-        return result;
-    }
-};
-
-Ref.prototype.simplify = function() {
-    var self = this.constructor;
-    
-    if(self.references[this.id] !== undefined) {
-        return self.references[this.id];
-    } else {
-        self.references[this.id] = this;
-        
-        return this;
-    }
-};
-
-Ref.prototype.equals = function(expr) {
-    return Expr.prototype.equals.apply(this, [expr])
-        && this.id === expr.id;
-};
-
-Ref.prototype.parseNull = function() {
-    if(this.fixed.parseNull !== undefined) {
-        return this.fixed.parseNull;
-    } else {
-        this.fixed.parseNull = [];
-        
-        function equal(a, b) {
-            return JSON.stringify(a) === JSON.stringify(b);
-        }
-        
-        while(true) {
-            var a = this.resolve().parseNull();
-            var b = this.fixed.parseNull;
-            
-            if(equal(a, b)) {
-                this.fixed.parseNull = undefined;
-                
-                return a;
-            } else {
-                this.fixed.parseNull = a;
-            }
-        }
-    }
-};
-
-// todo: implement as Register-class instead of Def-mixin
-function Def(Ref) {
-    Ref.definitions = {};
-    Ref.references = {};
-    
-    Ref.createCons = function(id) {
-        throw new Error("Cannot call abstract method Ref.createCons");
-    };
-
-    Ref.createFunc = function(cons) {
-        throw new Error("Cannot call abstract method Ref.createFunc");
-    };
-
-    Ref.define = function(id, expr, cons) {
-        if(cons === undefined) {
-            cons = Ref.createCons(id);
-        }
-        
-        if(cons === null) {
-            Ref.definitions[id] = expr;
-        } else {
-            Ref.definitions[id] = Red(expr, Ref.createFunc(cons));
-        }
-        
-        return cons;
-    };
-}
-
-exports.Expr   = Expr;
-exports.Void   = Void;
-exports.Null   = Null;
-exports.Seq    = Seq;
-exports.Or     = Or;
-exports.And    = And;
-exports.Any    = Any;
-exports.Not    = Not;
-exports.Red    = Red;
-exports.Join   = Join;
-exports.Maybe  = Maybe;
-exports.Ignore = Ignore;
-exports.Many   = Many;
-exports.Ref    = Ref;
-exports.Def    = Def;
-
-var util    = require('util'),
-    common  = require('./common'),
-    unicode = require('./unicode');
-
-var Expr = common.Expr,
-    Void = common.Void,
-    Null = common.Null,
-    Or   = common.Or,
-    Seq  = common.Seq,
-    Join = common.Join,
-    Any  = common.Any;
 
 function One() {
     if(this.constructor === One) {
@@ -1362,46 +1156,9 @@ function Text(values) {
     return Array.prototype.join.apply(values, ['']);
 }
 
-exports.Char       = Char;
-exports.One        = One;
-exports.Range      = Range;
-exports.Category   = Category;
-exports.Ref        = Ref;
-exports.Literal    = Literal;
-exports.InstanceOf = InstanceOf;
-exports.Capture    = Capture;
-
-exports.Node    = Node;
-exports.Cons    = Cons;
-
-exports.parse   = parse;
-exports.match   = match;
-
-exports.List    = List;
-exports.Text    = Text;
-
-// includes type alteration
-// (like type augmentation, but changing methods instead of adding them)
-
-var util = require('util');
-
-var common  = require('./common'),
-    generic = require('./generic');
-
-var Expr = common.Expr,
-    Null = common.Null,
-    Void = common.Void,
-    Seq  = common.Seq,
-    Or   = common.Or,
-    And  = common.And,
-    Not  = common.Not,
-    Red  = common.Red,
-    Join = common.Join,
-    Many = common.Many,
-    Ref  = generic.Ref;
-
 // call delta with extra argument "element"
 // in Seq.prototype.derive and all delta-methods
+// TODO: delete old methods!
 
 Expr.prototype.isNullable = function(element) {
     return this.delta(element).equals(Null());
@@ -1542,5 +1299,37 @@ Look.prototype.parseNull = function() {
 Look.prototype.isNull = function() {
     return false;
 };
+
+exports.Expr   = Expr;
+exports.Void   = Void;
+exports.Null   = Null;
+exports.Seq    = Seq;
+exports.Or     = Or;
+exports.And    = And;
+exports.Any    = Any;
+exports.Not    = Not;
+exports.Red    = Red;
+exports.Join   = Join;
+exports.Maybe  = Maybe;
+exports.Ignore = Ignore;
+exports.Many   = Many;
+
+exports.Char       = Char;
+exports.One        = One;
+exports.Range      = Range;
+exports.Category   = Category;
+exports.Ref        = Ref;
+exports.Literal    = Literal;
+exports.InstanceOf = InstanceOf;
+exports.Capture    = Capture;
+
+exports.Node    = Node;
+exports.Cons    = Cons;
+
+exports.parse   = parse;
+exports.match   = match;
+
+exports.List    = List;
+exports.Text    = Text;
 
 exports.Look  = Look;

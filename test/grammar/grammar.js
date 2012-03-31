@@ -1,4 +1,4 @@
-var c = require('../../lib/common');
+var $ = require('../../lib/jsderiv');
 var g = require('../../lib/generic');
 var l = require('../../lib/lookahead');
 

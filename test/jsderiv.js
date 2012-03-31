@@ -1,3 +1,4 @@
+var Char = require('../src/jsderiv').Char;
 
 exports['test Node with String'] = function(test) {
     var id = 'ID';

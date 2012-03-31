@@ -1,3 +1,16 @@
+var Cons = require('../src/jsderiv').Cons;
+
+var INT = Cons("INT");
+
+function derive(expr, input) {
+    var output = expr;
+    
+    for(var i = 0; i < input.length; i++) {
+        output = output.derive(input[i]);
+    }
+    
+    return output;
+}
 
 exports['test Char'] = function(test) {
     var output;
