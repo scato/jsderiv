@@ -36,27 +36,20 @@ exports['test isNullable'] = function(test) {
 };
 
 exports['test isVoidable'] = function(test) {
-    // Void is not voidable
+    // Void is voidable
     test.ok(Void().isVoidable());
     
     test.done();
 };
 
 exports['test delta'] = function(test) {
-    // the delta of Void is Void
-    test.ok(Void().delta().equals(Void()));
-    
-    test.done();
-};
-
-exports['test bigDelta'] = function(test) {
-    // big delta requires an attribute
+    // delta requires an attribute
     test.throws(function() {
-        Void().bigDelta();
+        Void().delta();
     });
     
-    // the big delta of Void is always Void
-    test.ok(Void().bigDelta('a').equals(Void()));
+    // the delta of Void is always Void
+    test.ok(Void().delta('a').equals(Void()));
     
     test.done();
 };
@@ -91,3 +84,4 @@ exports['test parse'] = function(test) {
     
     test.done();
 };
+
