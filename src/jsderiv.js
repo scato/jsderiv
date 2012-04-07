@@ -1,9 +1,5 @@
 var Expr = function() {};
 
-Expr.prototype.equals = function(expr) {
-    return expr === this;
-};
-
 Expr.prototype.parse = function(input) {
     if(input === undefined) {
         throw new Error('Not enough arguments');
@@ -18,24 +14,41 @@ Expr.prototype.parse = function(input) {
     return expr.parseNull();
 }
 
-var Void = exports.Void = function() {
-    if(Void._instance !== undefined) {
-        return Void._instance;
-    } else if(this instanceof Void) {
-        Void._instance = this;
-        
-        return this;
-    } else {
-        return new Void();
-    }
+var Const = function() {};
+
+Const.prototype = Object.create(Expr.prototype);
+Const.prototype.constructor = Const;
+
+Const.define = function(type) {
+    var ctor = function() {
+        if(ctor._instance !== undefined) {
+            return ctor._instance;
+        } else if(this instanceof ctor) {
+            ctor._instance = this;
+            
+            return this;
+        } else {
+            return new ctor();
+        }
+    };
+    
+    ctor.prototype = Object.create(Const.prototype);
+    ctor.prototype.constructor = ctor;
+    
+    ctor.prototype._type = type;
+    
+    return ctor;
 };
 
-Void.prototype = Object.create(Expr.prototype);
-Void.prototype.constructor = Void;
-
-Void.prototype.toString = function() {
-    return 'Void()';
+Const.prototype.equals = function(expr) {
+    return expr === this;
 };
+
+Const.prototype.toString = function() {
+    return this._type + '()';
+};
+
+var Void = exports.Void = Const.define('Void');
 
 Void.prototype.isNullable = function() {
     return false;
@@ -65,24 +78,7 @@ Void.prototype.parseNull = function() {
     return [];
 };
 
-var Null = exports.Null = function() {
-    if(Null._instance !== undefined) {
-        return Null._instance;
-    } else if(this instanceof Null) {
-        Null._instance = this;
-        
-        return this;
-    } else {
-        return new Null();
-    }
-};
-
-Null.prototype = Object.create(Expr.prototype);
-Null.prototype.constructor = Null;
-
-Null.prototype.toString = function() {
-    return 'Null()';
-};
+var Null = exports.Null = Const.define('Null');
 
 Null.prototype.isNullable = function() {
     return true;
@@ -112,6 +108,8 @@ Null.prototype.parseNull = function() {
     return [[]];
 };
 
+var One = exports.One = Const.define('One');
+
 var Char = exports.Char = function(char) {
     if(char === undefined) {
         throw new Error('Not enough arguments');
@@ -126,7 +124,7 @@ var Char = exports.Char = function(char) {
     }
 };
 
-Char.prototype = Object.create(Expr.prototype);
+Char.prototype = Object.create(One.prototype);
 Char.prototype.constructor = Char;
 
 Char.prototype.equals = function(expr) {
@@ -159,16 +157,112 @@ Char.prototype.derive = function(element) {
     }
     
     if(element === this.char) {
-        return Red(Null(), function() {
-            return [element];
-        });
+        return One.prototype.derive.apply(this, [element]);
     } else {
         return Void();
     }
 };
 
+One.prototype.derive = function(element) {
+    if(element === undefined) {
+        throw new Error('Not enough arguments');
+    }
+    
+    return Red(Null(), function() {
+        return [element];
+    });
+};
+
 Char.prototype.parseNull = function() {
     return [];
+};
+
+var Unary = function() {};
+
+Unary.prototype = Object.create(Expr.prototype);
+Unary.prototype.constructor = Unary;
+
+Unary.define = function(type) {
+    var ctor = function(expr) {
+        if(expr === undefined) {
+            throw new Error('Not enough arguments');
+        }
+        
+        if(this instanceof ctor) {
+            this.expr = expr;
+            
+            return this._simplify();
+        } else {
+            return new ctor(expr);
+        }
+    };
+
+    ctor.prototype = Object.create(Unary.prototype);
+    ctor.prototype.constructor = ctor;
+    
+    ctor.prototype._type = type;
+    
+    return ctor;
+};
+
+Unary.prototype._simplify = function() {
+    return this;
+};
+
+Unary.prototype.equals = function(expr) {
+    return expr.constructor === this.constructor && expr.expr.equals(this.expr);
+};
+
+Unary.prototype.toString = function() {
+    return this._type + '(' + this.expr.toString() + ')';
+};
+
+var Any = exports.Any = Unary.define('Any');
+
+Any.prototype._simplify = function() {
+    if(this.expr instanceof Any) {
+        return this.expr;
+    } else if(this.expr.equals(Null())) {
+        return Null();
+    } else if(this.expr.equals(Void())) {
+        return Null();
+    } else {
+        return this;
+    }
+};
+
+Any.prototype.isNullable = function() {
+    return true;
+};
+
+Any.prototype.isVoidable = function() {
+    return !this.expr.equals(One());
+};
+
+Any.prototype.delta = function(element) {
+    if(element === undefined) {
+        throw new Error('Not enough arguments');
+    }
+    
+    return Null();
+};
+
+Any.prototype.derive = function(element) {
+    if(element === undefined) {
+        throw new Error('Not enough arguments');
+    }
+    
+    return Seq(this.expr.derive(element), this);
+};
+
+Any.prototype.parseNull = function() {
+    return [[]];
+};
+
+var Not = exports.Not = Unary.define('Not');
+
+Not.prototype.isVoidable = function() {
+    return !this.expr.equals(Void());
 };
 
 var Red = exports.Red = function(expr, func) {
@@ -186,6 +280,10 @@ Red.prototype.equals = function() {
     return false;
 };
 
+Red.prototype.isNullable = function() {
+    return true;
+};
+
 Red.prototype.derive = function() {
     return Void();
 };
@@ -194,27 +292,80 @@ Red.prototype.parseNull = function() {
     return this.func();
 };
 
-var Or = exports.Or = function(left, right) {
-    if(left === undefined || right === undefined) {
+var Binary = function() {};
+
+Binary.prototype = Object.create(Expr.prototype);
+Binary.prototype.constructor = Binary;
+
+Binary.define = function(type) {
+    var ctor = function(left, right) {
+        if(left === undefined || right === undefined) {
+            throw new Error('Not enough arguments');
+        }
+        
+        if(this instanceof ctor) {
+            this.left = left;
+            this.right = right;
+            
+            return this._simplify();
+        } else {
+            return new ctor(left, right);
+        }
+    };
+    
+    ctor.prototype = Object.create(Binary.prototype);
+    ctor.prototype.constructor = ctor;
+    
+    ctor.prototype._type = type;
+
+    return ctor;
+};
+
+Binary.prototype._simplify = function() {
+    if(this.left.equals(Void())) {
+        return Void();
+    } else if(this.right.equals(Void())) {
+        return Void();
+    } else if(this.right.constructor === this.constructor) {
+        return new this.constructor(new this.constructor(this.left, this.right.left), this.right.right);
+    } else {
+        return this;
+    }
+};
+
+Binary.prototype.equals = function(expr) {
+    return expr.constructor === this.constructor && (this.left.equals(expr.left) && this.right.equals(expr.right) || this.left.equals(expr.right) && this.right.equals(expr.left));
+};
+
+Binary.prototype.toString = function() {
+    return this._type + '(' + this.left.toString() + ', ' + this.right.toString() + ')';
+};
+
+Binary.prototype.isNullable = function() {
+    return this.left.isNullable() && this.right.isNullable();
+};
+
+Binary.prototype.isVoidable = function() {
+    return this.left.isVoidable() || this.right.isVoidable();
+};
+
+Binary.prototype.delta = function(element) {
+    if(element === undefined) {
         throw new Error('Not enough arguments');
     }
     
-    if(this instanceof Or) {
-        this.left = left;
-        this.right = right;
-        
-        return this._simplify();
-    } else {
-        return new Or(left, right);
+    return And(this.left.delta(element), this.right.delta(element));
+};
+
+Binary.prototype.derive = function(element) {
+    if(element === undefined) {
+        throw new Error('Not enough arguments');
     }
+    
+    return new this.constructor(this.left.derive(element), this.right.derive(element));
 };
 
-Or.prototype = Object.create(Expr.prototype);
-Or.prototype.constructor = Or;
-
-Or.prototype.equals = function(expr) {
-    return expr instanceof Or && (this.left.equals(expr.left) && this.right.equals(expr.right) || this.left.equals(expr.right) && this.right.equals(expr.left));
-};
+var Or = exports.Or = Binary.define('Or');
 
 Or.prototype._simplify = function() {
     if(this.left.equals(this.right)) {
@@ -227,15 +378,9 @@ Or.prototype._simplify = function() {
         return this.right;
     } else if(this.right.equals(Void())) {
         return this.left;
-    } else if(this.right instanceof Or) {
-        return Or(Or(this.left, this.right.left), this.right.right);
     } else {
-        return this;
+        return Binary.prototype._simplify.apply(this, []);
     }
-};
-
-Or.prototype.toString = function() {
-    return 'Or(' + this.left.toString() + ', ' + this.right.toString() + ')';
 };
 
 Or.prototype.isNullable = function() {
@@ -254,71 +399,24 @@ Or.prototype.delta = function(element) {
     return Or(this.left.delta(element), this.right.delta(element));
 };
 
-Or.prototype.derive = function(element) {
-    if(element === undefined) {
-        throw new Error('Not enough arguments');
-    }
-    
-    return Or(this.left.derive(element), this.right.derive(element));
-};
-
 Or.prototype.parseNull = function() {
     return this.left.parseNull().concat(this.right.parseNull());
 };
 
-var Seq = exports.Seq = function(left, right) {
-    if(left === undefined || right === undefined) {
-        throw new Error('Not enough arguments');
-    }
-    
-    if(this instanceof Seq) {
-        this.left = left;
-        this.right = right;
-        
-        return this._simplify();
-    } else {
-        return new Seq(left, right);
-    }
-};
+var Seq = exports.Seq = Binary.define('Seq');
 
 Seq.prototype._simplify = function() {
-    if(this.left.equals(Void())) {
-        return Void();
-    } else if(this.right.equals(Void())) {
-        return Void();
-    } else if(this.left.equals(Null())) {
+    if(this.left.equals(Null())) {
         return this.right;
     } else if(this.right.equals(Null())) {
         return this.left;
-    } else if(this.right instanceof Seq) {
-        return Seq(Seq(this.left, this.right.left), this.right.right);
     } else {
-        return this;
+        return Binary.prototype._simplify.apply(this, []);
     }
 };
 
 Seq.prototype.equals = function(expr) {
     return expr instanceof Seq && this.left.equals(expr.left) && this.right.equals(expr.right);
-};
-
-Seq.prototype.toString = function() {
-    return 'Seq(' + this.left.toString() + ', ' + this.right.toString() + ')';
-};
-
-Seq.prototype.isNullable = function() {
-    return this.left.isNullable() && this.right.isNullable();
-};
-
-Seq.prototype.isVoidable = function() {
-    return this.left.isVoidable() || this.right.isVoidable();
-};
-
-Seq.prototype.delta = function(element) {
-    if(element === undefined) {
-        throw new Error('Not enough arguments');
-    }
-    
-    return And(this.left.delta(element), this.right.delta(element));
 };
 
 Seq.prototype.derive = function(element) {
@@ -341,38 +439,19 @@ Seq.prototype.derive = function(element) {
     }
 };
 
-var Not = exports.Not = function(expr) {
-    if(this instanceof Not) {
-        this.expr = expr;
-        
-        return this;
-    } else {
-        return new Not(expr);
-    }
+Seq.prototype.parseNull = function() {
+    var result = [];
+    
+    this.left.parseNull().forEach(function(left) {
+        this.right.parseNull().forEach(function(right) {
+            result.push(left.concat(right));
+        });
+    }.bind(this));
+    
+    return result;
 };
 
-Not.prototype.equals = function(expr) {
-    return expr instanceof Not && this.expr.equals(expr.expr);
-};
-
-Not.prototype.isVoidable = function() {
-    if(this.expr.equals(Void())) {
-        return false;
-    } else {
-        return true;
-    }
-};
-
-var And = exports.And = function(left, right) {
-    if(this instanceof And) {
-        this.left = left;
-        this.right = right;
-        
-        return this._simplify();
-    } else {
-        return new And(left, right);
-    }
-};
+var And = exports.And = Binary.define('And');
 
 And.prototype._simplify = function() {
     if(this.left.equals(this.right)) {
@@ -381,12 +460,16 @@ And.prototype._simplify = function() {
         return Void();
     } else if(this.right.equals(Void())) {
         return Void();
+    } else if(this.left.equals(Not(Void()))) {
+        return this.right;
+    } else if(this.right.equals(Not(Void()))) {
+        return this.left;
     } else {
-        return this;
+        return Binary.prototype._simplify.apply(this, []);
     }
 };
 
-And.prototype.equals = function(expr) {
-    return expr instanceof And && (this.left.equals(expr.left) && this.right.equals(expr.right) || this.left.equals(expr.right) && this.right.equals(expr.left));
+And.prototype.parseNull = function() {
+    return this.left.parseNull();
 };
 

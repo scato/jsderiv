@@ -139,13 +139,15 @@ exports['test derive'] = function(test) {
     test.done();
 };
 
-/*
 exports['test parseNull'] = function(test) {
     // parsing Null with r . s yields an empty set
     test.deepEqual(Seq(Char('r'), Char('s')).parseNull(), []);
     
-    // parsing Null with r . () yields an empty list
-    test.deepEqual(Seq(Char('r'), Null()).parseNull(), [[]]);
+    // parsing Null with r . (s | ()) yields an empty set
+    test.deepEqual(Seq(Char('r'), Or(Char('s'), Null())).parseNull(), []);
+    
+    // parsing Null with (r | ()) . (s | ()) yields an empty list
+    test.deepEqual(Seq(Or(Char('r'), Null()), Or(Char('s'), Null())).parseNull(), [[]]);
     
     test.done();
 };
@@ -156,16 +158,21 @@ exports['test parse'] = function(test) {
         Seq(Char('r'), Char('s')).parse();
     });
     
-    // parsing "r" with r . s yields "r"
-    test.deepEqual(Seq(Char('r'), Char('s')).parse("r"), ["r"]);
+    // parsing "r" with r . s yields an empty set
+    test.deepEqual(Seq(Char('r'), Char('s')).parse("r"), []);
     
-    // parsing "s" with r . s yields "s"
-    test.deepEqual(Seq(Char('r'), Char('s')).parse("s"), ["s"]);
+    // parsing "s" with r . s yields an empty set
+    test.deepEqual(Seq(Char('r'), Char('s')).parse("s"), []);
+    
+    // parsing "rs" with r . s yields "rs"
+    test.deepEqual(Seq(Char('r'), Char('s')).parse("rs"), ["rs"]);
+    
+    // parsing "sr" with r . s yields an empty set
+    test.deepEqual(Seq(Char('r'), Char('s')).parse("sr"), []);
     
     // parsing "rst" with r . s yields an empty set
     test.deepEqual(Seq(Char('r'), Char('s')).parse("rst"), []);
     
     test.done();
 };
-*/
 
