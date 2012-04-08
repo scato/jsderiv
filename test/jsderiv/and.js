@@ -133,22 +133,21 @@ exports['test parseNull'] = function(test) {
     test.done();
 };
 
-/*
 exports['test parse'] = function(test) {
     // parse requires an attribute
     test.throws(function() {
         And(Char('r'), Char('s')).parse();
     });
     
-    // parsing "r" with r & s yields "r"
-    test.deepEqual(And(Char('r'), Char('s')).parse("r"), ["r"]);
+    // parsing "r" with r & . yields "r"
+    test.deepEqual(And(Char('r'), One()).parse("r"), ["r"]);
     
-    // parsing "s" with r & s yields "s"
-    test.deepEqual(And(Char('r'), Char('s')).parse("s"), ["s"]);
+    // parsing "s" with r & . yields an empty set
+    test.deepEqual(And(Char('s'), One()).parse("r"), []);
     
-    // parsing "rst" with r & s yields an empty set
-    test.deepEqual(And(Char('r'), Char('s')).parse("rst"), []);
+    // parsing "rrr with r & . yields an empty set
+    test.deepEqual(And(Char('r'), One()).parse("rrr"), []);
     
     test.done();
 };
-*/
+

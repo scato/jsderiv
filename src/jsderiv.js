@@ -48,23 +48,27 @@ Const.prototype.toString = function() {
     return this._type + '()';
 };
 
-var Void = exports.Void = Const.define('Void');
-
-Void.prototype.isNullable = function() {
+Const.prototype.isNullable = function() {
     return false;
 };
 
-Void.prototype.isVoidable = function() {
+Const.prototype.isVoidable = function() {
     return true;
 };
 
-Void.prototype.delta = function(element) {
+Const.prototype.delta = function(element) {
     if(element === undefined) {
         throw new Error('Not enough arguments');
     }
     
     return Void();
 };
+
+Const.prototype.parseNull = function() {
+    return [];
+};
+
+var Void = exports.Void = Const.define('Void');
 
 Void.prototype.derive = function(element) {
     if(element === undefined) {
@@ -74,17 +78,9 @@ Void.prototype.derive = function(element) {
     return Void();
 };
 
-Void.prototype.parseNull = function() {
-    return [];
-};
-
 var Null = exports.Null = Const.define('Null');
 
 Null.prototype.isNullable = function() {
-    return true;
-};
-
-Null.prototype.isVoidable = function() {
     return true;
 };
 
@@ -135,22 +131,6 @@ Char.prototype.toString = function() {
     return 'Char(' + JSON.stringify(this.char) + ')';
 };
 
-Char.prototype.isNullable = function() {
-    return false;
-};
-
-Char.prototype.isVoidable = function() {
-    return true;
-};
-
-Char.prototype.delta = function(element) {
-    if(element === undefined) {
-        throw new Error('Not enough arguments');
-    }
-    
-    return Void();
-};
-
 Char.prototype.derive = function(element) {
     if(element === undefined) {
         throw new Error('Not enough arguments');
@@ -171,10 +151,6 @@ One.prototype.derive = function(element) {
     return Red(Null(), function() {
         return [element];
     });
-};
-
-Char.prototype.parseNull = function() {
-    return [];
 };
 
 var Unary = function() {};
@@ -261,35 +237,108 @@ Any.prototype.parseNull = function() {
 
 var Not = exports.Not = Unary.define('Not');
 
+Not.prototype._simplify = function() {
+    if(this.expr instanceof Not) {
+        return this.expr.expr;
+    } else {
+        return this;
+    }
+};
+
+Not.prototype.isNullable = function() {
+    return !this.expr.isNullable();
+};
+
 Not.prototype.isVoidable = function() {
     return !this.expr.equals(Void());
 };
 
-var Red = exports.Red = function(expr, func) {
-    if(this instanceof Red) {
-        this.expr = expr;
-        this.func = func;
-        
-        return this;
+Not.prototype.delta = function(element) {
+    if(element === undefined) {
+        throw new Error('Not enough arguments');
+    }
+    
+    if(this.expr.delta(element).equals(Void())) {
+        return Null();
     } else {
-        return new Red(expr, func);
+        return Void();
     }
 };
 
-Red.prototype.equals = function() {
-    return false;
+Not.prototype.derive = function(element) {
+    if(element === undefined) {
+        throw new Error('Not enough arguments');
+    }
+    
+    return Not(this.expr.derive(element));
+};
+
+Not.prototype.parseNull = function() {
+    if(this.expr.isNullable()) {
+        return [];
+    } else {
+        return [[]];
+    }
+};
+
+var Red = exports.Red = function(expr, lambda) {
+    if(expr === undefined || lambda === undefined) {
+        throw new Error('Not enough arguments');
+    }
+    
+    if(this instanceof Red) {
+        this.expr = expr;
+        this.lambda = lambda;
+        
+        return this._simplify();
+    } else {
+        return new Red(expr, lambda);
+    }
+};
+
+Red.prototype = Object.create(Expr.prototype);
+Red.prototype.constructor = Red;
+
+Red.prototype._simplify = function() {
+    if(this.expr.equals(Void())) {
+        return Void();
+    } else {
+        return this;
+    }
+};
+
+Red.prototype.equals = function(expr) {
+    return expr instanceof Red && expr.expr.equals(this.expr) && expr.lambda === this.lambda;
+};
+
+Red.prototype.toString = function() {
+    return 'Red(' + this.expr.toString() + ', [Function])';
 };
 
 Red.prototype.isNullable = function() {
-    return true;
+    return this.expr.isNullable();
 };
 
-Red.prototype.derive = function() {
-    return Void();
+Red.prototype.isVoidable = function() {
+    return this.expr.isVoidable();
+};
+
+Red.prototype.delta = function(element) {
+    return this.expr.delta(element);
+};
+
+Red.prototype.derive = function(element) {
+    return Red(this.expr.derive(element), this.lambda);
 };
 
 Red.prototype.parseNull = function() {
-    return this.func();
+    var result = [];
+    
+    this.expr.parseNull().forEach(function(tree) {
+        result = result.concat(this.lambda(tree));
+    }.bind(this));
+    
+    return result;
 };
 
 var Binary = function() {};

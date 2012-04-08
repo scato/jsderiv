@@ -70,7 +70,7 @@ exports['test delta'] = function(test) {
         Any(Char('r')).delta();
     });
     
-    // the delta of Any(Char('r')) is always Null
+    // the delta of r* is always Null
     test.ok(Any(Char('r')).delta('a').equals(Null()));
     
     test.done();
