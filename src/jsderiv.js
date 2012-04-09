@@ -106,6 +106,16 @@ Null.prototype.parseNull = function() {
 
 var One = exports.One = Const.define('One');
 
+One.prototype.derive = function(element) {
+    if(element === undefined) {
+        throw new Error('Not enough arguments');
+    }
+    
+    return Red(Null(), function() {
+        return [element];
+    });
+};
+
 var Char = exports.Char = function(char) {
     if(char === undefined) {
         throw new Error('Not enough arguments');
@@ -143,14 +153,79 @@ Char.prototype.derive = function(element) {
     }
 };
 
-One.prototype.derive = function(element) {
+var Cat = exports.Cat = function(cat) {
+    if(cat === undefined) {
+        throw new Error('Not enough arguments');
+    }
+    
+    if(this instanceof Cat) {
+        this.cat = cat;
+        
+        return this;
+    } else {
+        return new Cat(cat);
+    }
+};
+
+Cat.prototype = Object.create(One.prototype);
+Cat.prototype.constructor = Cat;
+
+Cat.prototype.equals = function(expr) {
+    return expr instanceof Cat && expr.cat === this.cat;
+};
+
+Cat.prototype.toString = function() {
+    return 'Cat(' + JSON.stringify(this.cat) + ')';
+};
+
+Cat.prototype.derive = function(element) {
     if(element === undefined) {
         throw new Error('Not enough arguments');
     }
     
-    return Red(Null(), function() {
-        return [element];
-    });
+    if(typeof element === 'string' && element.match(new RegExp('\\' + this.cat))) {
+        return One.prototype.derive.apply(this, [element]);
+    } else {
+        return Void();
+    }
+};
+
+var Range = exports.Range = function(min, max) {
+    if(min === undefined || max === undefined) {
+        throw new Error('Not enough arguments');
+    }
+    
+    if(this instanceof Range) {
+        this.min = min;
+        this.max = max;
+        
+        return this;
+    } else {
+        return new Range(min, max);
+    }
+};
+
+Range.prototype = Object.create(One.prototype);
+Range.prototype.constructor = Range;
+
+Range.prototype.equals = function(expr) {
+    return expr instanceof Range && expr.min === this.min && expr.max === this.max;
+};
+
+Range.prototype.toString = function() {
+    return 'Range(' + JSON.stringify(this.min) + ', ' + JSON.stringify(this.max) + ')';
+};
+
+Range.prototype.derive = function(element) {
+    if(element === undefined) {
+        throw new Error('Not enough arguments');
+    }
+    
+    if(typeof element === 'string' && element.length === 1 && this.min.charCodeAt(0) <= element.charCodeAt(0) && element.charCodeAt(0) <= this.max.charCodeAt(0)) {
+        return One.prototype.derive.apply(this, [element]);
+    } else {
+        return Void();
+    }
 };
 
 var Unary = function() {};
