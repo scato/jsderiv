@@ -1,3 +1,5 @@
+var ArgumentError = require('../../src/jsderiv').ArgumentError;
+
 var Void  = require('../../src/jsderiv').Void,
     Null  = require('../../src/jsderiv').Null,
     Range = require('../../src/jsderiv').Range,
@@ -7,12 +9,22 @@ exports['test constructor'] = function(test) {
     // constructor expects two arguments
     test.throws(function() {
         new Range();
-    });
+    }, ArgumentError);
     
     // constructor expects two arguments
     test.throws(function() {
         new Range('a');
-    });
+    }, ArgumentError);
+    
+    // constructor expects two characters
+    test.throws(function() {
+        new Range('', 'c');
+    }, ArgumentError);
+    
+    // constructor expects two characters
+    test.throws(function() {
+        new Range('a', '');
+    }, ArgumentError);
     
     // function can also be used as a constructor 
     test.ok(Range('a', 'c') instanceof Range);
@@ -55,10 +67,10 @@ exports['test isVoidable'] = function(test) {
 };
 
 exports['test delta'] = function(test) {
-    // delta requires an attribute
+    // delta requires an argument
     test.throws(function() {
         Range('a', 'c').delta();
-    });
+    }, ArgumentError);
     
     // the delta of 'a' - 'c' is always Void
     test.ok(Range('a', 'c').delta('a').equals(Void()));
@@ -67,10 +79,10 @@ exports['test delta'] = function(test) {
 };
 
 exports['test derive'] = function(test) {
-    // derive requires an attribute
+    // derive requires an argument
     test.throws(function() {
         Range('a', 'c').derive();
-    });
+    }, ArgumentError);
     
     // deriving 'a' - 'c' yields Null -> 'a' for 'a'
     test.ok(Range('a', 'c').derive('a') instanceof Red);
@@ -90,7 +102,7 @@ exports['test parseNull'] = function(test) {
 };
 
 exports['test parse'] = function(test) {
-    // parse requires an attribute
+    // parse requires an argument
     test.throws(function() {
         Range('a', 'c').parse();
     });

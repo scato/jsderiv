@@ -1,3 +1,5 @@
+var ArgumentError = require('../../src/jsderiv').ArgumentError;
+
 var Void = require('../../src/jsderiv').Void,
     Null = require('../../src/jsderiv').Null,
     Char = require('../../src/jsderiv').Char,
@@ -18,12 +20,22 @@ exports['test constructor'] = function(test) {
     // constructor expects two arguments
     test.throws(function() {
         new Red();
-    });
+    }, ArgumentError);
     
     // constructor expects two arguments
     test.throws(function() {
         new Red(Char('r'));
-    });
+    }, ArgumentError);
+    
+    // constructor expects an expression and a function
+    test.throws(function() {
+        new Red(Char('r'), Array());
+    }, ArgumentError);
+    
+    // constructor expects an expression and a function
+    test.throws(function() {
+        new Red(Array(), upper);
+    }, ArgumentError);
     
     // function can also be used as a constructor 
     test.ok(Red(Char('r'), upper) instanceof Red);
@@ -78,10 +90,10 @@ exports['test isVoidable'] = function(test) {
 };
 
 exports['test delta'] = function(test) {
-    // delta requires an attribute
+    // delta requires an argument
     test.throws(function() {
         Red(Char('r'), upper).delta();
-    });
+    }, ArgumentError);
     
     // the delta of r -> upper is always Void
     test.ok(Red(Char('r'), upper).delta('a').equals(Void()));
@@ -93,10 +105,10 @@ exports['test delta'] = function(test) {
 };
 
 exports['test derive'] = function(test) {
-    // derive requires an attribute
+    // derive requires an argument
     test.throws(function() {
         Red(Char('r'), upper).derive();
-    });
+    }, ArgumentError);
     
     // deriving r -> upper yields ~(Null -> 'r' -> upper) for 'r'
     test.ok(Red(Char('r'), upper).derive('r') instanceof Red);
@@ -123,10 +135,10 @@ exports['test parseNull'] = function(test) {
 };
 
 exports['test parse'] = function(test) {
-    // parse requires an attribute
+    // parse requires an argument
     test.throws(function() {
         Red(Char('r'), upper).parse();
-    });
+    }, ArgumentError);
     
     // parsing "r" with r -> upper yields "R"
     test.deepEqual(Red(Char('r'), upper).parse("r"), ["R"]);

@@ -1,3 +1,5 @@
+var ArgumentError = require('../../src/jsderiv').ArgumentError;
+
 var Void = require('../../src/jsderiv').Void,
     Null = require('../../src/jsderiv').Null,
     Char = require('../../src/jsderiv').Char,
@@ -9,12 +11,22 @@ exports['test constructor'] = function(test) {
     // constructor expects two arguments
     test.throws(function() {
         new Or();
-    });
+    }, ArgumentError);
     
     // constructor expects two arguments
     test.throws(function() {
         new Or(Char('a'));
-    });
+    }, ArgumentError);
+    
+    // constructor expects two expressions
+    test.throws(function() {
+        new Or(Array(), Char('b'));
+    }, ArgumentError);
+    
+    // constructor expects two expressions
+    test.throws(function() {
+        new Or(Char('a'), Array());
+    }, ArgumentError);
     
     // function can also be used as a constructor 
     test.ok(Or(Char('a'), Char('b')) instanceof Or);
@@ -75,10 +87,10 @@ exports['test isVoidable'] = function(test) {
 };
 
 exports['test delta'] = function(test) {
-    // delta requires an attribute
+    // delta requires an argument
     test.throws(function() {
         Or(Char('r'), Char('s')).delta();
-    });
+    }, ArgumentError);
     
     // the delta of r | s is always Void
     test.ok(Or(Char('r'), Char('s')).delta('a').equals(Void()));
@@ -90,10 +102,10 @@ exports['test delta'] = function(test) {
 };
 
 exports['test derive'] = function(test) {
-    // derive requires an attribute
+    // derive requires an argument
     test.throws(function() {
         Or(Char('r'), Char('s')).derive();
-    });
+    }, ArgumentError);
     
     // deriving r | s yields Null -> 'r' for 'r'
     test.ok(Or(Char('r'), Char('s')).derive('r') instanceof Red);
@@ -120,7 +132,7 @@ exports['test parseNull'] = function(test) {
 };
 
 exports['test parse'] = function(test) {
-    // parse requires an attribute
+    // parse requires an argument
     test.throws(function() {
         Or(Char('r'), Char('s')).parse();
     });

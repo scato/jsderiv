@@ -1,3 +1,5 @@
+var ArgumentError = require('../../src/jsderiv').ArgumentError;
+
 var Void = require('../../src/jsderiv').Void,
     Null = require('../../src/jsderiv').Null,
     Char = require('../../src/jsderiv').Char,
@@ -10,7 +12,12 @@ exports['test constructor'] = function(test) {
     // constructor expects one argument
     test.throws(function() {
         new Not();
-    });
+    }, ArgumentError);
+    
+    // constructor expects an expression
+    test.throws(function() {
+        new Not(Array());
+    }, ArgumentError);
     
     // function can also be used as a constructor 
     test.ok(Not(Char('r')) instanceof Not);
@@ -62,10 +69,10 @@ exports['test isVoidable'] = function(test) {
 };
 
 exports['test delta'] = function(test) {
-    // delta requires an attribute
+    // delta requires an argument
     test.throws(function() {
         Not(Char('r')).delta();
-    });
+    }, ArgumentError);
     
     // the delta of ~r is always Null
     test.ok(Not(Char('r')).delta('a').equals(Null()));
@@ -77,10 +84,10 @@ exports['test delta'] = function(test) {
 };
 
 exports['test derive'] = function(test) {
-    // derive requires an attribute
+    // derive requires an argument
     test.throws(function() {
         Not(Char('r')).derive();
-    });
+    }, ArgumentError);
     
     // deriving ~r yields ~(Null -> 'r') for 'r'
     test.ok(Not(Char('r')).derive('r') instanceof Not);
@@ -104,7 +111,7 @@ exports['test parseNull'] = function(test) {
 };
 
 exports['test parse'] = function(test) {
-    // parse requires an attribute
+    // parse requires an argument
     test.throws(function() {
         Not(Char('r')).parse();
     });

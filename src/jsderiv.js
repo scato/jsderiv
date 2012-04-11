@@ -1,8 +1,30 @@
+var ArgumentError = exports.ArgumentError = function(message) {
+    this.name = 'ArgumentError';
+    this.message = message;
+    
+    var error = new Error(message);
+    
+    if(error.stack !== undefined) {
+        if(error.fileName !== undefined && error.lineNumber !== undefined) {
+            // Firefox
+            this.stack = error.stack.split('\n').slice(1).join('\n');
+            this.fileName = this.stack.split('\n')[0].match(/^.*@(.*):(\d+)$/)[1];
+            this.lineNumber = this.stack.split('\n')[0].match(/^.*@(.*):(\d+)$/)[2];
+        } else if(error.stack !== undefined) {
+            // V8
+            this.stack = ['ArgumentError: ' + message].concat(error.stack.split('\n').slice(2)).join('\n');
+        }
+    }
+}
+
+ArgumentError.prototype = Object.create(ArgumentError.prototype);
+ArgumentError.prototype.constructor = ArgumentError;
+
 var Expr = function() {};
 
 Expr.prototype.parse = function(input) {
     if(input === undefined) {
-        throw new Error('Not enough arguments');
+        throw new ArgumentError('Not enough arguments');
     }
     
     var expr = this;
@@ -58,7 +80,7 @@ Const.prototype.isVoidable = function() {
 
 Const.prototype.delta = function(element) {
     if(element === undefined) {
-        throw new Error('Not enough arguments');
+        throw new ArgumentError('Not enough arguments');
     }
     
     return Void();
@@ -72,7 +94,7 @@ var Void = exports.Void = Const.define('Void');
 
 Void.prototype.derive = function(element) {
     if(element === undefined) {
-        throw new Error('Not enough arguments');
+        throw new ArgumentError('Not enough arguments');
     }
     
     return Void();
@@ -86,7 +108,7 @@ Null.prototype.isNullable = function() {
 
 Null.prototype.delta = function(element) {
     if(element === undefined) {
-        throw new Error('Not enough arguments');
+        throw new ArgumentError('Not enough arguments');
     }
     
     return Null();
@@ -94,7 +116,7 @@ Null.prototype.delta = function(element) {
 
 Null.prototype.derive = function(element) {
     if(element === undefined) {
-        throw new Error('Not enough arguments');
+        throw new ArgumentError('Not enough arguments');
     }
     
     return Void();
@@ -108,7 +130,7 @@ var One = exports.One = Const.define('One');
 
 One.prototype.derive = function(element) {
     if(element === undefined) {
-        throw new Error('Not enough arguments');
+        throw new ArgumentError('Not enough arguments');
     }
     
     return Red(Null(), function() {
@@ -118,7 +140,11 @@ One.prototype.derive = function(element) {
 
 var Char = exports.Char = function(char) {
     if(char === undefined) {
-        throw new Error('Not enough arguments');
+        throw new ArgumentError('Not enough arguments');
+    }
+    
+    if(typeof char !== 'string' || char.length !== 1) {
+        throw new ArgumentError('Not a character: ' + char.toString());
     }
     
     if(this instanceof Char) {
@@ -143,7 +169,7 @@ Char.prototype.toString = function() {
 
 Char.prototype.derive = function(element) {
     if(element === undefined) {
-        throw new Error('Not enough arguments');
+        throw new ArgumentError('Not enough arguments');
     }
     
     if(element === this.char) {
@@ -155,7 +181,11 @@ Char.prototype.derive = function(element) {
 
 var Cat = exports.Cat = function(cat) {
     if(cat === undefined) {
-        throw new Error('Not enough arguments');
+        throw new ArgumentError('Not enough arguments');
+    }
+    
+    if(!cat.match(/^[wWdDsS]$/)) {
+        throw new ArgumentError('Invalid category: ' + JSON.stringify(cat));
     }
     
     if(this instanceof Cat) {
@@ -180,7 +210,7 @@ Cat.prototype.toString = function() {
 
 Cat.prototype.derive = function(element) {
     if(element === undefined) {
-        throw new Error('Not enough arguments');
+        throw new ArgumentError('Not enough arguments');
     }
     
     if(typeof element === 'string' && element.match(new RegExp('\\' + this.cat))) {
@@ -192,7 +222,15 @@ Cat.prototype.derive = function(element) {
 
 var Range = exports.Range = function(min, max) {
     if(min === undefined || max === undefined) {
-        throw new Error('Not enough arguments');
+        throw new ArgumentError('Not enough arguments');
+    }
+    
+    if(typeof min !== 'string' || min.length !== 1) {
+        throw new ArgumentError('Not a character: ' + min.toString());
+    }
+    
+    if(typeof max !== 'string' || max.length !== 1) {
+        throw new ArgumentError('Not a character: ' + max.toString());
     }
     
     if(this instanceof Range) {
@@ -218,7 +256,7 @@ Range.prototype.toString = function() {
 
 Range.prototype.derive = function(element) {
     if(element === undefined) {
-        throw new Error('Not enough arguments');
+        throw new ArgumentError('Not enough arguments');
     }
     
     if(typeof element === 'string' && element.length === 1 && this.min.charCodeAt(0) <= element.charCodeAt(0) && element.charCodeAt(0) <= this.max.charCodeAt(0)) {
@@ -236,7 +274,11 @@ Unary.prototype.constructor = Unary;
 Unary.define = function(type) {
     var ctor = function(expr) {
         if(expr === undefined) {
-            throw new Error('Not enough arguments');
+            throw new ArgumentError('Not enough arguments');
+        }
+        
+        if(!(expr instanceof Expr)) {
+            throw new ArgumentError('Not an expression: ' + expr.toString());
         }
         
         if(this instanceof ctor) {
@@ -292,7 +334,7 @@ Any.prototype.isVoidable = function() {
 
 Any.prototype.delta = function(element) {
     if(element === undefined) {
-        throw new Error('Not enough arguments');
+        throw new ArgumentError('Not enough arguments');
     }
     
     return Null();
@@ -300,7 +342,7 @@ Any.prototype.delta = function(element) {
 
 Any.prototype.derive = function(element) {
     if(element === undefined) {
-        throw new Error('Not enough arguments');
+        throw new ArgumentError('Not enough arguments');
     }
     
     return Seq(this.expr.derive(element), this);
@@ -330,7 +372,7 @@ Not.prototype.isVoidable = function() {
 
 Not.prototype.delta = function(element) {
     if(element === undefined) {
-        throw new Error('Not enough arguments');
+        throw new ArgumentError('Not enough arguments');
     }
     
     if(this.expr.delta(element).equals(Void())) {
@@ -342,7 +384,7 @@ Not.prototype.delta = function(element) {
 
 Not.prototype.derive = function(element) {
     if(element === undefined) {
-        throw new Error('Not enough arguments');
+        throw new ArgumentError('Not enough arguments');
     }
     
     return Not(this.expr.derive(element));
@@ -358,7 +400,15 @@ Not.prototype.parseNull = function() {
 
 var Red = exports.Red = function(expr, lambda) {
     if(expr === undefined || lambda === undefined) {
-        throw new Error('Not enough arguments');
+        throw new ArgumentError('Not enough arguments');
+    }
+    
+    if(!(expr instanceof Expr)) {
+        throw new ArgumentError('Not an expression: ' + expr.toString());
+    }
+    
+    if(typeof lambda !== 'function') {
+        throw new ArgumentError('Not a function: ' + lambda.toString());
     }
     
     if(this instanceof Red) {
@@ -424,7 +474,15 @@ Binary.prototype.constructor = Binary;
 Binary.define = function(type) {
     var ctor = function(left, right) {
         if(left === undefined || right === undefined) {
-            throw new Error('Not enough arguments');
+            throw new ArgumentError('Not enough arguments');
+        }
+        
+        if(!(left instanceof Expr)) {
+            throw new ArgumentError('Not an expression: ' + left.toString());
+        }
+        
+        if(!(right instanceof Expr)) {
+            throw new ArgumentError('Not an expression: ' + right.toString());
         }
         
         if(this instanceof ctor) {
@@ -475,7 +533,7 @@ Binary.prototype.isVoidable = function() {
 
 Binary.prototype.delta = function(element) {
     if(element === undefined) {
-        throw new Error('Not enough arguments');
+        throw new ArgumentError('Not enough arguments');
     }
     
     return And(this.left.delta(element), this.right.delta(element));
@@ -483,7 +541,7 @@ Binary.prototype.delta = function(element) {
 
 Binary.prototype.derive = function(element) {
     if(element === undefined) {
-        throw new Error('Not enough arguments');
+        throw new ArgumentError('Not enough arguments');
     }
     
     return new this.constructor(this.left.derive(element), this.right.derive(element));
@@ -517,7 +575,7 @@ Or.prototype.isVoidable = function() {
 
 Or.prototype.delta = function(element) {
     if(element === undefined) {
-        throw new Error('Not enough arguments');
+        throw new ArgumentError('Not enough arguments');
     }
     
     return Or(this.left.delta(element), this.right.delta(element));
@@ -545,7 +603,7 @@ Seq.prototype.equals = function(expr) {
 
 Seq.prototype.derive = function(element) {
     if(element === undefined) {
-        throw new Error('Not enough arguments');
+        throw new ArgumentError('Not enough arguments');
     }
     
     if(!this.left.isNullable()) {

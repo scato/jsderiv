@@ -1,3 +1,5 @@
+var ArgumentError = require('../../src/jsderiv').ArgumentError;
+
 var Void = require('../../src/jsderiv').Void,
     Null = require('../../src/jsderiv').Null,
     Cat  = require('../../src/jsderiv').Cat,
@@ -7,7 +9,22 @@ exports['test constructor'] = function(test) {
     // constructor expects one argument
     test.throws(function() {
         new Cat();
-    });
+    }, ArgumentError);
+    
+    // constructor expects a valid category
+    test.throws(function() {
+        new Cat('');
+    }, ArgumentError);
+    
+    // constructor expects a valid category
+    test.throws(function() {
+        new Cat('x');
+    }, ArgumentError);
+    
+    // constructor expects a valid category
+    test.throws(function() {
+        new Cat('ww');
+    }, ArgumentError);
     
     // function can also be used as a constructor 
     test.ok(Cat('w') instanceof Cat);
@@ -50,10 +67,10 @@ exports['test isVoidable'] = function(test) {
 };
 
 exports['test delta'] = function(test) {
-    // delta requires an attribute
+    // delta requires an argument
     test.throws(function() {
         Cat('w').delta();
-    });
+    }, ArgumentError);
     
     // the delta of Cat('w') is always Void
     test.ok(Cat('w').delta('a').equals(Void()));
@@ -62,10 +79,10 @@ exports['test delta'] = function(test) {
 };
 
 exports['test derive'] = function(test) {
-    // derive requires an attribute
+    // derive requires an argument
     test.throws(function() {
         Cat('w').derive();
-    });
+    }, ArgumentError);
     
     // deriving Cat('w') yields Null -> 'a' for 'a'
     test.ok(Cat('w').derive('a') instanceof Red);
@@ -85,7 +102,7 @@ exports['test parseNull'] = function(test) {
 };
 
 exports['test parse'] = function(test) {
-    // parse requires an attribute
+    // parse requires an argument
     test.throws(function() {
         Cat('w').parse();
     });
@@ -99,3 +116,65 @@ exports['test parse'] = function(test) {
     test.done();
 };
 
+exports['test derive JavaScript categories'] = function(test) {
+    // derive Cat('w') yields non-void for alphanumerics and underscore, void for everything else
+    test.ok(!Cat('w').derive('a').equals(Void()));
+    test.ok(!Cat('w').derive('A').equals(Void()));
+    test.ok(!Cat('w').derive('0').equals(Void()));
+    test.ok(!Cat('w').derive('_').equals(Void()));
+    test.ok(Cat('w').derive('%').equals(Void()));
+    test.ok(Cat('w').derive(' ').equals(Void()));
+    
+    // derive Cat('W') yields void for alphanumerics and underscore, non-void for everything else
+    test.ok(Cat('W').derive('a').equals(Void()));
+    test.ok(Cat('W').derive('A').equals(Void()));
+    test.ok(Cat('W').derive('0').equals(Void()));
+    test.ok(Cat('W').derive('_').equals(Void()));
+    test.ok(!Cat('W').derive('%').equals(Void()));
+    test.ok(!Cat('W').derive(' ').equals(Void()));
+    
+    // derive Cat('d') yields non-void for decimals, void for everything else
+    test.ok(Cat('d').derive('a').equals(Void()));
+    test.ok(Cat('d').derive('A').equals(Void()));
+    test.ok(!Cat('d').derive('0').equals(Void()));
+    test.ok(Cat('d').derive('_').equals(Void()));
+    test.ok(Cat('d').derive('%').equals(Void()));
+    test.ok(Cat('d').derive(' ').equals(Void()));
+    
+    // derive Cat('D') yields void for decimals, non-void for everything else
+    test.ok(!Cat('D').derive('a').equals(Void()));
+    test.ok(!Cat('D').derive('A').equals(Void()));
+    test.ok(Cat('D').derive('0').equals(Void()));
+    test.ok(!Cat('D').derive('_').equals(Void()));
+    test.ok(!Cat('D').derive('%').equals(Void()));
+    test.ok(!Cat('D').derive(' ').equals(Void()));
+    
+    // derive Cat('s') yields non-void for decimals, void for everything else
+    test.ok(Cat('s').derive('a').equals(Void()));
+    test.ok(Cat('s').derive('A').equals(Void()));
+    test.ok(Cat('s').derive('0').equals(Void()));
+    test.ok(Cat('s').derive('_').equals(Void()));
+    test.ok(Cat('s').derive('%').equals(Void()));
+    test.ok(!Cat('s').derive(' ').equals(Void()));
+    
+    // derive Cat('S') yields void for decimals, non-void for everything else
+    test.ok(!Cat('S').derive('a').equals(Void()));
+    test.ok(!Cat('S').derive('A').equals(Void()));
+    test.ok(!Cat('S').derive('0').equals(Void()));
+    test.ok(!Cat('S').derive('_').equals(Void()));
+    test.ok(!Cat('S').derive('%').equals(Void()));
+    test.ok(Cat('S').derive(' ').equals(Void()));
+    
+    test.done();
+};
+
+/*
+    test derive unicode categories
+     
+    test.ok(Cat('').derive('a').equals(Void()));
+    test.ok(Cat('').derive('A').equals(Void()));
+    test.ok(Cat('').derive('0').equals(Void()));
+    test.ok(Cat('').derive('_').equals(Void()));
+    test.ok(Cat('').derive('%').equals(Void()));
+    test.ok(Cat('').derive(' ').equals(Void()));
+ */

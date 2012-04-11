@@ -1,3 +1,5 @@
+var ArgumentError = require('../../src/jsderiv').ArgumentError;
+
 var Void = require('../../src/jsderiv').Void,
     One  = require('../../src/jsderiv').One,
     Red  = require('../../src/jsderiv').Red;
@@ -45,10 +47,10 @@ exports['test isVoidable'] = function(test) {
 };
 
 exports['test delta'] = function(test) {
-    // delta requires an attribute
+    // delta requires an argument
     test.throws(function() {
         One().delta();
-    });
+    }, ArgumentError);
     
     // the delta of One is always Void
     test.ok(One().delta('a').equals(Void()));
@@ -57,10 +59,10 @@ exports['test delta'] = function(test) {
 };
 
 exports['test derive'] = function(test) {
-    // derive requires an attribute
+    // derive requires an argument
     test.throws(function() {
         One().derive();
-    });
+    }, ArgumentError);
     
     // deriving One() yields Null -> 'a' for 'a'
     test.ok(One().derive('a') instanceof Red);
@@ -81,7 +83,7 @@ exports['test parseNull'] = function(test) {
 };
 
 exports['test parse'] = function(test) {
-    // parse requires an attribute
+    // parse requires an argument
     test.throws(function() {
         One().parse();
     });

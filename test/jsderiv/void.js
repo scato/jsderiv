@@ -1,3 +1,5 @@
+var ArgumentError = require('../../src/jsderiv').ArgumentError;
+
 var Void = require('../../src/jsderiv').Void;
 
 exports['test constructor'] = function(test) {
@@ -43,10 +45,10 @@ exports['test isVoidable'] = function(test) {
 };
 
 exports['test delta'] = function(test) {
-    // delta requires an attribute
+    // delta requires an argument
     test.throws(function() {
         Void().delta();
-    });
+    }, ArgumentError);
     
     // the delta of Void is always Void
     test.ok(Void().delta('a').equals(Void()));
@@ -55,10 +57,10 @@ exports['test delta'] = function(test) {
 };
 
 exports['test derive'] = function(test) {
-    // derive requires an attribute
+    // derive requires an argument
     test.throws(function() {
         Void().derive();
-    });
+    }, ArgumentError);
     
     // deriving Void always yields Void
     test.ok(Void().derive('a').equals(Void()));
@@ -74,7 +76,7 @@ exports['test parseNull'] = function(test) {
 };
 
 exports['test parse'] = function(test) {
-    // parse requires an attribute
+    // parse requires an argument
     test.throws(function() {
         Void().parse();
     });

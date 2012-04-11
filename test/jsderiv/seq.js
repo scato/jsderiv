@@ -1,3 +1,5 @@
+var ArgumentError = require('../../src/jsderiv').ArgumentError;
+
 var Void = require('../../src/jsderiv').Void,
     Null = require('../../src/jsderiv').Null,
     Char = require('../../src/jsderiv').Char,
@@ -10,12 +12,22 @@ exports['test constructor'] = function(test) {
     // constructor expects two arguments
     test.throws(function() {
         new Seq();
-    });
+    }, ArgumentError);
     
     // constructor expects two arguments
     test.throws(function() {
         new Seq(Char('a'));
-    });
+    }, ArgumentError);
+    
+    // constructor expects two expressions
+    test.throws(function() {
+        new Seq(Array(), Char('b'));
+    }, ArgumentError);
+    
+    // constructor expects two expressions
+    test.throws(function() {
+        new Seq(Char('a'), Array());
+    }, ArgumentError);
     
     // function can also be used as a constructor 
     test.ok(Seq(Char('a'), Char('b')) instanceof Seq);
@@ -88,10 +100,10 @@ exports['test isVoidable'] = function(test) {
 };
 
 exports['test delta'] = function(test) {
-    // delta requires an attribute
+    // delta requires an argument
     test.throws(function() {
         Seq(Char('r'), Char('s')).delta();
-    });
+    }, ArgumentError);
     
     // the delta of r . s is always Void
     test.ok(Seq(Char('r'), Char('s')).delta('a').equals(Void()));
@@ -106,10 +118,10 @@ exports['test delta'] = function(test) {
 };
 
 exports['test derive'] = function(test) {
-    // derive requires an attribute
+    // derive requires an argument
     test.throws(function() {
         Seq(Char('r'), Char('s')).derive();
-    });
+    }, ArgumentError);
     
     // deriving r . s yields Null -> 'r' . s for 'r'
     test.ok(Seq(Char('r'), Char('s')).derive('r') instanceof Seq);
@@ -153,10 +165,10 @@ exports['test parseNull'] = function(test) {
 };
 
 exports['test parse'] = function(test) {
-    // parse requires an attribute
+    // parse requires an argument
     test.throws(function() {
         Seq(Char('r'), Char('s')).parse();
-    });
+    }, ArgumentError);
     
     // parsing "r" with r . s yields an empty set
     test.deepEqual(Seq(Char('r'), Char('s')).parse("r"), []);
