@@ -184,12 +184,19 @@ var Cat = exports.Cat = function(cat) {
         throw new ArgumentError('Not enough arguments');
     }
     
-    if(!cat.match(/^[wWdDsS]$/)) {
+    if(typeof cat !== 'string' || !Cat._isValid(cat)) {
         throw new ArgumentError('Invalid category: ' + JSON.stringify(cat));
     }
     
     if(this instanceof Cat) {
         this.cat = cat;
+        
+        if(this.cat.length === 1) {
+            this._regexp = new RegExp('\\' + this.cat);
+        } else {
+            this._complement = !!this.cat.match(/^P\{(\w+)\}$/);
+            this._unicode = Cat._unicodeCategories[this.cat.match(/^[pP]\{(\w+)\}$/)[1]];
+        }
         
         return this;
     } else {
@@ -200,6 +207,18 @@ var Cat = exports.Cat = function(cat) {
 Cat.prototype = Object.create(One.prototype);
 Cat.prototype.constructor = Cat;
 
+Cat._unicodeCategories = require('./unicode').categories;
+
+Cat._isValid = function(cat) {
+    if(cat.match(/^[wWdDsS]$/)) {
+        return true;
+    } else if(cat.match(/^[pP]\{(\w+)\}$/)) {
+        return Cat._unicodeCategories[cat.match(/^[pP]\{(\w+)\}$/)[1]] !== undefined;
+    } else {
+        return false;
+    }
+};
+
 Cat.prototype.equals = function(expr) {
     return expr instanceof Cat && expr.cat === this.cat;
 };
@@ -208,12 +227,28 @@ Cat.prototype.toString = function() {
     return 'Cat(' + JSON.stringify(this.cat) + ')';
 };
 
+Cat.prototype._test = function(char) {
+    if(this._regexp !== undefined) {
+        return this._regexp.test(char);
+    } else {
+        var charCode = char.charCodeAt(0);
+        
+        for(var i = 0; i < this._unicode.length; i += 2) {
+            if(this._unicode[i] <= charCode && charCode <= this._unicode[i + 1]) {
+                return !this._complement;
+            }
+        }
+        
+        return this._complement;
+    }
+};
+
 Cat.prototype.derive = function(element) {
     if(element === undefined) {
         throw new ArgumentError('Not enough arguments');
     }
     
-    if(typeof element === 'string' && element.match(new RegExp('\\' + this.cat))) {
+    if(typeof element === 'string' && element.length === 1 && this._test(element)) {
         return One.prototype.derive.apply(this, [element]);
     } else {
         return Void();

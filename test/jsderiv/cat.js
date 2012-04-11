@@ -13,17 +13,12 @@ exports['test constructor'] = function(test) {
     
     // constructor expects a valid category
     test.throws(function() {
-        new Cat('');
+        new Cat(false);
     }, ArgumentError);
     
     // constructor expects a valid category
     test.throws(function() {
         new Cat('x');
-    }, ArgumentError);
-    
-    // constructor expects a valid category
-    test.throws(function() {
-        new Cat('ww');
     }, ArgumentError);
     
     // function can also be used as a constructor 
@@ -168,13 +163,85 @@ exports['test derive JavaScript categories'] = function(test) {
     test.done();
 };
 
-/*
-    test derive unicode categories
-     
-    test.ok(Cat('').derive('a').equals(Void()));
-    test.ok(Cat('').derive('A').equals(Void()));
-    test.ok(Cat('').derive('0').equals(Void()));
-    test.ok(Cat('').derive('_').equals(Void()));
-    test.ok(Cat('').derive('%').equals(Void()));
-    test.ok(Cat('').derive(' ').equals(Void()));
- */
+exports['test derive Unicode categories'] = function(test) {
+    // The following are valid constructor arguments: p{Cc}, p{Zs}, p{Po}, p{Sc}, p{Ps}, p{Pe}, p{Sm}, p{Pd}, p{Nd}, p{Lu}, p{Sk}, p{Pc}, p{Ll}, p{So}, p{Pi}, p{Cf}, p{No}, p{Pf}, p{Lo}, p{Lt}, p{Lm}, p{Mn}, p{Me}, p{Mc}, p{Nl}, p{Zl}, p{Zp}, p{Cs}, p{Co}: 
+    
+    test.doesNotThrow(function() {
+        new Cat('p{Cc}');
+        new Cat('p{Zs}');
+        new Cat('p{Po}');
+        new Cat('p{Sc}');
+        new Cat('p{Ps}');
+        new Cat('p{Pe}');
+        new Cat('p{Sm}');
+        new Cat('p{Pd}');
+        new Cat('p{Nd}');
+        new Cat('p{Lu}');
+        new Cat('p{Sk}');
+        new Cat('p{Pc}');
+        new Cat('p{Ll}');
+        new Cat('p{So}');
+        new Cat('p{Pi}');
+        new Cat('p{Cf}');
+        new Cat('p{No}');
+        new Cat('p{Pf}');
+        new Cat('p{Lo}');
+        new Cat('p{Lt}');
+        new Cat('p{Lm}');
+        new Cat('p{Mn}');
+        new Cat('p{Me}');
+        new Cat('p{Mc}');
+        new Cat('p{Nl}');
+        new Cat('p{Zl}');
+        new Cat('p{Zp}');
+        new Cat('p{Cs}');
+        new Cat('p{Co}');
+    }, ArgumentError);
+    
+    // derive Cat('p{Cc}') yields non-void for '\0'
+    // derive Cat('p{Cc}') yields non-void for '\u0083' (NO BREAK HERE)
+    // derive Cat('p{Cc}') yields void for 'a'
+    test.ok(!Cat('p{Cc}').derive('\0').equals(Void()));
+    test.ok(!Cat('p{Cc}').derive('\u0083').equals(Void()));
+    test.ok(Cat('p{Cc}').derive('a').equals(Void()));
+    
+    // derive Cat('p{Sm}') yields non-void for '+'
+    // derive Cat('p{Sm}') yields non-void for '\u00d7' (MULTIPLICATION SIGN)
+    // derive Cat('p{Sm}') yields void for 'a'
+    test.ok(!Cat('p{Sm}').derive('+').equals(Void()));
+    test.ok(!Cat('p{Sm}').derive('\u00d7').equals(Void()));
+    test.ok(Cat('p{Sm}').derive('a').equals(Void()));
+    
+    // derive Cat('p{Ll}') yields non-void for 'a'
+    // derive Cat('p{Ll}') yields non-void for '\u00e0' (LATIN SMALL LETTER A WITH GRAVE)
+    // derive Cat('p{Ll}') yields void for '+'
+    test.ok(!Cat('p{Ll}').derive('a').equals(Void()));
+    test.ok(!Cat('p{Ll}').derive('\u00e0').equals(Void()));
+    test.ok(Cat('p{Ll}').derive('+').equals(Void()));
+    
+    // derive Cat('p{Pd}') yields non-void for '-'
+    // derive Cat('p{Pd}') yields non-void for '\u2014' (EM DASH)
+    // derive Cat('p{Pd}') yields void for '+'
+    test.ok(!Cat('p{Pd}').derive('-').equals(Void()));
+    test.ok(!Cat('p{Pd}').derive('\u2014').equals(Void()));
+    test.ok(Cat('p{Pd}').derive('+').equals(Void()));
+    
+    // P{Cc} is also a valid constructor argument 
+    test.doesNotThrow(function() {
+        new Cat('P{Cc}');
+    }, ArgumentError);
+    
+    // derive Cat('P{Pd}') yields void for '-'
+    // derive Cat('P{Pd}') yields void for '\u2014' (EM DASH)
+    // derive Cat('P{Pd}') yields non-void for '+'
+    test.ok(Cat('P{Pd}').derive('-').equals(Void()));
+    test.ok(Cat('P{Pd}').derive('\u2014').equals(Void()));
+    test.ok(!Cat('P{Pd}').derive('+').equals(Void()));
+    
+    // p{Xx} is not a valid constructor argument 
+    test.throws(function() {
+        new Cat('p{Xx}');
+    }, ArgumentError);
+    
+    test.done();
+};
