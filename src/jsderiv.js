@@ -134,20 +134,20 @@ One.prototype.derive = function(element) {
     }
     
     return Red(Null(), function() {
-        return [element];
+        return element;
     });
 };
 
 var Char = exports.Char = function(char) {
-    if(char === undefined) {
-        throw new ArgumentError('Not enough arguments');
-    }
-    
-    if(typeof char !== 'string' || char.length !== 1) {
-        throw new ArgumentError('Not a character: ' + char.toString());
-    }
-    
     if(this instanceof Char) {
+        if(char === undefined) {
+            throw new ArgumentError('Not enough arguments');
+        }
+        
+        if(typeof char !== 'string' || char.length !== 1) {
+            throw new ArgumentError('Not a character: ' + char.toString());
+        }
+        
         this.char = char;
         
         return this;
@@ -180,15 +180,15 @@ Char.prototype.derive = function(element) {
 };
 
 var Cat = exports.Cat = function(cat) {
-    if(cat === undefined) {
-        throw new ArgumentError('Not enough arguments');
-    }
-    
-    if(typeof cat !== 'string' || !Cat._isValid(cat)) {
-        throw new ArgumentError('Invalid category: ' + JSON.stringify(cat));
-    }
-    
     if(this instanceof Cat) {
+        if(cat === undefined) {
+            throw new ArgumentError('Not enough arguments');
+        }
+        
+        if(typeof cat !== 'string' || !Cat._isValid(cat)) {
+            throw new ArgumentError('Invalid category: ' + JSON.stringify(cat));
+        }
+        
         this.cat = cat;
         
         if(this.cat.length === 1) {
@@ -256,19 +256,19 @@ Cat.prototype.derive = function(element) {
 };
 
 var Range = exports.Range = function(min, max) {
-    if(min === undefined || max === undefined) {
-        throw new ArgumentError('Not enough arguments');
-    }
-    
-    if(typeof min !== 'string' || min.length !== 1) {
-        throw new ArgumentError('Not a character: ' + min.toString());
-    }
-    
-    if(typeof max !== 'string' || max.length !== 1) {
-        throw new ArgumentError('Not a character: ' + max.toString());
-    }
-    
     if(this instanceof Range) {
+        if(min === undefined || max === undefined) {
+            throw new ArgumentError('Not enough arguments');
+        }
+        
+        if(typeof min !== 'string' || min.length !== 1) {
+            throw new ArgumentError('Not a character: ' + min.toString());
+        }
+        
+        if(typeof max !== 'string' || max.length !== 1) {
+            throw new ArgumentError('Not a character: ' + max.toString());
+        }
+        
         this.min = min;
         this.max = max;
         
@@ -301,6 +301,53 @@ Range.prototype.derive = function(element) {
     }
 };
 
+var InstanceOf = exports.InstanceOf = function(ctor) {
+    if(this instanceof InstanceOf) {
+        if(ctor === undefined) {
+            throw new ArgumentError('Not enough arguments');
+        }
+        
+        if(typeof ctor !== 'function') {
+            throw new ArgumentError('Not a function: ' + ctor.toString());
+        }
+        
+        if(!(ctor.prototype instanceof Node)) {
+            throw new ArgumentError('Constructor does not inherit from Node');
+        }
+        
+        this.ctor = ctor;
+        
+        return this;
+    } else {
+        return new InstanceOf(ctor);
+    }
+};
+
+InstanceOf.prototype = Object.create(One.prototype);
+InstanceOf.prototype.constructor = InstanceOf;
+
+InstanceOf.prototype.equals = function(expr) {
+    return expr.ctor === this.ctor;
+};
+
+InstanceOf.prototype.toString = function() {
+    return 'InstanceOf([Function])';
+};
+
+InstanceOf.prototype.derive = function(element) {
+    if(element === undefined) {
+        throw new ArgumentError('Not enough arguments');
+    }
+    
+    if(element instanceof this.ctor) {
+        return Red(Null(), function() {
+            return element.childNodes;
+        });
+    } else {
+        return Void();
+    }
+}
+
 var Unary = function() {};
 
 Unary.prototype = Object.create(Expr.prototype);
@@ -308,15 +355,15 @@ Unary.prototype.constructor = Unary;
 
 Unary.define = function(type) {
     var ctor = function(expr) {
-        if(expr === undefined) {
-            throw new ArgumentError('Not enough arguments');
-        }
-        
-        if(!(expr instanceof Expr)) {
-            throw new ArgumentError('Not an expression: ' + expr.toString());
-        }
-        
         if(this instanceof ctor) {
+            if(expr === undefined) {
+                throw new ArgumentError('Not enough arguments');
+            }
+            
+            if(!(expr instanceof Expr)) {
+                throw new ArgumentError('Not an expression: ' + expr.toString());
+            }
+            
             this.expr = expr;
             
             return this._simplify();
@@ -343,6 +390,26 @@ Unary.prototype.equals = function(expr) {
 
 Unary.prototype.toString = function() {
     return this._type + '(' + this.expr.toString() + ')';
+};
+
+Unary.prototype.isNullable = function() {
+    return this.expr.isNullable();
+};
+
+Unary.prototype.isVoidable = function() {
+    return this.expr.isVoidable();
+};
+
+Unary.prototype.delta = function(element) {
+    return this.expr.delta(element);
+};
+
+Unary.prototype.derive = function(element) {
+    if(element === undefined) {
+        throw new ArgumentError('Not enough arguments');
+    }
+    
+    return new this.constructor(this.expr.derive(element));
 };
 
 var Any = exports.Any = Unary.define('Any');
@@ -417,14 +484,6 @@ Not.prototype.delta = function(element) {
     }
 };
 
-Not.prototype.derive = function(element) {
-    if(element === undefined) {
-        throw new ArgumentError('Not enough arguments');
-    }
-    
-    return Not(this.expr.derive(element));
-};
-
 Not.prototype.parseNull = function() {
     if(this.expr.isNullable()) {
         return [];
@@ -433,33 +492,99 @@ Not.prototype.parseNull = function() {
     }
 };
 
-var Red = exports.Red = function(expr, lambda) {
-    if(expr === undefined || lambda === undefined) {
+var Capture = exports.Capture = Unary.define('Capture');
+
+Capture.prototype.parseNull = function() {
+    return this.expr.parseNull().map(function(list) {
+        return [list];
+    });
+};
+
+var Look = exports.Look = Unary.define('Look');
+
+Look.prototype._simplify = function() {
+    if(this.expr.equals(Void())) {
+        return Void();
+    } else if(this.expr.equals(Null())) {
+        return Null();
+    } else if(this.expr.equals(Not(Void()))) {
+        return Null();
+    } else if(this.expr.equals(Not(Null()))) {
+        return Void();
+    } else if(this.expr instanceof Join) {
+        return Look(this.expr.expr);
+    } else if(this.expr instanceof Not && this.expr.expr instanceof Join) {
+        return Look(Not(this.expr.expr.expr));
+    } else if(this.expr instanceof Capture) {
+        return Look(this.expr.expr);
+    } else if(this.expr instanceof Not && this.expr.expr instanceof Capture) {
+        return Look(Not(this.expr.expr.expr));
+    } else {
+        return this;
+    }
+};
+
+Look.prototype.isNullable = function() {
+    return true;
+};
+
+Look.prototype.isVoidable = function() {
+    return true;
+};
+
+Look.prototype.delta = function(element) {
+    if(element === undefined) {
         throw new ArgumentError('Not enough arguments');
     }
     
-    if(!(expr instanceof Expr)) {
-        throw new ArgumentError('Not an expression: ' + expr.toString());
+    var deriv = this.expr.derive(element);
+    
+    if(deriv.isNullable()) {
+        return Null();
+    } else {
+        return Look(deriv);
+    }
+};
+
+Look.prototype.derive = function(element) {
+    if(element === undefined) {
+        throw new ArgumentError('Not enough arguments');
     }
     
-    if(typeof lambda !== 'function') {
-        throw new ArgumentError('Not a function: ' + lambda.toString());
-    }
-    
-    if(this instanceof Red) {
+    return Void();
+};
+
+Look.prototype.parseNull = function() {
+    return [[]];
+};
+
+var Join = exports.Join = function(expr, lambda) {
+    if(this instanceof Join) {
+        if(expr === undefined || lambda === undefined) {
+            throw new ArgumentError('Not enough arguments');
+        }
+        
+        if(!(expr instanceof Expr)) {
+            throw new ArgumentError('Not an expression: ' + expr.toString());
+        }
+        
+        if(typeof lambda !== 'function') {
+            throw new ArgumentError('Not a function: ' + lambda.toString());
+        }
+        
         this.expr = expr;
         this.lambda = lambda;
         
         return this._simplify();
     } else {
-        return new Red(expr, lambda);
+        return new Join(expr, lambda);
     }
 };
 
-Red.prototype = Object.create(Expr.prototype);
-Red.prototype.constructor = Red;
+Join.prototype = Object.create(Unary.prototype);
+Join.prototype.constructor = Join;
 
-Red.prototype._simplify = function() {
+Join.prototype._simplify = function() {
     if(this.expr.equals(Void())) {
         return Void();
     } else {
@@ -467,24 +592,45 @@ Red.prototype._simplify = function() {
     }
 };
 
-Red.prototype.equals = function(expr) {
-    return expr instanceof Red && expr.expr.equals(this.expr) && expr.lambda === this.lambda;
+Join.prototype.equals = function(expr) {
+    return expr instanceof Join && expr.expr.equals(this.expr) && expr.lambda === this.lambda;
 };
+
+Join.prototype.toString = function() {
+    return 'Join(' + this.expr.toString() + ', [Function])';
+};
+
+Join.prototype.derive = function(element) {
+    return Join(this.expr.derive(element), this.lambda);
+};
+
+Join.prototype.parseNull = function() {
+    var result = [];
+    
+    this.expr.parseNull().forEach(function(list) {
+        if(!(list instanceof Array)) {
+            throw new ArgumentError('Not an array: ' + list.toString());
+        }
+        
+        result = result.concat(this.lambda.apply(null, list));
+    }.bind(this));
+    
+    return result;
+};
+
+var Red = exports.Red = function(expr, lambda) {
+    if(this instanceof Red) {
+        return Join.apply(this, [expr, lambda]);
+    } else {
+        return new Red(expr, lambda);
+    }
+};
+
+Red.prototype = Object.create(Join.prototype);
+Red.prototype.constructor = Red;
 
 Red.prototype.toString = function() {
     return 'Red(' + this.expr.toString() + ', [Function])';
-};
-
-Red.prototype.isNullable = function() {
-    return this.expr.isNullable();
-};
-
-Red.prototype.isVoidable = function() {
-    return this.expr.isVoidable();
-};
-
-Red.prototype.delta = function(element) {
-    return this.expr.delta(element);
 };
 
 Red.prototype.derive = function(element) {
@@ -494,11 +640,48 @@ Red.prototype.derive = function(element) {
 Red.prototype.parseNull = function() {
     var result = [];
     
-    this.expr.parseNull().forEach(function(tree) {
-        result = result.concat(this.lambda(tree));
+    this.expr.parseNull().forEach(function(list) {
+        if(!(list instanceof Array)) {
+            throw new ArgumentError('Not an array: ' + list.toString());
+        }
+        
+        result = result.concat([this.lambda.apply(null, list)]);
     }.bind(this));
     
     return result;
+};
+
+var Defer = exports.Defer = function(left, right) {
+    if(this instanceof Defer) {
+        if(right === undefined) {
+            throw new ArgumentError('Not enough arguments.');
+        }
+        
+        if(!(right instanceof Expr)) {
+            throw new ArgumentError('Not an expression: ' + right.toString());
+        }
+        
+        var lambda = function(list) {
+            return right.parse(list);
+        };
+        
+        this.right = right;
+        
+        return Join.apply(this, [left, lambda]);
+    } else {
+        return new Defer(left, right);
+    }
+};
+
+Defer.prototype = Object.create(Join.prototype);
+Defer.prototype.constructor = Defer;
+
+Defer.prototype.toString = function() {
+    return 'Defer(' + this.expr.toString() + ', ' + this.right.toString() + ')';
+};
+
+Defer.prototype.derive = function(element) {
+    return Defer(this.expr.derive(element), this.right);
 };
 
 var Binary = function() {};
@@ -508,19 +691,19 @@ Binary.prototype.constructor = Binary;
 
 Binary.define = function(type) {
     var ctor = function(left, right) {
-        if(left === undefined || right === undefined) {
-            throw new ArgumentError('Not enough arguments');
-        }
-        
-        if(!(left instanceof Expr)) {
-            throw new ArgumentError('Not an expression: ' + left.toString());
-        }
-        
-        if(!(right instanceof Expr)) {
-            throw new ArgumentError('Not an expression: ' + right.toString());
-        }
-        
         if(this instanceof ctor) {
+            if(left === undefined || right === undefined) {
+                throw new ArgumentError('Not enough arguments');
+            }
+            
+            if(!(left instanceof Expr)) {
+                throw new ArgumentError('Not an expression: ' + left.toString());
+            }
+            
+            if(!(right instanceof Expr)) {
+                throw new ArgumentError('Not an expression: ' + right.toString());
+            }
+            
             this.left = left;
             this.right = right;
             
@@ -649,7 +832,7 @@ Seq.prototype.derive = function(element) {
         if(result.length === 1 && result[0].length === 0) {
             return Or(Seq(this.left.derive(element), this.right), this.right.derive(element));
         } else {
-            return Or(Seq(this.left.derive(element), this.right), Seq(Red(Null(), function() {
+            return Or(Seq(this.left.derive(element), this.right), Seq(Join(Null(), function() {
                 return result;
             }.bind(this)), this.right.derive(element)));
         }
@@ -690,3 +873,50 @@ And.prototype.parseNull = function() {
     return this.left.parseNull();
 };
 
+var Node = exports.Node = function(type, childNodes) {
+    if(this instanceof Node) {
+        if(type === undefined || childNodes === undefined) {
+            throw new ArgumentError('Not enough arguments');
+        }
+        
+        if(typeof type !== 'string') {
+            throw new ArgumentError('Not a string: ' + type.toString());
+        }
+        
+        if(!(childNodes instanceof Array)) {
+            throw new ArgumentError('Not a array: ' + childNodes.toString());
+        }
+        
+        this.type = type;
+        this.childNodes = childNodes;
+        
+        return this;
+    } else {
+        return new Node(type, childNodes);
+    }
+};
+
+Node.define = function(type) {
+    var ctor = function() {
+        if(this instanceof ctor) {
+            return Node.apply(this, [type, Array.prototype.slice.apply(arguments)]);
+        } else {
+            return ctor.apply(Object.create(ctor.prototype), arguments);
+        }
+    };
+    
+    ctor.prototype = Object.create(Node.prototype);
+    ctor.prototype.constructor = ctor;
+    
+    return ctor;
+};
+
+Node.prototype.toString = function() {
+    return this.type + '(' + this.childNodes.map(function(childNode) {
+        if(typeof childNode === 'string') {
+            return JSON.stringify(childNode);
+        } else {
+            return childNode.toString();
+        }
+    }).join(', ') + ')';
+};
