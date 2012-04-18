@@ -6,7 +6,7 @@ var Void = require('../../src/jsderiv').Void,
     One  = require('../../src/jsderiv').One,
     Any  = require('../../src/jsderiv').Any,
     Or   = require('../../src/jsderiv').Or,
-    Red  = require('../../src/jsderiv').Red,
+    Map  = require('../../src/jsderiv').Map,
     And  = require('../../src/jsderiv').And,
     Not  = require('../../src/jsderiv').Not;
 
@@ -121,9 +121,9 @@ exports['test derive'] = function(test) {
     
     // deriving r & . yields (Null -> 'r') & (Null -> 'r') for 'r'
     test.ok(And(Char('r'), One()).derive('r') instanceof And);
-    test.ok(And(Char('r'), One()).derive('r').left instanceof Red);
+    test.ok(And(Char('r'), One()).derive('r').left instanceof Map);
     test.deepEqual(And(Char('r'), One()).derive('r').left.parseNull(), ['r']);
-    test.ok(And(Char('r'), One()).derive('r').right instanceof Red);
+    test.ok(And(Char('r'), One()).derive('r').right instanceof Map);
     test.deepEqual(And(Char('r'), One()).derive('r').right.parseNull(), ['r']);
     
     // deriving r & . yields Void for 's'
@@ -155,9 +155,12 @@ exports['test parse'] = function(test) {
     test.deepEqual(And(Char('r'), One()).parse("r"), ["r"]);
     
     // parsing "s" with r & . yields an empty set
-    test.deepEqual(And(Char('s'), One()).parse("r"), []);
+    test.deepEqual(And(Char('r'), One()).parse("s"), []);
     
-    // parsing "rrr with r & . yields an empty set
+    // parsing "s" with . & ~s yields an empty set
+    test.deepEqual(And(One(), Not(Char('s'))).parse("s"), []);
+    
+    // parsing "rrr" with r & . yields an empty set
     test.deepEqual(And(Char('r'), One()).parse("rrr"), []);
     
     test.done();

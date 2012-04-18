@@ -5,7 +5,7 @@ var Void = require('../../src/jsderiv').Void,
     Char = require('../../src/jsderiv').Char,
     Seq  = require('../../src/jsderiv').Seq,
     Any  = require('../../src/jsderiv').Any,
-    Red  = require('../../src/jsderiv').Red,
+    Map  = require('../../src/jsderiv').Map,
     One  = require('../../src/jsderiv').One;
 
 exports['test constructor'] = function(test) {
@@ -91,7 +91,7 @@ exports['test derive'] = function(test) {
     
     // deriving r* yields (Null -> 'r') . r* for 'r'
     test.ok(Any(Char('r')).derive('r') instanceof Seq);
-    test.ok(Any(Char('r')).derive('r').left instanceof Red);
+    test.ok(Any(Char('r')).derive('r').left instanceof Map);
     test.deepEqual(Any(Char('r')).derive('r').left.parseNull(), ['r']);
     test.ok(Any(Char('r')).derive('r').right.equals(Any(Char('r'))));
     

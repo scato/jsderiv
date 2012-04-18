@@ -3,7 +3,7 @@ var ArgumentError = require('../../src/jsderiv').ArgumentError;
 var Void = require('../../src/jsderiv').Void,
     Null = require('../../src/jsderiv').Null,
     Char = require('../../src/jsderiv').Char,
-    Red  = require('../../src/jsderiv').Red,
+    Map  = require('../../src/jsderiv').Map,
     Or   = require('../../src/jsderiv').Or,
     Seq  = require('../../src/jsderiv').Seq,
     Not  = require('../../src/jsderiv').Not;
@@ -125,7 +125,7 @@ exports['test derive'] = function(test) {
     
     // deriving r . s yields Null -> 'r' . s for 'r'
     test.ok(Seq(Char('r'), Char('s')).derive('r') instanceof Seq);
-    test.ok(Seq(Char('r'), Char('s')).derive('r').left instanceof Red);
+    test.ok(Seq(Char('r'), Char('s')).derive('r').left instanceof Map);
     test.deepEqual(Seq(Char('r'), Char('s')).derive('r').left.parseNull(), ['r']);
     test.ok(Seq(Char('r'), Char('s')).derive('r').right.equals(Char('s')));
     
@@ -137,12 +137,12 @@ exports['test derive'] = function(test) {
     
     // deriving (r | ()) . s yields Null -> 'r' . s for 'r'
     test.ok(Seq(Or(Char('r'), Null()), Char('s')).derive('r') instanceof Seq);
-    test.ok(Seq(Or(Char('r'), Null()), Char('s')).derive('r').left instanceof Red);
+    test.ok(Seq(Or(Char('r'), Null()), Char('s')).derive('r').left instanceof Map);
     test.deepEqual(Seq(Or(Char('r'), Null()), Char('s')).derive('r').left.parseNull(), ['r']);
     test.ok(Seq(Or(Char('r'), Null()), Char('s')).derive('r').right.equals(Char('s')));
     
     // deriving (r | ()) . s yields Null -> 's' for 's'
-    test.ok(Seq(Or(Char('r'), Null()), Char('s')).derive('s') instanceof Red);
+    test.ok(Seq(Or(Char('r'), Null()), Char('s')).derive('s') instanceof Map);
     test.deepEqual(Seq(Or(Char('r'), Null()), Char('s')).derive('s').parseNull(), ['s']);
     
     // deriving (r | ()) . s yields Void for 't'

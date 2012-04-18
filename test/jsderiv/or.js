@@ -3,7 +3,7 @@ var ArgumentError = require('../../src/jsderiv').ArgumentError;
 var Void = require('../../src/jsderiv').Void,
     Null = require('../../src/jsderiv').Null,
     Char = require('../../src/jsderiv').Char,
-    Red  = require('../../src/jsderiv').Red,
+    Map  = require('../../src/jsderiv').Map,
     Or   = require('../../src/jsderiv').Or,
     Not  = require('../../src/jsderiv').Not;
 
@@ -108,11 +108,11 @@ exports['test derive'] = function(test) {
     }, ArgumentError);
     
     // deriving r | s yields Null -> 'r' for 'r'
-    test.ok(Or(Char('r'), Char('s')).derive('r') instanceof Red);
+    test.ok(Or(Char('r'), Char('s')).derive('r') instanceof Map);
     test.deepEqual(Or(Char('r'), Char('s')).derive('r').parseNull(), ['r']);
     
     // deriving r | s yields Null -> 's' for 's'
-    test.ok(Or(Char('r'), Char('s')).derive('s') instanceof Red);
+    test.ok(Or(Char('r'), Char('s')).derive('s') instanceof Map);
     test.deepEqual(Or(Char('r'), Char('s')).derive('s').parseNull(), ['s']);
     
     // deriving r | s yields Void for 't'

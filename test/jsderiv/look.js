@@ -4,11 +4,10 @@ var Void    = require('../../src/jsderiv').Void,
     Null    = require('../../src/jsderiv').Null,
     Char    = require('../../src/jsderiv').Char,
     Seq     = require('../../src/jsderiv').Seq,
-    Join    = require('../../src/jsderiv').Join,
     Look    = require('../../src/jsderiv').Look,
     Not     = require('../../src/jsderiv').Not,
     Any     = require('../../src/jsderiv').Any,
-    Red     = require('../../src/jsderiv').Red,
+    Map     = require('../../src/jsderiv').Map,
     One     = require('../../src/jsderiv').One,
     Capture = require('../../src/jsderiv').Capture;
 
@@ -56,16 +55,10 @@ exports['test equals'] = function(test) {
     test.ok(Look(Not(Null())).equals(Void()));
     
     // ?= r |> upper equals ?= r
-    test.ok(Look(Join(Char('r'), upper)).equals(Look(Char('r'))));
+    test.ok(Look(Map(Char('r'), upper)).equals(Look(Char('r'))));
     
     // ?= ~(r |> upper) equals ?= ~r
-    test.ok(Look(Not(Join(Char('r'), upper))).equals(Look(Not(Char('r')))));
-    
-    // ?= <r> equals ?= r
-    test.ok(Look(Capture(Char('r'))).equals(Look(Char('r'))));
-    
-    // ?= ~<r> equals ?= ~r
-    test.ok(Look(Not(Capture(Char('r')))).equals(Look(Not(Char('r')))));
+    test.ok(Look(Not(Map(Char('r'), upper))).equals(Look(Not(Char('r')))));
     
     test.done();
 };
@@ -130,7 +123,7 @@ exports['test derive'] = function(test) {
     // deriving ?= (r s) yields ?= ((Null -> 'r') s) for 'r'
     test.ok(Look(Seq(Char('r'), Char('s'))).derive('r') instanceof Look);
     test.ok(Look(Seq(Char('r'), Char('s'))).derive('r').expr instanceof Seq);
-    test.ok(Look(Seq(Char('r'), Char('s'))).derive('r').expr.left instanceof Red);
+    test.ok(Look(Seq(Char('r'), Char('s'))).derive('r').expr.left instanceof Map);
     test.deepEqual(Look(Seq(Char('r'), Char('s'))).derive('r').expr.left.parseNull(), ['r']);
     test.ok(Look(Seq(Char('r'), Char('s'))).derive('r').expr.right.equals(Char('s')));
     

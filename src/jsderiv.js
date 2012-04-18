@@ -179,6 +179,22 @@ Char.prototype.derive = function(element) {
     }
 };
 
+var Literal = exports.Literal = function(string) {
+    if(string === undefined) {
+        throw new ArgumentError('Not enough arguments');
+    }
+    
+    if(typeof string !== 'string') {
+        throw new ArgumentError('Not a string' + string.toString());
+    }
+    
+    if(string.length === 0) {
+        return Null();
+    } else {
+        return Seq(Literal(string.substring(0, string.length - 1)), Char(string[string.length - 1]));
+    }
+};
+
 var Cat = exports.Cat = function(cat) {
     if(this instanceof Cat) {
         if(cat === undefined) {
@@ -454,6 +470,14 @@ Any.prototype.parseNull = function() {
     return [[]];
 };
 
+var Maybe = exports.Maybe = function(expr) {
+    return Or(expr, Null());
+};
+
+var Many = exports.Many = function(expr) {
+    return Seq(expr, Any(expr));
+};
+
 var Not = exports.Not = Unary.define('Not');
 
 Not.prototype._simplify = function() {
@@ -492,14 +516,6 @@ Not.prototype.parseNull = function() {
     }
 };
 
-var Capture = exports.Capture = Unary.define('Capture');
-
-Capture.prototype.parseNull = function() {
-    return this.expr.parseNull().map(function(list) {
-        return [list];
-    });
-};
-
 var Look = exports.Look = Unary.define('Look');
 
 Look.prototype._simplify = function() {
@@ -511,13 +527,9 @@ Look.prototype._simplify = function() {
         return Null();
     } else if(this.expr.equals(Not(Null()))) {
         return Void();
-    } else if(this.expr instanceof Join) {
+    } else if(this.expr instanceof Map) {
         return Look(this.expr.expr);
-    } else if(this.expr instanceof Not && this.expr.expr instanceof Join) {
-        return Look(Not(this.expr.expr.expr));
-    } else if(this.expr instanceof Capture) {
-        return Look(this.expr.expr);
-    } else if(this.expr instanceof Not && this.expr.expr instanceof Capture) {
+    } else if(this.expr instanceof Not && this.expr.expr instanceof Map) {
         return Look(Not(this.expr.expr.expr));
     } else {
         return this;
@@ -558,8 +570,8 @@ Look.prototype.parseNull = function() {
     return [[]];
 };
 
-var Join = exports.Join = function(expr, lambda) {
-    if(this instanceof Join) {
+var Map = exports.Map = function(expr, lambda) {
+    if(this instanceof Map) {
         if(expr === undefined || lambda === undefined) {
             throw new ArgumentError('Not enough arguments');
         }
@@ -577,14 +589,14 @@ var Join = exports.Join = function(expr, lambda) {
         
         return this._simplify();
     } else {
-        return new Join(expr, lambda);
+        return new Map(expr, lambda);
     }
 };
 
-Join.prototype = Object.create(Unary.prototype);
-Join.prototype.constructor = Join;
+Map.prototype = Object.create(Unary.prototype);
+Map.prototype.constructor = Map;
 
-Join.prototype._simplify = function() {
+Map.prototype._simplify = function() {
     if(this.expr.equals(Void())) {
         return Void();
     } else {
@@ -592,96 +604,74 @@ Join.prototype._simplify = function() {
     }
 };
 
-Join.prototype.equals = function(expr) {
-    return expr instanceof Join && expr.expr.equals(this.expr) && expr.lambda === this.lambda;
+Map.prototype.equals = function(expr) {
+    return expr instanceof Map && expr.expr.equals(this.expr) && expr.lambda === this.lambda;
 };
 
-Join.prototype.toString = function() {
-    return 'Join(' + this.expr.toString() + ', [Function])';
+Map.prototype.toString = function() {
+    return 'Map(' + this.expr.toString() + ', [Function])';
 };
 
-Join.prototype.derive = function(element) {
-    return Join(this.expr.derive(element), this.lambda);
+Map.prototype.derive = function(element) {
+    return Map(this.expr.derive(element), this.lambda);
 };
 
-Join.prototype.parseNull = function() {
+Map.prototype.parseNull = function() {
     var result = [];
     
     this.expr.parseNull().forEach(function(list) {
-        if(!(list instanceof Array)) {
-            throw new ArgumentError('Not an array: ' + list.toString());
-        }
-        
-        result = result.concat(this.lambda.apply(null, list));
+        result = result.concat(this.lambda(list));
     }.bind(this));
     
     return result;
 };
 
 var Red = exports.Red = function(expr, lambda) {
-    if(this instanceof Red) {
-        return Join.apply(this, [expr, lambda]);
-    } else {
-        return new Red(expr, lambda);
+    if(lambda === undefined) {
+        throw new ArgumentError('Not enough arguments.');
     }
-};
-
-Red.prototype = Object.create(Join.prototype);
-Red.prototype.constructor = Red;
-
-Red.prototype.toString = function() {
-    return 'Red(' + this.expr.toString() + ', [Function])';
-};
-
-Red.prototype.derive = function(element) {
-    return Red(this.expr.derive(element), this.lambda);
-};
-
-Red.prototype.parseNull = function() {
-    var result = [];
     
-    this.expr.parseNull().forEach(function(list) {
+    if(typeof lambda !== 'function') {
+        throw new ArgumentError('Not a function: ' + lambda.toString());
+    }
+    
+    return Map(expr, function(list) {
         if(!(list instanceof Array)) {
             throw new ArgumentError('Not an array: ' + list.toString());
         }
         
-        result = result.concat([this.lambda.apply(null, list)]);
-    }.bind(this));
-    
-    return result;
+        return [lambda.apply(null, list)];
+    });
+}
+
+var Capture = exports.Capture = function(expr) {
+    return Map(expr, function(list) {
+        return [[list]];
+    });
 };
 
 var Defer = exports.Defer = function(left, right) {
-    if(this instanceof Defer) {
-        if(right === undefined) {
-            throw new ArgumentError('Not enough arguments.');
-        }
-        
-        if(!(right instanceof Expr)) {
-            throw new ArgumentError('Not an expression: ' + right.toString());
-        }
-        
-        var lambda = function(list) {
-            return right.parse(list);
-        };
-        
-        this.right = right;
-        
-        return Join.apply(this, [left, lambda]);
-    } else {
-        return new Defer(left, right);
+    if(right === undefined) {
+        throw new ArgumentError('Not enough arguments.');
     }
+    
+    if(!(right instanceof Expr)) {
+        throw new ArgumentError('Not an expression: ' + right.toString());
+    }
+    
+    return Map(left, function(list) {
+        return right.parse(list);
+    });
 };
 
-Defer.prototype = Object.create(Join.prototype);
-Defer.prototype.constructor = Defer;
-
-Defer.prototype.toString = function() {
-    return 'Defer(' + this.expr.toString() + ', ' + this.right.toString() + ')';
+var Ignore = exports.Ignore = function(expr) {
+    return Map(expr, function() {
+        return [[]];
+    });
 };
 
-Defer.prototype.derive = function(element) {
-    return Defer(this.expr.derive(element), this.right);
+var Omit = exports.Omit = function(expr) {
+    return Any(Ignore(expr));
 };
 
 var Binary = function() {};
@@ -803,6 +793,18 @@ Or.prototype.parseNull = function() {
     return this.left.parseNull().concat(this.right.parseNull());
 };
 
+var OneOf = exports.OneOf = function() {
+    if(arguments.length === 0) {
+        return Void();
+    } else {
+        return Or(OneOf.apply(null, Array.prototype.slice.apply(arguments, [0, arguments.length - 1])), arguments[arguments.length - 1]);
+    }
+};
+
+var NoneOf = exports.NoneOf = function() {
+    return ButNot(One(), OneOf.apply(null, arguments));
+};
+
 var Seq = exports.Seq = Binary.define('Seq');
 
 Seq.prototype._simplify = function() {
@@ -832,7 +834,7 @@ Seq.prototype.derive = function(element) {
         if(result.length === 1 && result[0].length === 0) {
             return Or(Seq(this.left.derive(element), this.right), this.right.derive(element));
         } else {
-            return Or(Seq(this.left.derive(element), this.right), Seq(Join(Null(), function() {
+            return Or(Seq(this.left.derive(element), this.right), Seq(Map(Null(), function() {
                 return result;
             }.bind(this)), this.right.derive(element)));
         }
@@ -870,7 +872,15 @@ And.prototype._simplify = function() {
 };
 
 And.prototype.parseNull = function() {
-    return this.left.parseNull();
+    if(this.left.parseNull().length === 0) {
+        return [];
+    } else {
+        return this.right.parseNull();
+    }
+};
+
+var ButNot = exports.ButNot = function(left, right) {
+    return And(left, Not(right));
 };
 
 var Node = exports.Node = function(type, childNodes) {

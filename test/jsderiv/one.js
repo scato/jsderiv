@@ -2,7 +2,7 @@ var ArgumentError = require('../../src/jsderiv').ArgumentError;
 
 var Void = require('../../src/jsderiv').Void,
     One  = require('../../src/jsderiv').One,
-    Red  = require('../../src/jsderiv').Red;
+    Map  = require('../../src/jsderiv').Map;
 
 exports['test constructor'] = function(test) {
     // function can also be used as a constructor 
@@ -65,11 +65,11 @@ exports['test derive'] = function(test) {
     }, ArgumentError);
     
     // deriving One() yields Null -> 'a' for 'a'
-    test.ok(One().derive('a') instanceof Red);
+    test.ok(One().derive('a') instanceof Map);
     test.deepEqual(One().derive('a').parseNull(), ['a']);
     
     // deriving One() yields Null -> 'b' for 'b'
-    test.ok(One().derive('b') instanceof Red);
+    test.ok(One().derive('b') instanceof Map);
     test.deepEqual(One().derive('b').parseNull(), ['b']);
     
     test.done();

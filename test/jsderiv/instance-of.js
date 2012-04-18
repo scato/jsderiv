@@ -4,7 +4,7 @@ var ArgumentError = require('../../src/jsderiv').ArgumentError,
 var Void       = require('../../src/jsderiv').Void,
     Null       = require('../../src/jsderiv').Null,
     InstanceOf = require('../../src/jsderiv').InstanceOf,
-    Red        = require('../../src/jsderiv').Red;
+    Map        = require('../../src/jsderiv').Map;
 
 var ID = Node.define('ID');
 var SYMBOL = Node.define('SYMBOL');
@@ -84,7 +84,7 @@ exports['test derive'] = function(test) {
     }, ArgumentError);
     
     // deriving @ID yields Null -> ("foo") for ID("foo")
-    test.ok(InstanceOf(ID).derive(ID("foo")) instanceof Red);
+    test.ok(InstanceOf(ID).derive(ID("foo")) instanceof Map);
     test.deepEqual(InstanceOf(ID).derive(ID("foo")).parseNull(), [["foo"]]);
     
     // deriving @SYMBOL yields Void for ID("foo")

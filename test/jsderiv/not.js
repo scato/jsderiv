@@ -5,7 +5,7 @@ var Void = require('../../src/jsderiv').Void,
     Char = require('../../src/jsderiv').Char,
     Seq  = require('../../src/jsderiv').Seq,
     Not  = require('../../src/jsderiv').Not,
-    Red  = require('../../src/jsderiv').Red,
+    Map  = require('../../src/jsderiv').Map,
     One  = require('../../src/jsderiv').One;
 
 exports['test constructor'] = function(test) {
@@ -91,7 +91,7 @@ exports['test derive'] = function(test) {
     
     // deriving ~r yields ~(Null -> 'r') for 'r'
     test.ok(Not(Char('r')).derive('r') instanceof Not);
-    test.ok(Not(Char('r')).derive('r').expr instanceof Red);
+    test.ok(Not(Char('r')).derive('r').expr instanceof Map);
     test.deepEqual(Not(Char('r')).derive('r').expr.parseNull(), ['r']);
     
     // deriving ~s yields ~Void for 'r'

@@ -3,7 +3,7 @@ var ArgumentError = require('../../src/jsderiv').ArgumentError;
 var Void = require('../../src/jsderiv').Void,
     Null = require('../../src/jsderiv').Null,
     Cat  = require('../../src/jsderiv').Cat,
-    Red  = require('../../src/jsderiv').Red;
+    Map  = require('../../src/jsderiv').Map;
 
 exports['test constructor'] = function(test) {
     // constructor expects one argument
@@ -80,7 +80,7 @@ exports['test derive'] = function(test) {
     }, ArgumentError);
     
     // deriving Cat('w') yields Null -> 'a' for 'a'
-    test.ok(Cat('w').derive('a') instanceof Red);
+    test.ok(Cat('w').derive('a') instanceof Map);
     test.deepEqual(Cat('w').derive('a').parseNull(), ['a']);
     
     // deriving Cat('d') yields Void for 'a'
