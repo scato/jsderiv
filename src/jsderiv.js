@@ -317,45 +317,88 @@ Range.prototype.derive = function(element) {
     }
 };
 
-var InstanceOf = exports.InstanceOf = function(ctor) {
-    if(this instanceof InstanceOf) {
-        if(ctor === undefined) {
+var Type = exports.Type = function(type) {
+    if(this instanceof Type) {
+        if(type === undefined) {
             throw new ArgumentError('Not enough arguments');
         }
         
-        if(typeof ctor !== 'function') {
-            throw new ArgumentError('Not a function: ' + ctor.toString());
+        if(typeof type !== 'function') {
+            throw new ArgumentError('Not a function: ' + type.toString());
         }
         
-        if(!(ctor.prototype instanceof Node)) {
-            throw new ArgumentError('Constructor does not inherit from Node');
+        if(!(type.prototype instanceof Node)) {
+            throw new ArgumentError('Type does not inherit from Node');
         }
         
-        this.ctor = ctor;
+        this.type = type;
         
         return this;
     } else {
-        return new InstanceOf(ctor);
+        return new Type(type);
     }
 };
 
-InstanceOf.prototype = Object.create(One.prototype);
-InstanceOf.prototype.constructor = InstanceOf;
+Type.prototype = Object.create(One.prototype);
+Type.prototype.constructor = Type;
 
-InstanceOf.prototype.equals = function(expr) {
-    return expr.ctor === this.ctor;
+Type.prototype.equals = function(expr) {
+    return expr.type === this.type;
 };
 
-InstanceOf.prototype.toString = function() {
-    return 'InstanceOf([Function])';
+Type.prototype.toString = function() {
+    return 'Type([Function])';
 };
 
-InstanceOf.prototype.derive = function(element) {
+Type.prototype.derive = function(element) {
     if(element === undefined) {
         throw new ArgumentError('Not enough arguments');
     }
     
-    if(element instanceof this.ctor) {
+    if(element instanceof this.type) {
+        return Red(Null(), function() {
+            return element.childNodes;
+        });
+    } else {
+        return Void();
+    }
+}
+
+var Value = exports.Value = function(value) {
+    if(this instanceof Value) {
+        if(value === undefined) {
+            throw new ArgumentError('Not enough arguments');
+        }
+        
+        if(typeof value !== 'string') {
+            throw new ArgumentError('Not a string: ' + value.toString());
+        }
+        
+        this.value = value;
+        
+        return this;
+    } else {
+        return new Value(value);
+    }
+};
+
+Value.prototype = Object.create(One.prototype);
+Value.prototype.constructor = Value;
+
+Value.prototype.equals = function(expr) {
+    return expr.value === this.value;
+};
+
+Value.prototype.toString = function() {
+    return 'Value(' + JSON.stringify(this.value) + ')';
+};
+
+Value.prototype.derive = function(element) {
+    if(element === undefined) {
+        throw new ArgumentError('Not enough arguments');
+    }
+    
+    if(element instanceof Node && element.childNodes.length === 1 && element.childNodes[0] === this.value) {
         return Red(Null(), function() {
             return element.childNodes;
         });
@@ -664,6 +707,10 @@ var Defer = exports.Defer = function(left, right) {
     });
 };
 
+var Part = exports.Part = function(expr) {
+    return Defer(One(), expr);
+};
+
 var Ignore = exports.Ignore = function(expr) {
     return Map(expr, function() {
         return [[]];
@@ -881,6 +928,44 @@ And.prototype.parseNull = function() {
 
 var ButNot = exports.ButNot = function(left, right) {
     return And(left, Not(right));
+};
+
+var Ref = exports.Ref = function(lambda) {
+    if(this instanceof Ref) {
+        if(lambda === undefined) {
+            throw new ArgumentError('Not enough arguments');
+        }
+        
+        if(typeof lambda !== 'function') {
+            throw new ArgumentError('Not a function: ' + lambda.toString());
+        }
+        
+        this.lambda = lambda;
+        this._cache = {};
+        
+        return this;
+    } else {
+        return new Ref(lambda);
+    }
+};
+
+Ref.prototype = Object.create(Expr.prototype);
+Ref.prototype.constructor = Ref;
+
+Ref.prototype.resolve = function() {
+    if(this._cache.resolve === undefined) {
+        this._cache.resolve = this.lambda();
+        
+        if(!(this._cache.resolve instanceof Expr)) {
+            throw new ArgumentError('Not an expression: ' + this._cache.resolve.toString());
+        }
+    }
+    
+    return this._cache.resolve;
+};
+
+Ref.prototype.equals = function(expr) {
+    return expr === this;
 };
 
 var Node = exports.Node = function(type, childNodes) {

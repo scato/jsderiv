@@ -11,6 +11,7 @@ var Char    = require('../../src/jsderiv').Char,
     Red     = require('../../src/jsderiv').Red,
     Capture = require('../../src/jsderiv').Capture,
     Defer   = require('../../src/jsderiv').Defer,
+    Part    = require('../../src/jsderiv').Part,
     Map     = require('../../src/jsderiv').Map,
     Ignore  = require('../../src/jsderiv').Ignore,
     Omit    = require('../../src/jsderiv').Omit,
@@ -111,6 +112,30 @@ exports['test Defer'] = function(test) {
     
     // parsing "rrr" with <r*> &> (<.*> -> upper) yields "RRR"
     test.deepEqual(Defer(Capture(Any(Char('r'))), Red(Capture(Any(One())), upper)).parse("rrr"), ["RRR"]);
+    
+    test.done();
+};
+
+exports['test Part'] = function(test) {
+    // function expects one argument
+    test.throws(function() {
+        Part();
+    }, ArgumentError);
+    
+    // function expects an expression
+    test.throws(function() {
+        Part(false);
+    }, ArgumentError);
+    
+    // r$ is a shortcut for (. &> r)
+    test.ok(Part(Char('r')) instanceof Map);
+    test.ok(Part(Char('r')).expr.equals(One()));
+    
+    // parsing "rrr" with "rrr"$ yields an empty set
+    test.deepEqual(Part(Literal("rrr")).parse('rrr'), []);
+    
+    // parsing ["rrr"] with "rrr"$ yields "rrr"
+    test.deepEqual(Part(Literal("rrr")).parse(['rrr']), ["rrr"]);
     
     test.done();
 };
