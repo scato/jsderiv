@@ -952,20 +952,71 @@ var Ref = exports.Ref = function(lambda) {
 Ref.prototype = Object.create(Expr.prototype);
 Ref.prototype.constructor = Ref;
 
-Ref.prototype.resolve = function() {
-    if(this._cache.resolve === undefined) {
-        this._cache.resolve = this.lambda();
-        
-        if(!(this._cache.resolve instanceof Expr)) {
-            throw new ArgumentError('Not an expression: ' + this._cache.resolve.toString());
-        }
+Ref.prototype.resolve = function() {//require('sys').puts('resolve');
+    if(this._cache.resolve !== undefined) return this._cache.resolve;
+    
+    var expr = this.lambda();
+    
+    if(!(expr instanceof Expr)) {
+        throw new ArgumentError('Not an expression: ' + expr.toString());
     }
     
-    return this._cache.resolve;
+    return this._cache.resolve = expr;
 };
 
 Ref.prototype.equals = function(expr) {
     return expr === this;
+};
+
+Ref.prototype.toString = function() {
+    return 'Ref([Function])';
+};
+
+Ref.prototype.isNullable = function() {//require('sys').puts('isNullable');
+    if(this._cache.isNullable !== undefined) return this._cache.isNullable;
+    
+    // sort of fixed point
+    this._cache.isNullable = false;
+    
+    return this._cache.isNullable = this.resolve().isNullable();
+};
+
+Ref.prototype.isVoidable = function() {//require('sys').puts('isVoidable');
+    return this.resolve().isVoidable();
+};
+
+Ref.prototype.delta = function(element) {//require('sys').puts('delta');
+    this._cache.delta = this._cache.delta || {};
+    if(this._cache.delta[element] !== undefined) return this._cache.delta[element];
+    
+    return this._cache.delta[element] = this.resolve().delta(element);
+};
+
+Ref.prototype.derive = function(element) {//require('sys').puts('derive');
+    this._cache.derive = this._cache.derive || {};
+    if(this._cache.derive[element] !== undefined) return this._cache.derive[element];
+    
+    // sort of fixed point
+    this._cache.derive[element] = Ref(function() {
+        return expr;
+    });
+    
+    var expr = this.resolve().derive(element);
+    
+    if(expr.equals(Void())) {
+        return this._cache.derive[element] = expr;
+    } else {
+        return this._cache.derive[element];
+    }
+};
+
+Ref.prototype.parseNull = function() {//require('sys').puts('parseNull');
+    if(this._cache.parseNull !== undefined) return this._cache.parseNull;
+    
+    // sort of fixed point
+    this._cache.parseNull = [];
+    
+    return this._cache.parseNull = this.resolve().parseNull();
 };
 
 var Node = exports.Node = function(type, childNodes) {
