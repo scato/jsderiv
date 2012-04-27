@@ -1,6 +1,16 @@
-var c = require('../../lib/common');
-var g = require('../../lib/generic');
-var l = require('../../lib/lookahead');
+var c = require('../../src/jsderiv');
+var g = require('../../src/jsderiv');
+var l = require('../../src/jsderiv');
+
+g.Cons = function(id) { return g.Node.define(id); };
+var defaultRed = c.Red;
+c.Red = function(expr, lambda) { return c.Capture(defaultRed(c.Capture(expr), lambda)); };
+g.InstanceOf = g.Type;
+g.List = function() { return arguments[0]; };
+var Release = function() { return arguments[0][0]; };
+g.Text = function() { return Array.prototype.join.apply(arguments[0], ['']); };
+var defaultLiteral = g.Literal;
+g.Literal = function(string) { return c.Or(defaultLiteral(string), g.Value(string)); };
 
 var List = g.List,
     Text = g.Text;
@@ -116,9 +126,9 @@ var Scannerless = exports.Scannerless = function() {};
     };
 })();
 
-var c = require('../../lib/common');
-var g = require('../../lib/generic');
-var l = require('../../lib/lookahead');
+var c = require('../../src/jsderiv');
+var g = require('../../src/jsderiv');
+var l = require('../../src/jsderiv');
 
 var List = g.List,
     Text = g.Text;
@@ -287,17 +297,17 @@ var Lexer = exports.Lexer = function() {};
     };
 })();
 
-var c = require('../../lib/common');
-var g = require('../../lib/generic');
-var l = require('../../lib/lookahead');
+var c = require('../../src/jsderiv');
+var g = require('../../src/jsderiv');
+var l = require('../../src/jsderiv');
 
 var List = g.List,
     Text = g.Text;
 
 // import {ID, CLASS, LITERAL} from .lexer;
-var ID      = require('./lexer').ID,
-    CLASS   = require('./lexer').CLASS,
-    LITERAL = require('./lexer').LITERAL;
+var ID      = require('./grammar').ID,
+    CLASS   = require('./grammar').CLASS,
+    LITERAL = require('./grammar').LITERAL;
 
 // export constructor Module, Import, Export, Constructor, Grammar, Start, Rule, Augmentation;
 var Module       = exports.Module       = g.Cons("Module");

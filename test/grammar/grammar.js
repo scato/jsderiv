@@ -1,19 +1,21 @@
-var $ = require('../../lib/jsderiv');
-var g = require('../../lib/generic');
-var l = require('../../lib/lookahead');
+var c = require('../../src/jsderiv');
+var g = require('../../src/jsderiv');
+var l = require('../../src/jsderiv');
+
+g.parse = function(expr, string) { return expr.parse(string); };
 
 var List = g.List,
     Text = g.Text;
 
 // import {Lexer} from .lexer;
-var Lexer = require('./lexer').Lexer;
+var Lexer = require('../../src/grammar/grammar').Lexer;
 
 // import {ID, LITERAL, SYMBOL, CLASS, KEYWORD} from .lexer;
-var ID      = require('./lexer').ID,
-    LITERAL = require('./lexer').LITERAL,
-    SYMBOL  = require('./lexer').SYMBOL,
-    CLASS   = require('./lexer').CLASS,
-    KEYWORD = require('./lexer').KEYWORD;
+var ID      = require('../../src/grammar/grammar').ID,
+    LITERAL = require('../../src/grammar/grammar').LITERAL,
+    SYMBOL  = require('../../src/grammar/grammar').SYMBOL,
+    CLASS   = require('../../src/grammar/grammar').CLASS,
+    KEYWORD = require('../../src/grammar/grammar').KEYWORD;
 
 // export test "SPACE" {
 //     start Lexer.SPACE;
@@ -141,52 +143,52 @@ exports["test \"start\""] = function(test) {
     test.done();
 };
 
-var c = require('../../lib/common');
-var g = require('../../lib/generic');
-var l = require('../../lib/lookahead');
+var c = require('../../src/jsderiv');
+var g = require('../../src/jsderiv');
+var l = require('../../src/jsderiv');
 
 var List = g.List,
     Text = g.Text;
 
 // import {Parser} from .parser;
-var Parser = require('./parser').Parser;
+var Parser = require('../../src/grammar/grammar').Parser;
 
 // import {ID, LITERAL, SYMBOL, CLASS, KEYWORD} from .lexer;
-var ID      = require('./lexer').ID,
-    LITERAL = require('./lexer').LITERAL,
-    SYMBOL  = require('./lexer').SYMBOL,
-    CLASS   = require('./lexer').CLASS,
-    KEYWORD = require('./lexer').KEYWORD;
+var ID      = require('../../src/grammar/grammar').ID,
+    LITERAL = require('../../src/grammar/grammar').LITERAL,
+    SYMBOL  = require('../../src/grammar/grammar').SYMBOL,
+    CLASS   = require('../../src/grammar/grammar').CLASS,
+    KEYWORD = require('../../src/grammar/grammar').KEYWORD;
 
 // import {Module, Import, Export, Constructor, Grammar, Start, Rule} from .parser;
-var Module      = require('./parser').Module,
-    Import      = require('./parser').Import,
-    Export      = require('./parser').Export,
-    Constructor = require('./parser').Constructor,
-    Grammar     = require('./parser').Grammar,
-    Start       = require('./parser').Start,
-    Rule        = require('./parser').Rule;
+var Module      = require('../../src/grammar/grammar').Module,
+    Import      = require('../../src/grammar/grammar').Import,
+    Export      = require('../../src/grammar/grammar').Export,
+    Constructor = require('../../src/grammar/grammar').Constructor,
+    Grammar     = require('../../src/grammar/grammar').Grammar,
+    Start       = require('../../src/grammar/grammar').Start,
+    Rule        = require('../../src/grammar/grammar').Rule;
 
 // import {Or, Red, And, Seq, Any, Many, Maybe, Ignore, Not, Look, Token, One, Ref, Class, Literal, InstanceOf, Default, Super, Capture} from .parser;
-var Or         = require('./parser').Or,
-    Red        = require('./parser').Red,
-    And        = require('./parser').And,
-    Seq        = require('./parser').Seq,
-    Any        = require('./parser').Any,
-    Many       = require('./parser').Many,
-    Maybe      = require('./parser').Maybe,
-    Ignore     = require('./parser').Ignore,
-    Not        = require('./parser').Not,
-    Look       = require('./parser').Look,
-    Token      = require('./parser').Token,
-    One        = require('./parser').One,
-    Ref        = require('./parser').Ref,
-    Class      = require('./parser').Class,
-    Literal    = require('./parser').Literal,
-    InstanceOf = require('./parser').InstanceOf,
-    Default    = require('./parser').Default,
-    Super      = require('./parser').Super,
-    Capture    = require('./parser').Capture;
+var Or         = require('../../src/grammar/grammar').Or,
+    Red        = require('../../src/grammar/grammar').Red,
+    And        = require('../../src/grammar/grammar').And,
+    Seq        = require('../../src/grammar/grammar').Seq,
+    Any        = require('../../src/grammar/grammar').Any,
+    Many       = require('../../src/grammar/grammar').Many,
+    Maybe      = require('../../src/grammar/grammar').Maybe,
+    Ignore     = require('../../src/grammar/grammar').Ignore,
+    Not        = require('../../src/grammar/grammar').Not,
+    Look       = require('../../src/grammar/grammar').Look,
+    Token      = require('../../src/grammar/grammar').Token,
+    One        = require('../../src/grammar/grammar').One,
+    Ref        = require('../../src/grammar/grammar').Ref,
+    Class      = require('../../src/grammar/grammar').Class,
+    Literal    = require('../../src/grammar/grammar').Literal,
+    InstanceOf = require('../../src/grammar/grammar').InstanceOf,
+    Default    = require('../../src/grammar/grammar').Default,
+    Super      = require('../../src/grammar/grammar').Super,
+    Capture    = require('../../src/grammar/grammar').Capture;
 
 // export test "start" {
 //     start Parser.start;
