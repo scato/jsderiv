@@ -88,6 +88,12 @@ exports['test toString'] = function(test) {
     // ID renders as "Ref([Function])"
     test.equals('Ref([Function])', Ref(ID).toString());
     
+    // ID can also render as "Ref([ID])"
+    test.equals('Ref([ID])', Ref(ID, 'ID').toString());
+    
+    // ID' can also render as "Ref([ID'])"
+    test.equals('Ref([ID\'])', Ref(ID, 'ID').derive('a').toString());
+    
     test.done();
 };
 

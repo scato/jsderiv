@@ -1,18 +1,17 @@
-var lexer   = require('./lexer');
-var parser  = require('./parser');
-var classes = require('./classes');
-var generic = require('../../lib/generic')
+var lexer   = require('./grammar');
+var parser  = require('./grammar');
+var classes = require('./grammar-classes');
+var generic = require('../jsderiv')
 
-require('./lexer-test');
-require('./parser-test');
+require('./grammar-test');
 
-require('./parser-indent');
-require('./parser-to-source');
-require('./parser-to-javascript');
-require('./classes-to-javascript');
+require('./grammar-indent');
+require('./grammar-to-source');
+require('./grammar-to-javascript');
+require('./grammar-classes-to-javascript');
 
-require('./parser-test-to-source');
-require('./parser-test-to-javascript');
+require('./grammar-test-to-source');
+require('./grammar-test-to-javascript');
 
 exports.parse = function(string) {
     try {
@@ -30,16 +29,7 @@ exports.parse = function(string) {
 };
 
 exports.parseClass = function(string) {
-    try {
-        return generic.parse(new classes.Scannerless().start(), string, true);
-    } catch(ex) {
-        if(ex.result !== undefined) {
-            require('sys').puts('Ambigious grammar, document could mean any of...');
-            require('sys').puts(ex.result.join('\n'));
-        } else {
-            throw ex;
-        }
-    }
+    return new classes.Scannerless().start().parse(string);
 };
 
 var jsderiv = require('./index'),

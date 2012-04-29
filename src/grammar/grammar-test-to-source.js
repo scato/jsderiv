@@ -1,6 +1,6 @@
-var parser = require('./parser');
-var test = require('./parser-test');
-var helper = require('./parser-helper');
+var parser = require('./grammar');
+var test = require('./grammar-test');
+var helper = require('./grammar-helper');
 
 test.Test.prototype.toSource = function(forComment) {
     forComment = forComment || false;

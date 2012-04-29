@@ -8,7 +8,8 @@ var Void = require('../../src/jsderiv').Void,
     Or   = require('../../src/jsderiv').Or,
     Map  = require('../../src/jsderiv').Map,
     And  = require('../../src/jsderiv').And,
-    Not  = require('../../src/jsderiv').Not;
+    Not  = require('../../src/jsderiv').Not,
+    Ignore = require('../../src/jsderiv').Ignore;
 
 exports['test constructor'] = function(test) {
     // constructor expects two arguments
@@ -162,6 +163,9 @@ exports['test parse'] = function(test) {
     
     // parsing "rrr" with r & . yields an empty set
     test.deepEqual(And(Char('r'), One()).parse("rrr"), []);
+    
+    // parsing "r" with r & .! yields "r"
+    test.deepEqual(And(Char('r'), Ignore(One())).parse("r"), ["r"]);
     
     test.done();
 };

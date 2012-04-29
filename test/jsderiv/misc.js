@@ -20,7 +20,9 @@ var Char    = require('../../src/jsderiv').Char,
     Literal = require('../../src/jsderiv').Literal,
     OneOf   = require('../../src/jsderiv').OneOf,
     NoneOf  = require('../../src/jsderiv').NoneOf,
-    ButNot  = require('../../src/jsderiv').ButNot;
+    ButNot  = require('../../src/jsderiv').ButNot,
+    Look    = require('../../src/jsderiv').Look,
+    Range   = require('../../src/jsderiv').Range;
 
 function lower(string) {
     return string.toLowerCase();
@@ -54,8 +56,8 @@ exports['test Red'] = function(test) {
     // r -> upper is a shortcut for r |> ...
     test.ok(Red(Char('r'), upper) instanceof Map);
     
-    // parsing "rrr" with <r*> -> upper yields "RRR"
-    test.deepEqual(Red(Capture(Any(Char('r'))), upper).parse("rrr"), ["RRR"]);
+    // parsing "rrr" with <r*> -> upper yields ("RRR")
+    test.deepEqual(Red(Capture(Any(Char('r'))), upper).parse("rrr"), [["RRR"]]);
     
     test.done();
 };
@@ -110,8 +112,8 @@ exports['test Defer'] = function(test) {
     // r &> s is a shortcut for r |> ...
     test.ok(Defer(Char('r'), Char('s')) instanceof Map);
     
-    // parsing "rrr" with <r*> &> (<.*> -> upper) yields "RRR"
-    test.deepEqual(Defer(Capture(Any(Char('r'))), Red(Capture(Any(One())), upper)).parse("rrr"), ["RRR"]);
+    // parsing "rrr" with <r*> &> (<.*> -> upper) yields ("RRR")
+    test.deepEqual(Defer(Capture(Any(Char('r'))), Red(Capture(Any(One())), upper)).parse("rrr"), [["RRR"]]);
     
     test.done();
 };
@@ -315,5 +317,24 @@ exports['test ButNot'] = function(test) {
     
     test.done();
 
+};
+
+require('../../src/jsderiv').debug = false;
+
+/*
+var Seq   = require('../../src/jsderiv').Seq,
+    Not   = require('../../src/jsderiv').Not,
+    Any   = require('../../src/jsderiv').Any,
+    Many  = require('../../src/jsderiv').Many,
+*/
+
+var ID = Many(Range('a', 'z'));
+
+exports['test (ID ?= ~ID)*'] = function(test) {
+    var start = Any(Seq(ID, Look(Not(ID))));
+    
+    test.deepEqual(start.parse("id"), ["id"]);
+    
+    test.done();
 };
 

@@ -1,4 +1,4 @@
-var parser = require('./parser');
+var parser = require('./grammar');
 
 parser.Literal.prototype.indent = false;
 parser.Ref.prototype.indent = false;

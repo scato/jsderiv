@@ -1,13 +1,15 @@
-var c = require('../../lib/common');
-var g = require('../../lib/generic');
-var l = require('../../lib/lookahead');
+var c = require('../jsderiv');
+var g = require('../jsderiv');
+var l = require('../jsderiv');
+
+require('./legacy');
 
 var List = g.List,
     Text = g.Text;
 
 // import {Lexer, KEYWORD} from .lexer;
-var Lexer   = require('./lexer').Lexer,
-    KEYWORD = require('./lexer').KEYWORD;
+var Lexer   = require('./grammar').Lexer,
+    KEYWORD = require('./grammar').KEYWORD;
 
 // KEYWORD: default | ("test" | "assert") -> KEYWORD;
 (function($default) {
@@ -20,20 +22,20 @@ var Lexer   = require('./lexer').Lexer,
     };
 })(Lexer.prototype.KEYWORD);
 
-var c = require('../../lib/common');
-var g = require('../../lib/generic');
-var l = require('../../lib/lookahead');
+var c = require('../jsderiv');
+var g = require('../jsderiv');
+var l = require('../jsderiv');
 
 var List = g.List,
     Text = g.Text;
 
 // import {Parser, Literal} from .parser;
-var Parser  = require('./parser').Parser,
-    Literal = require('./parser').Literal;
+var Parser  = require('./grammar').Parser,
+    Literal = require('./grammar').Literal;
 
 // import {ID, LITERAL} from .lexer;
-var ID      = require('./lexer').ID,
-    LITERAL = require('./lexer').LITERAL;
+var ID      = require('./grammar').ID,
+    LITERAL = require('./grammar').LITERAL;
 
 // export constructor Test, StartDeclaration, Assertion, NodeList, NodeSet, Node, Terminal;
 var Test             = exports.Test             = g.Cons("Test");

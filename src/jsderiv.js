@@ -1,3 +1,5 @@
+exports.debug = false;
+
 var ArgumentError = exports.ArgumentError = function(message) {
     this.name = 'ArgumentError';
     this.message = message;
@@ -31,6 +33,16 @@ Expr.prototype.parse = function(input) {
     
     for(var i = 0; i < input.length; i++) {
         expr = expr.derive(input[i]);
+        
+        if(exports.debug) {
+            require('sys').puts(input[i]);
+            
+            if(expr instanceof Ref) {
+                require('sys').puts(expr.resolve().toString());
+            } else {
+                require('sys').puts(expr.toString());
+            }
+        }
     }
     
     return expr.parseNull();
@@ -133,8 +145,8 @@ One.prototype.derive = function(element) {
         throw new ArgumentError('Not enough arguments');
     }
     
-    return Red(Null(), function() {
-        return element;
+    return Map(Null(), function() {
+        return [element];
     });
 };
 
@@ -356,8 +368,8 @@ Type.prototype.derive = function(element) {
     }
     
     if(element instanceof this.type) {
-        return Red(Null(), function() {
-            return element.childNodes;
+        return Map(Null(), function() {
+            return [element.childNodes];
         });
     } else {
         return Void();
@@ -399,8 +411,8 @@ Value.prototype.derive = function(element) {
     }
     
     if(element instanceof Node && element.childNodes.length === 1 && element.childNodes[0] === this.value) {
-        return Red(Null(), function() {
-            return element.childNodes;
+        return Map(Null(), function() {
+            return [element.childNodes];
         });
     } else {
         return Void();
@@ -683,7 +695,7 @@ var Red = exports.Red = function(expr, lambda) {
             throw new ArgumentError('Not an array: ' + list.toString());
         }
         
-        return [lambda.apply(null, list)];
+        return [[lambda.apply(null, list)]];
     });
 }
 
@@ -873,7 +885,7 @@ Seq.prototype.derive = function(element) {
         throw new ArgumentError('Not enough arguments');
     }
     
-    if(!this.left.isNullable()) {
+    if(!this.left.delta(element).equals(Null())) {
         return Seq(this.left.derive(element), this.right);
     } else {
         var result = this.left.parseNull();
@@ -919,10 +931,10 @@ And.prototype._simplify = function() {
 };
 
 And.prototype.parseNull = function() {
-    if(this.left.parseNull().length === 0) {
+    if(this.right.parseNull().length === 0) {
         return [];
     } else {
-        return this.right.parseNull();
+        return this.left.parseNull();
     }
 };
 
@@ -930,7 +942,7 @@ var ButNot = exports.ButNot = function(left, right) {
     return And(left, Not(right));
 };
 
-var Ref = exports.Ref = function(lambda) {
+var Ref = exports.Ref = function(lambda, id) {
     if(this instanceof Ref) {
         if(lambda === undefined) {
             throw new ArgumentError('Not enough arguments');
@@ -941,11 +953,12 @@ var Ref = exports.Ref = function(lambda) {
         }
         
         this.lambda = lambda;
+        this.id = id;
         this._cache = {};
         
         return this;
     } else {
-        return new Ref(lambda);
+        return new Ref(lambda, id);
     }
 };
 
@@ -969,7 +982,11 @@ Ref.prototype.equals = function(expr) {
 };
 
 Ref.prototype.toString = function() {
-    return 'Ref([Function])';
+    if(this.id === undefined) {
+        return 'Ref([Function])';
+    } else {
+        return 'Ref([' + this.id + '])';
+    }
 };
 
 Ref.prototype.isNullable = function() {//require('sys').puts('isNullable');
@@ -989,6 +1006,9 @@ Ref.prototype.delta = function(element) {//require('sys').puts('delta');
     this._cache.delta = this._cache.delta || {};
     if(this._cache.delta[element] !== undefined) return this._cache.delta[element];
     
+    // sort of fixed point
+    this._cache.delta[element] = Void();
+    
     return this._cache.delta[element] = this.resolve().delta(element);
 };
 
@@ -996,18 +1016,27 @@ Ref.prototype.derive = function(element) {//require('sys').puts('derive');
     this._cache.derive = this._cache.derive || {};
     if(this._cache.derive[element] !== undefined) return this._cache.derive[element];
     
-    // sort of fixed point
+    // sort of fixed point: try Void
+    this._cache.derive[element] = Void();
+    
+    if(this.resolve().derive(element).equals(Void())) {
+        return Void();
+    }
+    
+    var id = undefined;
+    
+    if(this.id !== undefined) {
+        id = this.id + '\'';
+    }
+    
+    // sort of fixed point: otherwise make a new reference
     this._cache.derive[element] = Ref(function() {
         return expr;
-    });
+    }, id);
     
     var expr = this.resolve().derive(element);
     
-    if(expr.equals(Void())) {
-        return this._cache.derive[element] = expr;
-    } else {
-        return this._cache.derive[element];
-    }
+    return this._cache.derive[element];
 };
 
 Ref.prototype.parseNull = function() {//require('sys').puts('parseNull');

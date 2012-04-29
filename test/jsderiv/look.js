@@ -114,23 +114,6 @@ exports['test derive'] = function(test) {
     test.ok(Look(Char('r')).derive('r').equals(Void()));
     
     test.done();
-    
-    return;
-    
-    // deriving ?= r yields Null for 'r'
-    test.ok(Look(Char('r')).derive('r').equals(Null()));
-    
-    // deriving ?= (r s) yields ?= ((Null -> 'r') s) for 'r'
-    test.ok(Look(Seq(Char('r'), Char('s'))).derive('r') instanceof Look);
-    test.ok(Look(Seq(Char('r'), Char('s'))).derive('r').expr instanceof Seq);
-    test.ok(Look(Seq(Char('r'), Char('s'))).derive('r').expr.left instanceof Map);
-    test.deepEqual(Look(Seq(Char('r'), Char('s'))).derive('r').expr.left.parseNull(), ['r']);
-    test.ok(Look(Seq(Char('r'), Char('s'))).derive('r').expr.right.equals(Char('s')));
-    
-    // deriving ?= s yields Void for 'r'
-    test.ok(Look(Char('s')).derive('r').equals(Void()));
-    
-    test.done();
 };
 
 exports['test parseNull'] = function(test) {
