@@ -1,55 +1,54 @@
-export constructor ID, LITERAL, SYMBOL, CLASS, KEYWORD;
+export constructor ID, QID, LITERAL, SYMBOL, CLASS, KEYWORD;
 
 export grammar Lexer {
-    start (SPACE | ID | COMMENT | LITERAL | SYMBOL | CLASS | KEYWORD)*;
+    start (SPACE | ID | QID | COMMENT | LITERAL | SYMBOL | CLASS | KEYWORD)*;
     
     NEWLINE: "\r\n" | "\n";
     CONTROL: "\\t" | "\\r" | "\\n" | "\\v" | "\\f";
     UNICODE: "\\u" [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F];
     
     SPACE:      ((" " | "\t" | "\r" | "\n")+ ?= ~(" " | "\t" | "\r" | "\n"))!;
-    ID:         [A-Za-z_] [A-Za-z0-9_]* ?= ~[A-Za-z0-9_] & ~KEYWORD -> ID;
+    _ID:        [A-Za-z_] [A-Za-z0-9_\-]* ?= ~[A-Za-z0-9_\-] & ~KEYWORD;
+    ID:         <_ID> -> ID;
+    QID:        <"."* (_ID | _LITERAL) ("." (_ID | _LITERAL))* & ~_ID & ~_LITERAL> -> QID;
     // COMMENT:    ("/*" ([^*] | "*" ?= ~"/")* "*/" | "//" ([^\r\n] | "\r" ?= ~"\n")* ?= NEWLINE)!;
     // COMMENT:    ("/*" ~(.* "*/" .*) "*/" | "//" ([^\r\n] | "\r" ?= ~"\n")* ?= NEWLINE)!;
     COMMENT:    ("/*" ([^*] | "*" ?= ~"/")* "*/" | "//" ~(.* NEWLINE .*) ?= NEWLINE)!;
     // COMMENT:    ("/*" ~(.* "*/" .*) "*/" | "//" ~(.* NEWLINE .*) ?= NEWLINE)!;
-    LITERAL:    (
+    _LITERAL:   (
                     "\"" ([^"\\] | "\\\\" | "\\\"" | CONTROL | UNICODE)* "\""
                   | '\'' ([^'\\] | '\\\\' | '\\\'' | CONTROL | UNICODE)* '\''
-                ) -> LITERAL;
-    SYMBOL:     (
+                );
+    LITERAL:    <_LITERAL> -> LITERAL;
+    SYMBOL:     <
                     ":" | ";"
                   | "(" | ")"
                   | "*" | "+" | "?"
                   | "&" | "|" | "~"
                   | "?=" | "!" | "->" | "@"
                   | "{" | "}" | "," | "." | "<" | ">"
-                ) -> SYMBOL;
+                > -> SYMBOL;
     RANGE:      CHAR "-" CHAR;
     CATEGORY:   "\\d" | "\\D" | "\\s" | "\\S" | "\\w" | "\\W" | "\\p{" [A-Za-z_]* "}" | "\\P{" [A-Za-z_]* "}";
     CHAR:       [^\^\-\\\]] | "\\^" | "\\-" | "\\\\" | CONTROL | UNICODE | CATEGORY | "\\]";
-    CLASS:      "[" (RANGE | CHAR)* ("^" (RANGE | CHAR)+)? "]" -> CLASS;
-    KEYWORD:    (
+    CLASS:      <"[" ((RANGE | CHAR)* | "^" (RANGE | CHAR)+) "]"> -> CLASS;
+    KEYWORD:    <
                     "grammar" | "start" | "import" | "from" | "export" | "constructor"
                   | "augment" | "default" | "extends" | "super"
-                ) -> KEYWORD;
+                > ?= ~[A-Za-z0-9_\-] -> KEYWORD;
 }
 
-import {ID, CLASS, LITERAL} from .lexer;
-
 export constructor Module, Import, Export, Constructor, Grammar, Start, Rule, Augmentation;
-
-export constructor Or, Red, And, Seq, Any, Many, Maybe, Ignore, Not, Look, InstanceOf, One, Ref, Class, Literal, Default, Super, Capture;
+export constructor Or, Red, And, Seq, Any, Many, Maybe, Ignore, Not, Look, Type, Value, One, Ref, Class, Literal, Default, Super, Capture;
 
 export grammar Parser {
     start Statement* -> Module ;
     
     Statement       : Import | Export | Definition | Augmentation ;
     
-    Import          : "import"! IdentifierList "from"! ModuleIdentifier ";"! -> Import ;
-    IdentifierList  : "{"! @ID (":"! @ID)? (","! @ID (":"! @ID)?)* "}"! -> List
-                    | @ID (","! @ID)* -> List ;
-    ModuleIdentifier: "."* (@ID | @LITERAL) ("." (@ID | @LITERAL))* -> Text ;
+    Import          : "import"! IdentifierList "from"! @QID ";"! -> Import ;
+    IdentifierList  : <"{"! @ID (":"! @ID)? (","! @ID (":"! @ID)?)* "}"!>
+                    | <@ID (","! @ID)*> ;
     
     Export          : "export"! Definition -> Export ;
     
@@ -57,11 +56,11 @@ export grammar Parser {
     
     Constructor     : "constructor"! @ID (","! @ID)* ";"! -> Constructor ;
     
-    Grammar         : "grammar"! @ID ("extends"! @ID)? "{"! (Rule* -> List) "}"! -> Grammar ;
+    Grammar         : "grammar"! @ID ("extends"! @ID)? "{"! (<Rule*>) "}"! -> Grammar ;
     Rule            : "start"! Expression ";"! -> Start
                     | @ID ":"! Expression ";"! -> Rule ;
     
-    Augmentation    : "augment"! "grammar"! @ID "{"! (Rule* -> List) "}"! -> Augmentation ;
+    Augmentation    : "augment"! "grammar"! @ID "{"! (<Rule*>) "}"! -> Augmentation ;
     
     Expression  : OrExpr ;
     
@@ -84,7 +83,8 @@ export grammar Parser {
     
     Terminal    : "("! Expression ")"!
                 | "<"! Expression ">"! -> Capture
-                | "@"! @ID -> InstanceOf
+                | "@"! @ID -> Type
+                | "@"! @LITERAL -> Value
                 | "."! -> One
                 | @ID -> Ref
                 | @CLASS -> Class

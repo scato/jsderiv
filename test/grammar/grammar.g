@@ -1,5 +1,5 @@
-import Lexer from .lexer;
-import ID, LITERAL, SYMBOL, CLASS, KEYWORD from .lexer;
+import Lexer from ...src."grammar"."grammar";
+import ID, QID, LITERAL, SYMBOL, CLASS, KEYWORD from ...src."grammar"."grammar";
 
 export test "SPACE" {
     start Lexer.SPACE;
@@ -10,10 +10,21 @@ export test "SPACE" {
 export test "ID" {
     start Lexer.ID;
     
-    assert "id" -> (ID "id");
+    assert "id" -> (ID("id"));
     assert "start" -> {};
-    assert "id2" -> (ID "id2");
-    assert "ID_2" -> (ID "ID_2");
+    assert "id2" -> (ID("id2"));
+    assert "ID_2" -> (ID("ID_2"));
+    assert "common-lib" -> (ID("common-lib"));
+}
+
+export test "QID" {
+    start Lexer.QID;
+    
+    assert "." -> {};
+    assert "id" -> {};
+    assert "Example.NEWLINE" -> (QID("Example.NEWLINE"));
+    assert ".common-lib" -> (QID(".common-lib"));
+    assert "...lib.common" -> (QID("...lib.common"));
 }
 
 export test "COMMENT" {
@@ -26,25 +37,25 @@ export test "COMMENT" {
 export test "LITERAL" {
     start Lexer.LITERAL;
     
-    assert "\"literal\"" -> (LITERAL "\"literal\"");
+    assert "\"literal\"" -> (LITERAL("\"literal\""));
 }
 
 export test "SYMBOL" {
     start Lexer.SYMBOL;
     
-    assert "|" -> (SYMBOL "|");
-    assert "<" -> (SYMBOL "<");
-    assert ">" -> (SYMBOL ">");
+    assert "|" -> (SYMBOL("|"));
+    assert "<" -> (SYMBOL("<"));
+    assert ">" -> (SYMBOL(">"));
 }
 
 export test "CLASS" {
     start Lexer.CLASS;
     
-    assert "[0-9]" -> (CLASS "[0-9]");
-    assert "[123]" -> (CLASS "[123]");
-    assert "[^0-9]" -> (CLASS "[^0-9]");
-    assert "[^123]" -> (CLASS "[^123]");
-    assert "[0-9^123]" -> (CLASS "[0-9^123]");
+    assert "[0-9]" -> (CLASS("[0-9]"));
+    assert "[123]" -> (CLASS("[123]"));
+    assert "[^0-9]" -> (CLASS("[^0-9]"));
+    assert "[^123]" -> (CLASS("[^123]"));
+    assert "[0-9^123]" -> {};
     assert "[0-]" -> {};
     assert "[^]" -> {};
 }
@@ -52,16 +63,27 @@ export test "CLASS" {
 export test "KEYWORD" {
     start Lexer.KEYWORD;
     
-    assert "start" -> (KEYWORD "start");
-    assert "extends" -> (KEYWORD "extends");
-    assert "super" -> (KEYWORD "super");
+    assert "grammar" -> (KEYWORD("grammar"));
+    assert "start" -> (KEYWORD("start"));
+    assert "import" -> (KEYWORD("import"));
+    assert "from" -> (KEYWORD("from"));
+    assert "export" -> (KEYWORD("export"));
+    assert "constructor" -> (KEYWORD("constructor"));
+    assert "augment" -> (KEYWORD("augment"));
+    assert "default" -> (KEYWORD("default"));
+    assert "extends" -> (KEYWORD("extends"));
+    assert "super" -> (KEYWORD("super"));
 }
 
-export test "start" {
+export test "Lexer" {
     start Lexer.start;
     
-    assert "id /* comment */ \"literal\" | [0-9] start" -> (ID "id", LITERAL "\"literal\"", SYMBOL "|", CLASS "[0-9]", KEYWORD "start");
+    assert "id /* comment */ \"literal\" | [0-9] start" -> (ID("id"), LITERAL("\"literal\""), SYMBOL("|"), CLASS("[0-9]"), KEYWORD("start"));
+    assert "id /* comment */ \"literal\" | [0-9" -> {};
     assert "id /* comment */ \"literal\" | [0-9] start 123" -> {};
+    
+    assert "id" -> (ID("id"));
+    assert "exports" -> (ID("exports"));
 }
 
 /*
@@ -76,22 +98,21 @@ export test "start" {
  * }
  */
 
-import Parser from .parser;
+import Parser from ...src."grammar"."grammar";
 
-import {ID, LITERAL, SYMBOL, CLASS, KEYWORD} from .lexer;
-import {Module, Import, Export, Constructor, Grammar, Start, Rule} from .parser;
-import {Or, Red, And, Seq, Any, Many, Maybe, Ignore, Not, Look, Token, One, Ref, Class, Literal, InstanceOf, Default, Super, Capture} from .parser;
+import {Module, Import, Export, Constructor, Grammar, Start, Rule} from ...src."grammar"."grammar";
+import {Or, Red, And, Seq, Any, Many, Maybe, Ignore, Not, Look, One, Ref, Class, Literal, Type, Value, Default, Super, Capture, Part, Defer} from ...src."grammar"."grammar";
 
-export test "start" {
+export test "Parser" {
     start Parser.start;
     
     assert (
-        KEYWORD "import", SYMBOL "{", ID "INT", SYMBOL ",", ID "STRING", SYMBOL "}", KEYWORD "from", SYMBOL ".", ID "common-lib", SYMBOL ";",
-        KEYWORD "export", KEYWORD "constructor", ID "Statement", SYMBOL ",", ID "Expression", SYMBOL ";",
-        KEYWORD "export", KEYWORD "grammar", ID "Example", SYMBOL "{",
-            KEYWORD "start", ID "NEWLINE", SYMBOL ";",
-            ID "NEWLINE", SYMBOL ":", LITERAL "\"\\n\"", SYMBOL ";",
-        SYMBOL "}"
+        KEYWORD("import"), SYMBOL("{"), ID("INT"), SYMBOL(","), ID("STRING"), SYMBOL("}"), KEYWORD("from"), QID(".common-lib"), SYMBOL(";"),
+        KEYWORD("export"), KEYWORD("constructor"), ID("Statement"), SYMBOL(","), ID("Expression"), SYMBOL(";"),
+        KEYWORD("export"), KEYWORD("grammar"), ID("Example"), SYMBOL("{"),
+            KEYWORD("start"), ID("NEWLINE"), SYMBOL(";"),
+            ID("NEWLINE"), SYMBOL(":"), LITERAL("\"\\n\""), SYMBOL(";"),
+        SYMBOL("}")
     ) -> (
         Module(
             Import(("INT", "STRING"), ".common-lib"),
@@ -108,7 +129,7 @@ export test "Import" {
     start Parser.Import;
     
     assert (
-        KEYWORD "import", SYMBOL "{", ID "INT", SYMBOL ",", ID "STRING", SYMBOL "}", KEYWORD "from", SYMBOL ".", ID "common-lib", SYMBOL ";"
+        KEYWORD("import"), SYMBOL("{"), ID("INT"), SYMBOL(","), ID("STRING"), SYMBOL("}"), KEYWORD("from"), QID(".common-lib"), SYMBOL(";")
     ) -> (
         Import(("INT", "STRING"), ".common-lib")
     );
@@ -118,7 +139,7 @@ export test "Export" {
     start Parser.Export;
     
     assert (
-        KEYWORD "export", KEYWORD "constructor", ID "Statement", SYMBOL ",", ID "Expression", SYMBOL ";"
+        KEYWORD("export"), KEYWORD("constructor"), ID("Statement"), SYMBOL(","), ID("Expression"), SYMBOL(";")
     ) -> (
         Export(Constructor("Statement", "Expression"))
     );
@@ -128,7 +149,7 @@ export test "Constructor" {
     start Parser.Constructor;
     
     assert (
-        KEYWORD "constructor", ID "Statement", SYMBOL ",", ID "Expression", SYMBOL ";"
+        KEYWORD("constructor"), ID("Statement"), SYMBOL(","), ID("Expression"), SYMBOL(";")
     ) -> (
         Constructor("Statement", "Expression")
     );
@@ -138,10 +159,10 @@ export test "Grammar" {
     start Parser.Grammar;
     
     assert (
-        KEYWORD "grammar", ID "Example", SYMBOL "{",
-            KEYWORD "start", ID "NEWLINE", SYMBOL ";",
-            ID "NEWLINE", SYMBOL ":", LITERAL "\"\\n\"", SYMBOL ";",
-        SYMBOL "}"
+        KEYWORD("grammar"), ID("Example"), SYMBOL("{"),
+            KEYWORD("start"), ID("NEWLINE"), SYMBOL(";"),
+            ID("NEWLINE"), SYMBOL(":"), LITERAL("\"\\n\""), SYMBOL(";"),
+        SYMBOL("}")
     ) -> (
         Grammar("Example", (
             Start(Ref("NEWLINE")),
@@ -150,9 +171,9 @@ export test "Grammar" {
     );
     
     assert (
-        KEYWORD "grammar", ID "Example2", KEYWORD "extends", ID "Example", SYMBOL "{",
-            ID "NEWLINE", SYMBOL ":", KEYWORD "super", SYMBOL "|", LITERAL "\"\\r\\n\"", SYMBOL ";",
-        SYMBOL "}"
+        KEYWORD("grammar"), ID("Example2"), KEYWORD("extends"), ID("Example"), SYMBOL("{"),
+            ID("NEWLINE"), SYMBOL(":"), KEYWORD("super"), SYMBOL("|"), LITERAL("\"\\r\\n\""), SYMBOL(";"),
+        SYMBOL("}")
     ) -> (
         Grammar("Example2", "Example", (
             Rule("NEWLINE", Or(Super(), Literal("\"\\r\\n\"")))
@@ -163,24 +184,17 @@ export test "Grammar" {
 export test "Rule" {
     start Parser.Rule;
     
-    assert (KEYWORD "start", ID "NEWLINE", SYMBOL ";") -> (Start(Ref("NEWLINE")));
-    assert (KEYWORD "start") -> {};
+    assert (KEYWORD("start"), ID("NEWLINE"), SYMBOL(";")) -> (Start(Ref("NEWLINE")));
+    assert (KEYWORD("start")) -> {};
     
-    assert (ID "NEWLINE", SYMBOL ":", LITERAL "\"\\n\"", SYMBOL ";") -> (Rule("NEWLINE", Literal("\"\\n\"")));
-    assert (ID "NEWLINE") -> {};
+    assert (ID("NEWLINE"), SYMBOL(":"), LITERAL("\"\\n\""), SYMBOL(";")) -> (Rule("NEWLINE", Literal("\"\\n\"")));
+    assert (ID("NEWLINE")) -> {};
 }
 
 export test "IdentifierList" {
     start Parser.IdentifierList;
     
-    assert (SYMBOL "{", ID "INT", SYMBOL ",", ID "STRING", SYMBOL "}") -> (("INT", "STRING"));
-}
-
-export test "ModuleIdentifier" {
-    start Parser.ModuleIdentifier;
-    
-    assert (SYMBOL ".", ID "common") -> (".common");
-    assert (SYMBOL ".", LITERAL "'common-lib'") -> (".'common-lib'");
+    assert (SYMBOL("{"), ID("INT"), SYMBOL(","), ID("STRING"), SYMBOL("}")) -> (("INT", "STRING"));
 }
 
 /*
@@ -194,15 +208,15 @@ export test "Expression" {
     start Parser.Expression;
     
     assert (
-        LITERAL "\"var\"", SYMBOL "!", SYMBOL "<", ID "Identifier",
-            SYMBOL "(", LITERAL "\",\"", SYMBOL "!", ID "Identifier", SYMBOL ")",
-            SYMBOL "*", SYMBOL ">", LITERAL "\";\"", SYMBOL "!", SYMBOL "->", ID "Variable",
-        SYMBOL "|", LITERAL "\"function\"", SYMBOL "!", ID "Identifier", SYMBOL "?",
-            LITERAL "\"(\"", SYMBOL "!", ID "Param", SYMBOL "+", LITERAL "\")\"", SYMBOL "!",
-            SYMBOL "->", ID "Call",
-        SYMBOL "|", SYMBOL "(", SYMBOL "@", ID "INT", SYMBOL "|",
-            SYMBOL "@", ID "STRING", SYMBOL "&", SYMBOL "~", SYMBOL "@", ID "INT", SYMBOL ")",
-            SYMBOL "->", ID "Value"
+        LITERAL("\"var\""), SYMBOL("!"), SYMBOL("<"), ID("Identifier"),
+            SYMBOL("("), LITERAL("\",\""), SYMBOL("!"), ID("Identifier"), SYMBOL(")"),
+            SYMBOL("*"), SYMBOL(">"), LITERAL("\";\""), SYMBOL("!"), SYMBOL("->"), ID("Variable"),
+        SYMBOL("|"), LITERAL("\"function\""), SYMBOL("!"), ID("Identifier"), SYMBOL("?"),
+            LITERAL("\"(\""), SYMBOL("!"), ID("Param"), SYMBOL("+"), LITERAL("\")\""), SYMBOL("!"),
+            SYMBOL("->"), ID("Call"),
+        SYMBOL("|"), SYMBOL("("), SYMBOL("@"), ID("INT"), SYMBOL("|"),
+            SYMBOL("@"), ID("STRING"), SYMBOL("&"), SYMBOL("~"), SYMBOL("@"), ID("INT"), SYMBOL(")"),
+            SYMBOL("->"), ID("Value")
     ) -> (
         Or(Or(
             Red(Seq(Seq(
@@ -221,8 +235,8 @@ export test "Expression" {
                 Ignore(Literal("\")\""))
             ), "Call")),
             Red(Or(
-                InstanceOf("INT"),
-                And(InstanceOf("STRING"), Not(InstanceOf("INT")))
+                Type("INT"),
+                And(Type("STRING"), Not(Type("INT")))
             ), "Value")
         )
     );
@@ -232,12 +246,12 @@ export test "OrExpr" {
     start Parser.OrExpr;
     
     assert (
-        SYMBOL "@", ID "INT", SYMBOL "|",
-            SYMBOL "@", ID "STRING", SYMBOL "&", SYMBOL "~", SYMBOL "@", ID "INT"
+        SYMBOL("@"), ID("INT"), SYMBOL("|"),
+            SYMBOL("@"), ID("STRING"), SYMBOL("&"), SYMBOL("~"), SYMBOL("@"), ID("INT")
     ) -> (
         Or(
-            InstanceOf("INT"),
-            And(InstanceOf("STRING"), Not(InstanceOf("INT")))
+            Type("INT"),
+            And(Type("STRING"), Not(Type("INT")))
         )
     );
 }
@@ -246,13 +260,13 @@ export test "RedExpr" {
     start Parser.RedExpr;
     
     assert (
-        SYMBOL "(", SYMBOL "@", ID "INT", SYMBOL "|",
-            SYMBOL "@", ID "STRING", SYMBOL "&", SYMBOL "~", SYMBOL "@", ID "INT", SYMBOL ")",
-            SYMBOL "->", ID "Value"
+        SYMBOL("("), SYMBOL("@"), ID("INT"), SYMBOL("|"),
+            SYMBOL("@"), ID("STRING"), SYMBOL("&"), SYMBOL("~"), SYMBOL("@"), ID("INT"), SYMBOL(")"),
+            SYMBOL("->"), ID("Value")
     ) -> (
         Red(Or(
-            InstanceOf("INT"),
-            And(InstanceOf("STRING"), Not(InstanceOf("INT")))
+            Type("INT"),
+            And(Type("STRING"), Not(Type("INT")))
         ), "Value")
     );
 }
@@ -261,9 +275,9 @@ export test "AndExpr" {
     start Parser.AndExpr;
     
     assert (
-        SYMBOL "@", ID "STRING", SYMBOL "&", SYMBOL "~", SYMBOL "@", ID "INT"
+        SYMBOL("@"), ID("STRING"), SYMBOL("&"), SYMBOL("~"), SYMBOL("@"), ID("INT")
     ) -> (
-        And(InstanceOf("STRING"), Not(InstanceOf("INT")))
+        And(Type("STRING"), Not(Type("INT")))
     );
 }
 
@@ -271,7 +285,7 @@ export test "SeqExpr" {
     start Parser.SeqExpr;
     
     assert (
-        LITERAL "\",\"", SYMBOL "!", ID "Identifier"
+        LITERAL("\",\""), SYMBOL("!"), ID("Identifier")
     ) -> (
         Seq(Ignore(Literal("\",\"")), Ref("Identifier"))
     );
@@ -281,25 +295,25 @@ export test "RightExpr" {
     start Parser.RightExpr;
     
     assert (
-        SYMBOL "(", LITERAL "\",\"", SYMBOL "!", ID "Identifier", SYMBOL ")", SYMBOL "*"
+        SYMBOL("("), LITERAL("\",\""), SYMBOL("!"), ID("Identifier"), SYMBOL(")"), SYMBOL("*")
     ) -> (
         Any(Seq(Ignore(Literal("\",\"")), Ref("Identifier")))
     );
     
     assert (
-        ID "Param", SYMBOL "+"
+        ID("Param"), SYMBOL("+")
     ) -> (
         Many(Ref("Param"))
     );
     
     assert (
-        ID "Identifier", SYMBOL "?"
+        ID("Identifier"), SYMBOL("?")
     ) -> (
         Maybe(Ref("Identifier"))
     );
     
     assert (
-        LITERAL "\"(\"", SYMBOL "!"
+        LITERAL("\"(\""), SYMBOL("!")
     ) -> (
         Ignore(Literal("\"(\""))
     );
@@ -309,31 +323,33 @@ export test "LeftExpr" {
     start Parser.LeftExpr;
     
     assert (
-        SYMBOL "~", SYMBOL "@", ID "INT"
+        SYMBOL("~"), SYMBOL("@"), ID("INT")
     ) -> (
-        Not(InstanceOf("INT"))
+        Not(Type("INT"))
     );
     
     assert (
-        SYMBOL "?=", SYMBOL "@", ID "INT"
+        SYMBOL("?="), SYMBOL("@"), ID("INT")
     ) -> (
-        Look(InstanceOf("INT"))
+        Look(Type("INT"))
     );
 }
 
 export test "Terminal" {
     start Parser.Terminal;
     
-    assert (SYMBOL "(", ID "id", SYMBOL ")") -> (Ref("id"));
-    assert (SYMBOL "<", ID "id", SYMBOL ">") -> (Capture(Ref("id")));
-    assert (SYMBOL "@", ID "STRING") -> (InstanceOf("STRING"));
-    assert (SYMBOL ".") -> (One());
-    assert (ID "id") -> (Ref("id"));
-    assert (CLASS "[a-z]") -> (Class("[a-z]"));
-    assert (LITERAL "\"literal\"") -> (Literal("\"literal\""));
-    assert (KEYWORD "default") -> (Default());
-    assert (KEYWORD "super") -> (Super());
+    assert (SYMBOL("("), ID("id"), SYMBOL(")")) -> (Ref("id"));
+    assert (SYMBOL("<"), ID("id"), SYMBOL(">")) -> (Capture(Ref("id")));
+    assert (SYMBOL("@"), ID("STRING")) -> (Type("STRING"));
+    assert (SYMBOL("@"), LITERAL("\"literal\"")) -> (Value("\"literal\""));
+    assert (SYMBOL(".")) -> (One());
+    assert (ID("id")) -> (Ref("id"));
+    assert (CLASS("[a-z]")) -> (Class("[a-z]"));
+    assert (LITERAL("\"literal\"")) -> (Literal("\"literal\""));
+    assert (KEYWORD("default")) -> (Default());
+    assert (KEYWORD("super")) -> (Super());
     
-    assert (SYMBOL "|") -> {};
-    assert (KEYWORD "start") -> {};
+    assert (SYMBOL("|")) -> {};
+    assert (KEYWORD("start")) -> {};
 }
+

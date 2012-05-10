@@ -1,27 +1,29 @@
-import Lexer, KEYWORD from .lexer;
+import Lexer, Parser, ID, QID, LITERAL, KEYWORD from ...src."grammar"."grammar";
 
 augment grammar Lexer {
-    KEYWORD: default | ("test" | "assert") -> KEYWORD;
+    // TODO: fix caching
+    ID: default & ~KEYWORD;
+    
+    KEYWORD: default | <"test" | "assert"> ?= ~[A-Za-z0-9_\-] -> KEYWORD;
 }
 
-import Parser, Literal from .parser;
-import ID, LITERAL from .lexer;
-
-export constructor Test, StartDeclaration, Assertion, NodeList, NodeSet, Node, Terminal;
+export constructor Test, StartDeclaration, Assertion;
+export constructor List, Set, Node, Term;
 
 augment grammar Parser {
     Definition: default | Test;
     
-    Test: "test"! @LITERAL "{"! StartDeclaration (Assertion* -> List) "}"! -> Test;
+    Test: "test"! @LITERAL "{"! StartDeclaration <Assertion*> "}"! -> Test;
     
-    StartDeclaration: "start"! RuleIdentifier ";"! -> StartDeclaration;
-    RuleIdentifier: @ID "."! @ID | @ID "."! ("start" -> Text);
+    StartDeclaration: "start"! (@ID | @QID) ";"! -> StartDeclaration;
     
     Assertion: "assert"! NodeList "->"! NodeSet ";"! -> Assertion;
     
-    NodeList: "("! (Node (","! Node)*)? ")"! -> NodeList | @LITERAL -> Terminal;
-    NodeSet: "{"! (NodeList (","! NodeList)*)? "}"! -> NodeSet | NodeList -> NodeSet;
-    Node: @ID NodeList -> Node | NodeList;
+    NodeList: List | Term;
+    List: "("! (Node (","! Node)*)? ")"! -> List;
+    Term: @LITERAL -> Term;
+    NodeSet: "{"! (NodeList (","! NodeList)*)? "}"! -> Set | NodeList -> Set;
+    Node: @ID List -> Node | NodeList;
     
     // Node: NodeList provides shorthands
     //       (a, b, c) for List(a, b, c)

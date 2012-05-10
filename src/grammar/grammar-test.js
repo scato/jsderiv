@@ -1,135 +1,141 @@
-var c = require('../jsderiv');
-var g = require('../jsderiv');
-var l = require('../jsderiv');
+var $ = require('../jsderiv');
 
-require('./legacy');
+// import {Lexer, Parser, ID, QID, LITERAL, KEYWORD} from ...src."grammar"."grammar";
+var Lexer   = require("./../../src/grammar/grammar").Lexer,
+    Parser  = require("./../../src/grammar/grammar").Parser,
+    ID      = require("./../../src/grammar/grammar").ID,
+    QID     = require("./../../src/grammar/grammar").QID,
+    LITERAL = require("./../../src/grammar/grammar").LITERAL,
+    KEYWORD = require("./../../src/grammar/grammar").KEYWORD;
 
-var List = g.List,
-    Text = g.Text;
+// ID: default & ~ KEYWORD;
+(function($default) {
+    var $cache;
+    
+    Lexer.prototype.ID = function() {
+        return $cache || ($cache = $.Ref(function() {
+            return $.And($default.apply(this, []).resolve(), $.Not(this.KEYWORD()));
+        }.bind(this), 'ID'));
+    };
+})(Lexer.prototype.ID);
 
-// import {Lexer, KEYWORD} from .lexer;
-var Lexer   = require('./grammar').Lexer,
-    KEYWORD = require('./grammar').KEYWORD;
-
-// KEYWORD: default | ("test" | "assert") -> KEYWORD;
+// KEYWORD: default | <"test" | "assert"> ?= ~ [A-Za-z0-9_\-] -> KEYWORD;
 (function($default) {
     var $cache;
     
     Lexer.prototype.KEYWORD = function() {
-        return $cache || ($cache = g.Ref(function() {
-            return c.Or($default.apply(this, []), c.Red(c.Or(g.Literal("test"), g.Literal("assert")), KEYWORD));
+        return $cache || ($cache = $.Ref(function() {
+            return $.Or($default.apply(this, []).resolve(), $.Red($.Seq($.Capture($.Or($.Or($.Literal("test"), $.Value("test")), $.Or($.Literal("assert"), $.Value("assert")))), $.Look($.Not($.Or($.Or($.Or($.Or($.Range("A", "Z"), $.Range("a", "z")), $.Range("0", "9")), $.Char("_")), $.Char("-"))))), KEYWORD));
         }.bind(this), 'KEYWORD'));
     };
 })(Lexer.prototype.KEYWORD);
 
-var c = require('../jsderiv');
-var g = require('../jsderiv');
-var l = require('../jsderiv');
+// export constructor Test, StartDeclaration, Assertion;
+var Test             = exports.Test             = $.Node.define("Test");
+var StartDeclaration = exports.StartDeclaration = $.Node.define("StartDeclaration");
+var Assertion        = exports.Assertion        = $.Node.define("Assertion");
 
-var List = g.List,
-    Text = g.Text;
-
-// import {Parser, Literal} from .parser;
-var Parser  = require('./grammar').Parser,
-    Literal = require('./grammar').Literal;
-
-// import {ID, LITERAL} from .lexer;
-var ID      = require('./grammar').ID,
-    LITERAL = require('./grammar').LITERAL;
-
-// export constructor Test, StartDeclaration, Assertion, NodeList, NodeSet, Node, Terminal;
-var Test             = exports.Test             = g.Cons("Test");
-var StartDeclaration = exports.StartDeclaration = g.Cons("StartDeclaration");
-var Assertion        = exports.Assertion        = g.Cons("Assertion");
-var NodeList         = exports.NodeList         = g.Cons("NodeList");
-var NodeSet          = exports.NodeSet          = g.Cons("NodeSet");
-var Node             = exports.Node             = g.Cons("Node");
-var Terminal         = exports.Terminal         = g.Cons("Terminal");
+// export constructor List, Set, Node, Term;
+var List = exports.List = $.Node.define("List");
+var Set  = exports.Set  = $.Node.define("Set");
+var Node = exports.Node = $.Node.define("Node");
+var Term = exports.Term = $.Node.define("Term");
 
 // Definition: default | Test;
 (function($default) {
     var $cache;
     
     Parser.prototype.Definition = function() {
-        return $cache || ($cache = g.Ref(function() {
-            return c.Or($default.apply(this, []), this.Test());
+        return $cache || ($cache = $.Ref(function() {
+            return $.Or($default.apply(this, []).resolve(), this.Test());
         }.bind(this), 'Definition'));
     };
 })(Parser.prototype.Definition);
 
-// Test: "test"! @LITERAL "{"! StartDeclaration (Assertion* -> List) "}"! -> Test;
+// Test: "test"! @LITERAL "{"! StartDeclaration <Assertion*> "}"! -> Test;
 (function($default) {
     var $cache;
     
     Parser.prototype.Test = function() {
-        return $cache || ($cache = g.Ref(function() {
-            return c.Red(c.Seq(c.Seq(c.Seq(c.Seq(c.Seq(c.Ignore(g.Literal("test")), g.InstanceOf(LITERAL)), c.Ignore(g.Literal("{"))), this.StartDeclaration()), c.Red(c.Any(this.Assertion()), List)), c.Ignore(g.Literal("}"))), Test);
+        return $cache || ($cache = $.Ref(function() {
+            return $.Red($.Seq($.Seq($.Seq($.Seq($.Seq($.Ignore($.Or($.Literal("test"), $.Value("test"))), $.Type(LITERAL)), $.Ignore($.Or($.Literal("{"), $.Value("{")))), this.StartDeclaration()), $.Capture($.Any(this.Assertion()))), $.Ignore($.Or($.Literal("}"), $.Value("}")))), Test);
         }.bind(this), 'Test'));
     };
 })(Parser.prototype.Test);
 
-// StartDeclaration: "start"! RuleIdentifier ";"! -> StartDeclaration;
+// StartDeclaration: "start"! (@ID | @QID) ";"! -> StartDeclaration;
 (function($default) {
     var $cache;
     
     Parser.prototype.StartDeclaration = function() {
-        return $cache || ($cache = g.Ref(function() {
-            return c.Red(c.Seq(c.Seq(c.Ignore(g.Literal("start")), this.RuleIdentifier()), c.Ignore(g.Literal(";"))), StartDeclaration);
+        return $cache || ($cache = $.Ref(function() {
+            return $.Red($.Seq($.Seq($.Ignore($.Or($.Literal("start"), $.Value("start"))), $.Or($.Type(ID), $.Type(QID))), $.Ignore($.Or($.Literal(";"), $.Value(";")))), StartDeclaration);
         }.bind(this), 'StartDeclaration'));
     };
 })(Parser.prototype.StartDeclaration);
-
-// RuleIdentifier: @ID "."! @ID | @ID "."! ("start" -> Text);
-(function($default) {
-    var $cache;
-    
-    Parser.prototype.RuleIdentifier = function() {
-        return $cache || ($cache = g.Ref(function() {
-            return c.Or(c.Seq(c.Seq(g.InstanceOf(ID), c.Ignore(g.Literal("."))), g.InstanceOf(ID)), c.Seq(c.Seq(g.InstanceOf(ID), c.Ignore(g.Literal("."))), c.Red(g.Literal("start"), Text)));
-        }.bind(this), 'RuleIdentifier'));
-    };
-})(Parser.prototype.RuleIdentifier);
 
 // Assertion: "assert"! NodeList "->"! NodeSet ";"! -> Assertion;
 (function($default) {
     var $cache;
     
     Parser.prototype.Assertion = function() {
-        return $cache || ($cache = g.Ref(function() {
-            return c.Red(c.Seq(c.Seq(c.Seq(c.Seq(c.Ignore(g.Literal("assert")), this.NodeList()), c.Ignore(g.Literal("->"))), this.NodeSet()), c.Ignore(g.Literal(";"))), Assertion);
+        return $cache || ($cache = $.Ref(function() {
+            return $.Red($.Seq($.Seq($.Seq($.Seq($.Ignore($.Or($.Literal("assert"), $.Value("assert"))), this.NodeList()), $.Ignore($.Or($.Literal("->"), $.Value("->")))), this.NodeSet()), $.Ignore($.Or($.Literal(";"), $.Value(";")))), Assertion);
         }.bind(this), 'Assertion'));
     };
 })(Parser.prototype.Assertion);
 
-// NodeList: "("! (Node (","! Node)*)? ")"! -> NodeList | @LITERAL -> Terminal;
+// NodeList: List | Term;
 (function($default) {
     var $cache;
     
     Parser.prototype.NodeList = function() {
-        return $cache || ($cache = g.Ref(function() {
-            return c.Or(c.Red(c.Seq(c.Seq(c.Ignore(g.Literal("(")), c.Maybe(c.Seq(this.Node(), c.Any(c.Seq(c.Ignore(g.Literal(",")), this.Node()))))), c.Ignore(g.Literal(")"))), NodeList), c.Red(g.InstanceOf(LITERAL), Terminal));
+        return $cache || ($cache = $.Ref(function() {
+            return $.Or(this.List(), this.Term());
         }.bind(this), 'NodeList'));
     };
 })(Parser.prototype.NodeList);
 
-// NodeSet: "{"! (NodeList (","! NodeList)*)? "}"! -> NodeSet | NodeList -> NodeSet;
+// List: "("! (Node (","! Node)*)? ")"! -> List;
+(function($default) {
+    var $cache;
+    
+    Parser.prototype.List = function() {
+        return $cache || ($cache = $.Ref(function() {
+            return $.Red($.Seq($.Seq($.Ignore($.Or($.Literal("("), $.Value("("))), $.Maybe($.Seq(this.Node(), $.Any($.Seq($.Ignore($.Or($.Literal(","), $.Value(","))), this.Node()))))), $.Ignore($.Or($.Literal(")"), $.Value(")")))), List);
+        }.bind(this), 'List'));
+    };
+})(Parser.prototype.List);
+
+// Term: @LITERAL -> Term;
+(function($default) {
+    var $cache;
+    
+    Parser.prototype.Term = function() {
+        return $cache || ($cache = $.Ref(function() {
+            return $.Red($.Type(LITERAL), Term);
+        }.bind(this), 'Term'));
+    };
+})(Parser.prototype.Term);
+
+// NodeSet: "{"! (NodeList (","! NodeList)*)? "}"! -> Set | NodeList -> Set;
 (function($default) {
     var $cache;
     
     Parser.prototype.NodeSet = function() {
-        return $cache || ($cache = g.Ref(function() {
-            return c.Or(c.Red(c.Seq(c.Seq(c.Ignore(g.Literal("{")), c.Maybe(c.Seq(this.NodeList(), c.Any(c.Seq(c.Ignore(g.Literal(",")), this.NodeList()))))), c.Ignore(g.Literal("}"))), NodeSet), c.Red(this.NodeList(), NodeSet));
+        return $cache || ($cache = $.Ref(function() {
+            return $.Or($.Red($.Seq($.Seq($.Ignore($.Or($.Literal("{"), $.Value("{"))), $.Maybe($.Seq(this.NodeList(), $.Any($.Seq($.Ignore($.Or($.Literal(","), $.Value(","))), this.NodeList()))))), $.Ignore($.Or($.Literal("}"), $.Value("}")))), Set), $.Red(this.NodeList(), Set));
         }.bind(this), 'NodeSet'));
     };
 })(Parser.prototype.NodeSet);
 
-// Node: @ID NodeList -> Node | NodeList;
+// Node: @ID List -> Node | NodeList;
 (function($default) {
     var $cache;
     
     Parser.prototype.Node = function() {
-        return $cache || ($cache = g.Ref(function() {
-            return c.Or(c.Red(c.Seq(g.InstanceOf(ID), this.NodeList()), Node), this.NodeList());
+        return $cache || ($cache = $.Ref(function() {
+            return $.Or($.Red($.Seq($.Type(ID), this.List()), Node), this.NodeList());
         }.bind(this), 'Node'));
     };
 })(Parser.prototype.Node);

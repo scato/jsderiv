@@ -24,7 +24,7 @@ test.Assertion.prototype.toSource = function() {
     return 'assert ' + this.value[0].toSource() + ' -> ' + this.value[1].toSource() + ';';
 };
 
-test.NodeSet.prototype.toSource = function() {
+test.Set.prototype.toSource = function() {
     if(this.value.length === 1) {
         return this.value[0].toSource();
     } else {
@@ -34,7 +34,7 @@ test.NodeSet.prototype.toSource = function() {
     }
 };
 
-test.NodeList.prototype.toSource = function() {
+test.List.prototype.toSource = function() {
     return '(' + this.value.map(function(nodeList) {
         return nodeList.toSource();
     }).join(', ') + ')';
@@ -48,6 +48,6 @@ test.Node.prototype.toSource = function() {
     }
 };
 
-test.Terminal.prototype.toSource = function() {
+test.Term.prototype.toSource = function() {
     return this.value[0];
 };

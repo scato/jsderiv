@@ -31,13 +31,13 @@ test.Assertion.prototype.toJavascript = function() {
         '    test.deepEqual(g.parse(start, ' + this.value[0].toJavascript() + '), ' + this.value[1].toJavascript() + ');';
 };
 
-test.NodeSet.prototype.toJavascript = function() {
+test.Set.prototype.toJavascript = function() {
     return '[' + this.value.map(function(nodeList) {
         return nodeList.toJavascript();
     }).join(', ') + ']';
 };
 
-test.NodeList.prototype.toJavascript = function() {
+test.List.prototype.toJavascript = function() {
     return '[' + this.value.map(function(nodeList) {
         return nodeList.toJavascript();
     }).join(', ') + ']';
@@ -47,6 +47,6 @@ test.Node.prototype.toJavascript = function() {
     return this.value[0] + '(' + this.value[1].toJavascript() + ')';
 };
 
-test.Terminal.prototype.toJavascript = function() {
+test.Term.prototype.toJavascript = function() {
     return this.value[0];
 };

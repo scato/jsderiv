@@ -13,7 +13,8 @@ parser.Many.prototype.indent = false;
 parser.Look.prototype.indent = false;
 parser.Seq.prototype.indent = false;
 parser.Red.prototype.indent = false;
-parser.InstanceOf.prototype.indent = false;
+parser.Type.prototype.indent = false;
+parser.Value.prototype.indent = false;
 
 parser.Constructor.prototype.indent = false;
 parser.Import.prototype.indent = false;

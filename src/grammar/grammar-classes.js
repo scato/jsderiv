@@ -1,20 +1,13 @@
-var c = require('../../src/jsderiv');
-var g = require('../../src/jsderiv');
-var l = require('../../src/jsderiv');
-
-require('./legacy');
-
-var List = g.List,
-    Text = g.Text;
+var $ = require('../jsderiv');
 
 // export constructor Class, Char, Control, Unicode, Range, Category, Not;
-var Class    = exports.Class    = g.Cons("Class");
-var Char     = exports.Char     = g.Cons("Char");
-var Control  = exports.Control  = g.Cons("Control");
-var Unicode  = exports.Unicode  = g.Cons("Unicode");
-var Range    = exports.Range    = g.Cons("Range");
-var Category = exports.Category = g.Cons("Category");
-var Not      = exports.Not      = g.Cons("Not");
+var Class    = exports.Class    = $.Node.define("Class");
+var Char     = exports.Char     = $.Node.define("Char");
+var Control  = exports.Control  = $.Node.define("Control");
+var Unicode  = exports.Unicode  = $.Node.define("Unicode");
+var Range    = exports.Range    = $.Node.define("Range");
+var Category = exports.Category = $.Node.define("Category");
+var Not      = exports.Not      = $.Node.define("Not");
 
 // export grammar Scannerless;
 var Scannerless = exports.Scannerless = function() {};
@@ -24,52 +17,52 @@ var Scannerless = exports.Scannerless = function() {};
     var $cache;
     
     exports.Scannerless.prototype.start = function() {
-        return $cache || ($cache = g.Ref(function() {
+        return $cache || ($cache = $.Ref(function() {
             return this.Class();
         }.bind(this), 'start'));
     };
 })();
 
-// CONTROL: ("\\t" | "\\r" | "\\n" | "\\v" | "\\f") -> Text;
+// CONTROL: <"\\t" | "\\r" | "\\n" | "\\v" | "\\f">;
 (function() {
     var $cache;
     
     exports.Scannerless.prototype.CONTROL = function() {
-        return $cache || ($cache = g.Ref(function() {
-            return c.Red(c.Or(c.Or(c.Or(c.Or(g.Literal("\\t"), g.Literal("\\r")), g.Literal("\\n")), g.Literal("\\v")), g.Literal("\\f")), Text);
+        return $cache || ($cache = $.Ref(function() {
+            return $.Capture($.Or($.Or($.Or($.Or($.Or($.Literal("\\t"), $.Value("\\t")), $.Or($.Literal("\\r"), $.Value("\\r"))), $.Or($.Literal("\\n"), $.Value("\\n"))), $.Or($.Literal("\\v"), $.Value("\\v"))), $.Or($.Literal("\\f"), $.Value("\\f"))));
         }.bind(this), 'CONTROL'));
     };
 })();
 
-// UNICODE: "\\u" [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F] -> Text;
+// UNICODE: <"\\u" [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F]>;
 (function() {
     var $cache;
     
     exports.Scannerless.prototype.UNICODE = function() {
-        return $cache || ($cache = g.Ref(function() {
-            return c.Red(c.Seq(c.Seq(c.Seq(c.Seq(g.Literal("\\u"), c.Or(c.Or(g.Range("0", "9"), g.Range("a", "f")), g.Range("A", "F"))), c.Or(c.Or(g.Range("0", "9"), g.Range("a", "f")), g.Range("A", "F"))), c.Or(c.Or(g.Range("0", "9"), g.Range("a", "f")), g.Range("A", "F"))), c.Or(c.Or(g.Range("0", "9"), g.Range("a", "f")), g.Range("A", "F"))), Text);
+        return $cache || ($cache = $.Ref(function() {
+            return $.Capture($.Seq($.Seq($.Seq($.Seq($.Or($.Literal("\\u"), $.Value("\\u")), $.Or($.Or($.Range("0", "9"), $.Range("a", "f")), $.Range("A", "F"))), $.Or($.Or($.Range("0", "9"), $.Range("a", "f")), $.Range("A", "F"))), $.Or($.Or($.Range("0", "9"), $.Range("a", "f")), $.Range("A", "F"))), $.Or($.Or($.Range("0", "9"), $.Range("a", "f")), $.Range("A", "F"))));
         }.bind(this), 'UNICODE'));
     };
 })();
 
-// CHAR: ([^\^\-\\\]] | "\\^" | "\\-" | "\\\\" | "\\]") -> Text;
+// CHAR: <[^\^\-\\\]] | "\\^" | "\\-" | "\\\\" | "\\]">;
 (function() {
     var $cache;
     
     exports.Scannerless.prototype.CHAR = function() {
-        return $cache || ($cache = g.Ref(function() {
-            return c.Red(c.Or(c.Or(c.Or(c.Or(c.And(g.One(), c.Not(c.Or(c.Or(c.Or(g.Char("^"), g.Char("-")), g.Char("\\")), g.Char("]")))), g.Literal("\\^")), g.Literal("\\-")), g.Literal("\\\\")), g.Literal("\\]")), Text);
+        return $cache || ($cache = $.Ref(function() {
+            return $.Capture($.Or($.Or($.Or($.Or($.And($.One(), $.Not($.Or($.Or($.Or($.Char("^"), $.Char("-")), $.Char("\\")), $.Char("]")))), $.Or($.Literal("\\^"), $.Value("\\^"))), $.Or($.Literal("\\-"), $.Value("\\-"))), $.Or($.Literal("\\\\"), $.Value("\\\\"))), $.Or($.Literal("\\]"), $.Value("\\]"))));
         }.bind(this), 'CHAR'));
     };
 })();
 
-// CATEGORY: ("\\d" | "\\D" | "\\s" | "\\S" | "\\w" | "\\W" | "\\p{" [A-Za-z_]* "}" | "\\P{" [A-Za-z_]+ "}") -> Text;
+// CATEGORY: <"\\d" | "\\D" | "\\s" | "\\S" | "\\w" | "\\W" | "\\p{" [A-Za-z_]* "}" | "\\P{" [A-Za-z_]+ "}">;
 (function() {
     var $cache;
     
     exports.Scannerless.prototype.CATEGORY = function() {
-        return $cache || ($cache = g.Ref(function() {
-            return c.Red(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(c.Or(g.Literal("\\d"), g.Literal("\\D")), g.Literal("\\s")), g.Literal("\\S")), g.Literal("\\w")), g.Literal("\\W")), c.Seq(c.Seq(g.Literal("\\p{"), c.Any(c.Or(c.Or(g.Range("A", "Z"), g.Range("a", "z")), g.Char("_")))), g.Literal("}"))), c.Seq(c.Seq(g.Literal("\\P{"), c.Many(c.Or(c.Or(g.Range("A", "Z"), g.Range("a", "z")), g.Char("_")))), g.Literal("}"))), Text);
+        return $cache || ($cache = $.Ref(function() {
+            return $.Capture($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Literal("\\d"), $.Value("\\d")), $.Or($.Literal("\\D"), $.Value("\\D"))), $.Or($.Literal("\\s"), $.Value("\\s"))), $.Or($.Literal("\\S"), $.Value("\\S"))), $.Or($.Literal("\\w"), $.Value("\\w"))), $.Or($.Literal("\\W"), $.Value("\\W"))), $.Seq($.Seq($.Or($.Literal("\\p{"), $.Value("\\p{")), $.Any($.Or($.Or($.Range("A", "Z"), $.Range("a", "z")), $.Char("_")))), $.Or($.Literal("}"), $.Value("}")))), $.Seq($.Seq($.Or($.Literal("\\P{"), $.Value("\\P{")), $.Many($.Or($.Or($.Range("A", "Z"), $.Range("a", "z")), $.Char("_")))), $.Or($.Literal("}"), $.Value("}")))));
         }.bind(this), 'CATEGORY'));
     };
 })();
@@ -79,8 +72,8 @@ var Scannerless = exports.Scannerless = function() {};
     var $cache;
     
     exports.Scannerless.prototype.Range = function() {
-        return $cache || ($cache = g.Ref(function() {
-            return c.Red(c.Seq(c.Seq(c.Or(this.CHAR(), this.UNICODE()), c.Ignore(g.Literal("-"))), c.Or(this.CHAR(), this.UNICODE())), Range);
+        return $cache || ($cache = $.Ref(function() {
+            return $.Red($.Seq($.Seq($.Or(this.CHAR(), this.UNICODE()), $.Ignore($.Or($.Literal("-"), $.Value("-")))), $.Or(this.CHAR(), this.UNICODE())), Range);
         }.bind(this), 'Range'));
     };
 })();
@@ -90,8 +83,8 @@ var Scannerless = exports.Scannerless = function() {};
     var $cache;
     
     exports.Scannerless.prototype.Category = function() {
-        return $cache || ($cache = g.Ref(function() {
-            return c.Red(this.CATEGORY(), Category);
+        return $cache || ($cache = $.Ref(function() {
+            return $.Red(this.CATEGORY(), Category);
         }.bind(this), 'Category'));
     };
 })();
@@ -101,20 +94,19 @@ var Scannerless = exports.Scannerless = function() {};
     var $cache;
     
     exports.Scannerless.prototype.Char = function() {
-        return $cache || ($cache = g.Ref(function() {
-            return c.Or(c.Or(c.Or(this.Category(), c.Red(this.CHAR(), Char)), c.Red(this.CONTROL(), Control)), c.Red(this.UNICODE(), Unicode));
+        return $cache || ($cache = $.Ref(function() {
+            return $.Or($.Or($.Or(this.Category(), $.Red(this.CHAR(), Char)), $.Red(this.CONTROL(), Control)), $.Red(this.UNICODE(), Unicode));
         }.bind(this), 'Char'));
     };
 })();
 
-// Class: "["! ((Range | Char)* -> List) ("^"! (Range | Char)+ -> Not)? "]"! -> Class;
+// Class: "["! ((Range | Char)+ | "^"! (Range | Char)+ -> Not) "]"! -> Class;
 (function() {
     var $cache;
     
     exports.Scannerless.prototype.Class = function() {
-        return $cache || ($cache = g.Ref(function() {
-            return c.Red(c.Seq(c.Seq(c.Seq(c.Ignore(g.Literal("[")), c.Red(c.Any(c.Or(this.Range(), this.Char())), List)), c.Maybe(c.Red(c.Seq(c.Ignore(g.Literal("^")), c.Many(c.Or(this.Range(), this.Char()))), Not))), c.Ignore(g.Literal("]"))), Class);
+        return $cache || ($cache = $.Ref(function() {
+            return $.Red($.Seq($.Seq($.Ignore($.Or($.Literal("["), $.Value("["))), $.Or($.Many($.Or(this.Range(), this.Char())), $.Red($.Seq($.Ignore($.Or($.Literal("^"), $.Value("^"))), $.Many($.Or(this.Range(), this.Char()))), Not))), $.Ignore($.Or($.Literal("]"), $.Value("]")))), Class);
         }.bind(this), 'Class'));
     };
 })();
-
