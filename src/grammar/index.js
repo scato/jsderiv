@@ -21,7 +21,10 @@ exports.tokenize = function(string) {
         expr = expr.derive(string[i]);
         
         if(expr.equals(Void())) {
-            throw new Error('Parse error: unexpected character ' + JSON.stringify(string[i]));
+            var line = string.substring(0, i).split(/\n/).length;
+            var char = string.substring(0, i).split(/\n/).pop().length + 1;
+            
+            throw new Error('Parse error: unexpected character ' + JSON.stringify(string[i]) + ' at ' + line + ':' + char);
         }
     }
     
@@ -44,7 +47,20 @@ exports.parse = function(string) {
         expr = expr.derive(tokens[i]);
         
         if(expr.equals(Void())) {
-            throw new Error('Parse error: unexpected token ' + tokens[i].toString());
+            var lexer = new grammar.Lexer().start();
+            
+            for(var j = 0; j < string.length; j++) {
+                var result = lexer.parse(string.substring(0, j));
+                
+                if(result.length === 1 && result[0].length === i - 1) {
+                    var line = string.substring(0, j).split(/\n/).length;
+                    var char = string.substring(0, j).split(/\n/).pop().length + 1;
+                    
+                    break;
+                }
+            }
+            
+            throw new Error('Parse error: unexpected token ' + tokens[i].toString() + ' at ' + line + ':' + char);
         }
     }
     
