@@ -47,9 +47,9 @@ classes.Category.prototype.toJavascript = function() {
 };
 
 classes.Not.prototype.toJavascript = function() {
-    return '$.Not(' + this.childNodes.map(function(expr) {
+    return '$.And($.One(), $.Not(' + this.childNodes.map(function(expr) {
         return expr.toJavascript();
     }).fold(function(left, right) {
         return '$.Or(' + left + ', ' + right + ')';
-    }) + ')';
+    }) + '))';
 };

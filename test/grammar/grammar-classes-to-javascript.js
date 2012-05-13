@@ -41,7 +41,7 @@ exports['test Unicode'] = function(test) {
 
 exports['test Not'] = function(test) {
     test.equals(
-        "$.Not($.Or($.Or($.Or($.Or($.Char(\"\\t\"), $.Char(\"\\u0020\")), $.Char(\"-\")), $.Cat(\"w\")), $.Range(\"0\", \"9\")))",
+        "$.And($.One(), $.Not($.Or($.Or($.Or($.Or($.Char(\"\\t\"), $.Char(\"\\u0020\")), $.Char(\"-\")), $.Cat(\"w\")), $.Range(\"0\", \"9\"))))",
         Not(Control("\\t"), Unicode("\\u0020"), Char("\\-"), Category("\\w"), Range("0", "9")).toJavascript()
     );
     
@@ -54,7 +54,7 @@ exports['test Class'] = function(test) {
         Class(Control("\\t"), Unicode("\\u0020"), Char("\\-"), Category("\\w"), Range("0", "9")).toJavascript()
     );
     test.equals(
-        "$.Not($.Or($.Or($.Or($.Or($.Char(\"\\t\"), $.Char(\"\\u0020\")), $.Char(\"-\")), $.Cat(\"w\")), $.Range(\"0\", \"9\")))",
+        "$.And($.One(), $.Not($.Or($.Or($.Or($.Or($.Char(\"\\t\"), $.Char(\"\\u0020\")), $.Char(\"-\")), $.Cat(\"w\")), $.Range(\"0\", \"9\"))))",
         Class(Not(Control("\\t"), Unicode("\\u0020"), Char("\\-"), Category("\\w"), Range("0", "9"))).toJavascript()
     );
     

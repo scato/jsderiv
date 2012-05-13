@@ -50,52 +50,52 @@ export grammar Parser {
     
     Statement       : Import | Export | Definition | Augmentation ;
     
-    Import          : "import"! IdentifierList "from"! @QID ";"! -> Import ;
-    IdentifierList  : <"{"! @ID (":"! @ID)? (","! @ID (":"! @ID)?)* "}"!>
-                    | <@ID (","! @ID)*> ;
+    Import          : @"import"! IdentifierList @"from"! @QID @";"! -> Import ;
+    IdentifierList  : <@"{"! @ID (@":"! @ID)? (@","! @ID (@":"! @ID)?)* @"}"!>
+                    | <@ID (@","! @ID)*> ;
     
-    Export          : "export"! Definition -> Export ;
+    Export          : @"export"! Definition -> Export ;
     
     Definition      : Constructor | Grammar ;
     
-    Constructor     : "constructor"! @ID (","! @ID)* ";"! -> Constructor ;
+    Constructor     : @"constructor"! @ID (@","! @ID)* @";"! -> Constructor ;
     
-    Grammar         : "grammar"! @ID ("extends"! @ID)? "{"! (<Rule*>) "}"! -> Grammar ;
-    Rule            : "start"! Expression ";"! -> Start
-                    | @ID ":"! Expression ";"! -> Rule ;
+    Grammar         : @"grammar"! @ID (@"extends"! @ID)? @"{"! (<Rule*>) @"}"! -> Grammar ;
+    Rule            : @"start"! Expression @";"! -> Start
+                    | @ID @":"! Expression @";"! -> Rule ;
     
-    Augmentation    : "augment"! "grammar"! @ID "{"! (<Rule*>) "}"! -> Augmentation ;
+    Augmentation    : @"augment"! @"grammar"! @ID @"{"! (<Rule*>) @"}"! -> Augmentation ;
     
     Expression  : OrExpr ;
     
-    OrExpr      : OrExpr "|"! RedExpr -> Or
+    OrExpr      : OrExpr @"|"! RedExpr -> Or
                 | RedExpr ;
-    RedExpr     : RedExpr "->"! @ID -> Red
+    RedExpr     : RedExpr @"->"! @ID -> Red
                 | AndExpr ;
-    AndExpr     : AndExpr "&"! SeqExpr -> And
+    AndExpr     : AndExpr @"&"! SeqExpr -> And
                 | SeqExpr ;
     SeqExpr     : SeqExpr RightExpr -> Seq
                 | RightExpr ;
-    RightExpr   : RightExpr "*"! -> Any
-                | RightExpr "+"! -> Many
-                | RightExpr "?"! -> Maybe
-                | RightExpr "!"! -> Ignore
+    RightExpr   : RightExpr @"*"! -> Any
+                | RightExpr @"+"! -> Many
+                | RightExpr @"?"! -> Maybe
+                | RightExpr @"!"! -> Ignore
                 | LeftExpr ;
-    LeftExpr    : "~"! LeftExpr -> Not
-                | "?="! LeftExpr -> Look
+    LeftExpr    : @"~"! LeftExpr -> Not
+                | @"?="! LeftExpr -> Look
                 | Terminal ;
     
-    Terminal    : "("! Expression ")"!
-                | "<"! Expression ">"! -> Capture
-                | "@"! @ID -> Type
-                | "@"! @LITERAL -> Value
-                | "."! -> One
+    Terminal    : @"("! Expression @")"!
+                | @"<"! Expression @">"! -> Capture
+                | @"@"! @ID -> Type
+                | @"@"! @LITERAL -> Value
+                | @"."! -> One
                 | @ID -> Ref
                 | @CLASS -> Class
                 | @LITERAL -> Literal
                 | @CHAR -> Char
                 | @CATEGORY -> Category
-                | "default"! -> Default
-                | "super"! -> Super ;
+                | @"default"! -> Default
+                | @"super"! -> Super ;
 }
 
