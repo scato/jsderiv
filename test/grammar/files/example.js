@@ -1,24 +1,19 @@
-var c = require('../../../src/jsderivcommon');
-var g = require('../../../src/jsderivgeneric');
-var l = require('../../../src/jsderivlookahead');
-
-var List = g.List,
-    Text = g.Text;
+var $ = require('../../../src/jsderiv');
 
 // export constructor Var, Lit;
-var Var = exports.Var = g.Cons("Var");
-var Lit = exports.Lit = g.Cons("Lit");
+var Var = exports.Var = $.Node.define("Var");
+var Lit = exports.Lit = $.Node.define("Lit");
 
 // export grammar Scannerless;
 var Scannerless = exports.Scannerless = function() {};
 
-// Var: "var"! <ID> ("="! Expr)? ";"! -> Var;
+// Var: "var"! '\s'!* <ID> '\s'!* ("="! '\s'!* Expr '\s'!*)? ";"! -> Var;
 (function() {
     var $cache;
     
     exports.Scannerless.prototype.Var = function() {
-        return $cache || ($cache = g.Ref(function() {
-            return c.Red(c.Seq(c.Seq(c.Seq(c.Ignore(g.Literal("var")), g.Capture(this.ID())), c.Maybe(c.Seq(c.Ignore(g.Literal("=")), this.Expr()))), c.Ignore(g.Literal(";"))), Var);
+        return $cache || ($cache = $.Ref(function() {
+            return $.Red($.Seq($.Seq($.Seq($.Seq($.Seq($.Ignore($.Literal("var")), $.Any($.Ignore($.Cat("s")))), $.Capture(this.ID())), $.Any($.Ignore($.Cat("s")))), $.Maybe($.Seq($.Seq($.Seq($.Ignore($.Literal("=")), $.Any($.Ignore($.Cat("s")))), this.Expr()), $.Any($.Ignore($.Cat("s")))))), $.Ignore($.Literal(";"))), Var);
         }.bind(this), 'Var'));
     };
 })();
@@ -28,20 +23,31 @@ var Scannerless = exports.Scannerless = function() {};
     var $cache;
     
     exports.Scannerless.prototype.Expr = function() {
-        return $cache || ($cache = g.Ref(function() {
+        return $cache || ($cache = $.Ref(function() {
             return this.Lit();
         }.bind(this), 'Expr'));
     };
 })();
 
-// Lit: [a-z]+ & ~ KEYWORD -> Lit;
+// Lit: <"'" [a-z]+ "'"> -> Lit;
 (function() {
     var $cache;
     
     exports.Scannerless.prototype.Lit = function() {
-        return $cache || ($cache = g.Ref(function() {
-            return c.Red(c.And(c.Many(g.Range("a", "z")), c.Not(this.KEYWORD())), Lit);
+        return $cache || ($cache = $.Ref(function() {
+            return $.Red($.Capture($.Seq($.Seq($.Literal("'"), $.Many($.Range("a", "z"))), $.Literal("'"))), Lit);
         }.bind(this), 'Lit'));
+    };
+})();
+
+// ID: '\w'+ & ~ KEYWORD;
+(function() {
+    var $cache;
+    
+    exports.Scannerless.prototype.ID = function() {
+        return $cache || ($cache = $.Ref(function() {
+            return $.And($.Many($.Cat("w")), $.Not(this.KEYWORD()));
+        }.bind(this), 'ID'));
     };
 })();
 
@@ -50,8 +56,8 @@ var Scannerless = exports.Scannerless = function() {};
     var $cache;
     
     exports.Scannerless.prototype.KEYWORD = function() {
-        return $cache || ($cache = g.Ref(function() {
-            return g.Literal("var");
+        return $cache || ($cache = $.Ref(function() {
+            return $.Literal("var");
         }.bind(this), 'KEYWORD'));
     };
 })();

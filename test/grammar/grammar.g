@@ -1,5 +1,5 @@
 import Lexer from ...src."grammar"."grammar";
-import ID, QID, LITERAL, SYMBOL, CLASS, KEYWORD from ...src."grammar"."grammar";
+import ID, QID, LITERAL, CHAR, CATEGORY, SYMBOL, CLASS, KEYWORD from ...src."grammar"."grammar";
 
 export test "SPACE" {
     start Lexer.SPACE;
@@ -34,10 +34,28 @@ export test "COMMENT" {
     assert "// comment" -> ();
 }
 
+export test "CHAR" {
+    start Lexer.CHAR;
+    
+    assert "'a'" -> (CHAR("'a'"));
+    assert "'\\t'" -> (CHAR("'\\t'"));
+    assert "'\\u0020'" -> (CHAR("'\\u0020'"));
+    assert "'\\w'" -> {};
+}
+
+export test "CATEGORY" {
+    start Lexer.CATEGORY;
+    
+    assert "'\\w'" -> (CATEGORY("'\\w'"));
+    assert "'a'" -> {};
+    assert "'\\t'" -> {};
+}
+
 export test "LITERAL" {
     start Lexer.LITERAL;
     
     assert "\"literal\"" -> (LITERAL("\"literal\""));
+    assert "'literal'" -> {};
 }
 
 export test "SYMBOL" {
@@ -81,9 +99,14 @@ export test "Lexer" {
     assert "id /* comment */ \"literal\" | [0-9] start" -> (ID("id"), LITERAL("\"literal\""), SYMBOL("|"), CLASS("[0-9]"), KEYWORD("start"));
     assert "id /* comment */ \"literal\" | [0-9" -> {};
     assert "id /* comment */ \"literal\" | [0-9] start 123" -> {};
+    assert "'a' '\\t' '\\w'" -> (CHAR("'a'"), CHAR("'\\t'"), CATEGORY("'\\w'"));
     
     assert "id" -> (ID("id"));
     assert "exports" -> (ID("exports"));
+    assert ".example" -> (QID(".example"));
+    assert ". example" -> (SYMBOL("."), ID("example"));
+    assert "Example.NEWLINE" -> (QID("Example.NEWLINE"));
+    assert "Example.start" -> (QID("Example.start"));
 }
 
 /*
@@ -101,7 +124,7 @@ export test "Lexer" {
 import Parser from ...src."grammar"."grammar";
 
 import {Module, Import, Export, Constructor, Grammar, Start, Rule} from ...src."grammar"."grammar";
-import {Or, Red, And, Seq, Any, Many, Maybe, Ignore, Not, Look, One, Ref, Class, Literal, Type, Value, Default, Super, Capture, Part, Defer} from ...src."grammar"."grammar";
+import {Or, Red, And, Seq, Any, Many, Maybe, Ignore, Not, Look, One, Ref, Class, Literal, Char, Category, Type, Value, Default, Super, Capture, Part, Defer} from ...src."grammar"."grammar";
 
 export test "Parser" {
     start Parser.start;
@@ -346,6 +369,8 @@ export test "Terminal" {
     assert (ID("id")) -> (Ref("id"));
     assert (CLASS("[a-z]")) -> (Class("[a-z]"));
     assert (LITERAL("\"literal\"")) -> (Literal("\"literal\""));
+    assert (CHAR("'a'")) -> (Char("'a'"));
+    assert (CATEGORY("'\\w'")) -> (Category("'\\w'"));
     assert (KEYWORD("default")) -> (Default());
     assert (KEYWORD("super")) -> (Super());
     

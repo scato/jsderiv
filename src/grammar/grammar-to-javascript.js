@@ -6,12 +6,7 @@ var parser = require('./grammar');
 var helper = require('./grammar-helper');
 
 parser.Module.prototype.toJavascript = function(libPath) {
-    return 'var c = require(\'' + libPath + 'common\');\n' +
-        'var g = require(\'' + libPath + 'generic\');\n' +
-        'var l = require(\'' + libPath + 'lookahead\');\n\n' +
-        
-        'var List = g.List,\n' +
-        '    Text = g.Text;\n\n' + 
+    return 'var $ = require(\'' + libPath + '\');\n\n' +
         
         this.childNodes.map(function(definition) {
             return definition.toJavascript() + '\n';
@@ -39,7 +34,7 @@ parser.Constructor.prototype.toJavascript = function(exports) {
     return comment + this.childNodes.map(function(id) {
         var infix = exports === undefined ? '' : exports + '.' + id + padding(id) + ' = ';
         
-        return 'var ' + id + padding(id) + ' = ' + infix + 'g.Cons("' + id + '");';
+        return 'var ' + id + padding(id) + ' = ' + infix + '$.Node.define("' + id + '");';
     }).join('\n');
 };
 
@@ -86,7 +81,7 @@ function exprToJavascript(id, expr, exports, augmentation, grammar, rule) {
         '    var $cache;\n' +
         '    \n' +
         '    ' + exports + '.' + id + ' = function() {\n' +
-        '        return $cache || ($cache = g.Ref(function() {\n' +
+        '        return $cache || ($cache = $.Ref(function() {\n' +
         '            return ' + expr.toJavascript(grammar, rule) + ';\n' +
         '        }.bind(this), \'' + id + '\'));\n' +
         '    };\n' +
@@ -104,55 +99,55 @@ parser.Rule.prototype.toJavascript = function(exports, augmentation, grammar) {
 };
 
 parser.Or.prototype.toJavascript = function(grammar, rule) {
-    return 'c.Or(' + this.childNodes[0].toJavascript(grammar, rule) + ', ' + this.childNodes[1].toJavascript(grammar, rule) + ')';
+    return '$.Or(' + this.childNodes[0].toJavascript(grammar, rule) + ', ' + this.childNodes[1].toJavascript(grammar, rule) + ')';
 };
 
 parser.Red.prototype.toJavascript = function(grammar, rule) {
-    return 'c.Red(' + this.childNodes[0].toJavascript(grammar, rule) + ', ' + this.childNodes[1] + ')';
+    return '$.Red(' + this.childNodes[0].toJavascript(grammar, rule) + ', ' + this.childNodes[1] + ')';
 };
 
 parser.And.prototype.toJavascript = function(grammar, rule) {
-    return 'c.And(' + this.childNodes[0].toJavascript(grammar, rule) + ', ' + this.childNodes[1].toJavascript(grammar, rule) + ')';
+    return '$.And(' + this.childNodes[0].toJavascript(grammar, rule) + ', ' + this.childNodes[1].toJavascript(grammar, rule) + ')';
 };
 
 parser.Seq.prototype.toJavascript = function(grammar, rule) {
-    return 'c.Seq(' + this.childNodes[0].toJavascript(grammar, rule) + ', ' + this.childNodes[1].toJavascript(grammar, rule) + ')';
+    return '$.Seq(' + this.childNodes[0].toJavascript(grammar, rule) + ', ' + this.childNodes[1].toJavascript(grammar, rule) + ')';
 };
 
 parser.Any.prototype.toJavascript = function(grammar, rule) {
-    return 'c.Any(' + this.childNodes[0].toJavascript(grammar, rule) + ')';
+    return '$.Any(' + this.childNodes[0].toJavascript(grammar, rule) + ')';
 };
 
 parser.Many.prototype.toJavascript = function(grammar, rule) {
-    return 'c.Many(' + this.childNodes[0].toJavascript(grammar, rule) + ')';
+    return '$.Many(' + this.childNodes[0].toJavascript(grammar, rule) + ')';
 };
 
 parser.Maybe.prototype.toJavascript = function(grammar, rule) {
-    return 'c.Maybe(' + this.childNodes[0].toJavascript(grammar, rule) + ')';
+    return '$.Maybe(' + this.childNodes[0].toJavascript(grammar, rule) + ')';
 };
 
 parser.Ignore.prototype.toJavascript = function(grammar, rule) {
-    return 'c.Ignore(' + this.childNodes[0].toJavascript(grammar, rule) + ')';
+    return '$.Ignore(' + this.childNodes[0].toJavascript(grammar, rule) + ')';
 };
 
 parser.Not.prototype.toJavascript = function(grammar, rule) {
-    return 'c.Not(' + this.childNodes[0].toJavascript(grammar, rule) + ')';
+    return '$.Not(' + this.childNodes[0].toJavascript(grammar, rule) + ')';
 };
 
 parser.Look.prototype.toJavascript = function(grammar, rule) {
-    return 'l.Look(' + this.childNodes[0].toJavascript(grammar, rule) + ')';
+    return '$.Look(' + this.childNodes[0].toJavascript(grammar, rule) + ')';
 };
 
 parser.Type.prototype.toJavascript = function(grammar, rule) {
-    return 'g.Type(' + this.childNodes[0] + ')';
+    return '$.Type(' + this.childNodes[0] + ')';
 };
 
 parser.Value.prototype.toJavascript = function(grammar, rule) {
-    return 'g.Value(' + this.childNodes[0] + ')';
+    return '$.Value(' + this.childNodes[0] + ')';
 };
 
 parser.One.prototype.toJavascript = function(grammar, rule) {
-    return 'g.One()';
+    return '$.One()';
 };
 
 parser.Ref.prototype.toJavascript = function(grammar, rule) {
@@ -172,7 +167,15 @@ parser.Class.prototype.toJavascript = function(grammar, rule) {
 };
 
 parser.Literal.prototype.toJavascript = function(grammar, rule) {
-    return 'g.Literal(' + this.childNodes[0] + ')';
+    return '$.Literal(' + this.childNodes[0] + ')';
+};
+
+parser.Char.prototype.toJavascript = function() {
+    return '$.Char(' + this.childNodes[0].replace(/^'/, '"').replace(/'$/, '"') + ')';
+};
+
+parser.Category.prototype.toJavascript = function() {
+    return '$.Cat(' + JSON.stringify(this.childNodes[0].replace(/^'\\/, '').replace(/'$/, '')) + ')';
 };
 
 parser.Default.prototype.toJavascript = function(grammar, rule) {
@@ -184,6 +187,6 @@ parser.Super.prototype.toJavascript = function(grammar, rule) {
 };
 
 parser.Capture.prototype.toJavascript = function(grammar, rule) {
-    return 'g.Capture(' + this.childNodes[0].toJavascript(grammar, rule) + ')';
+    return '$.Capture(' + this.childNodes[0].toJavascript(grammar, rule) + ')';
 };
 

@@ -10,12 +10,12 @@ classes.Class.prototype.toJavascript = function() {
     var left;
     
     if(this.childNodes.length === 0) {
-        return 'c.Void()';
+        return '$.Void()';
     } else {
         return this.childNodes.map(function(expr) {
             return expr.toJavascript();
         }).fold(function(left, right) {
-            return 'c.Or(' + left + ', ' + right + ')';
+            return '$.Or(' + left + ', ' + right + ')';
         });
     }
 };
@@ -27,29 +27,29 @@ classes.Char.prototype.toJavascript = function() {
         chr = chr.substr(1);
     }
     
-    return 'g.Char(' + JSON.stringify(chr) + ')';
+    return '$.Char(' + JSON.stringify(chr) + ')';
 };
 
 classes.Control.prototype.toJavascript = function() {
-    return 'g.Char("' + this.childNodes[0] + '")';
+    return '$.Char("' + this.childNodes[0] + '")';
 };
 
 classes.Unicode.prototype.toJavascript = function() {
-    return 'g.Char("' + this.childNodes[0] + '")';
+    return '$.Char("' + this.childNodes[0] + '")';
 };
 
 classes.Range.prototype.toJavascript = function() {
-    return 'g.Range(' + JSON.stringify(this.childNodes[0]) + ', ' + JSON.stringify(this.childNodes[1]) + ')';
+    return '$.Range(' + JSON.stringify(this.childNodes[0]) + ', ' + JSON.stringify(this.childNodes[1]) + ')';
 };
 
 classes.Category.prototype.toJavascript = function() {
-    return 'g.Cat(' + JSON.stringify(this.childNodes[0]) + ')';
+    return '$.Cat(' + JSON.stringify(this.childNodes[0].replace(/^\\/, '')) + ')';
 };
 
 classes.Not.prototype.toJavascript = function() {
-    return 'c.Not(' + this.childNodes.map(function(expr) {
+    return '$.Not(' + this.childNodes.map(function(expr) {
         return expr.toJavascript();
     }).fold(function(left, right) {
-        return 'c.Or(' + left + ', ' + right + ')';
+        return '$.Or(' + left + ', ' + right + ')';
     }) + ')';
 };

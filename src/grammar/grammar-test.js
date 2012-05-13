@@ -8,6 +8,17 @@ var Lexer   = require("./../../src/grammar/grammar").Lexer,
     LITERAL = require("./../../src/grammar/grammar").LITERAL,
     KEYWORD = require("./../../src/grammar/grammar").KEYWORD;
 
+// start (SPACE | ID | QID | COMMENT | LITERAL | CHAR | CATEGORY | SYMBOL | CLASS | KEYWORD)*;
+(function($default) {
+    var $cache;
+    
+    Lexer.prototype.start = function() {
+        return $cache || ($cache = $.Ref(function() {
+            return $.Any($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or(this.SPACE(), this.ID()), this.QID()), this.COMMENT()), this.LITERAL()), this.CHAR()), this.CATEGORY()), this.SYMBOL()), this.CLASS()), this.KEYWORD()));
+        }.bind(this), 'start'));
+    };
+})(Lexer.prototype.start);
+
 // ID: default & ~ KEYWORD;
 (function($default) {
     var $cache;

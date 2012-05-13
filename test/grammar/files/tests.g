@@ -5,6 +5,6 @@ export test "Scannerless.Var" {
     start Scannerless.Var;
     
     assert "var id;" -> (Var("id"));
-    assert "var id = 'x';" -> (Var("id", Lit("x")));
+    assert "var id = 'x';" -> (Var("id", Lit("'x'")));
 }
 

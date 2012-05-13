@@ -21,6 +21,8 @@ var Or         = require('../../src/grammar/grammar').Or,
     Ref        = require('../../src/grammar/grammar').Ref,
     Class      = require('../../src/grammar/grammar').Class,
     Literal    = require('../../src/grammar/grammar').Literal,
+    Char       = require('../../src/grammar/grammar').Char,
+    Category   = require('../../src/grammar/grammar').Category,
     Type       = require('../../src/grammar/grammar').Type,
     Value      = require('../../src/grammar/grammar').Value,
     Default    = require('../../src/grammar/grammar').Default,
@@ -32,17 +34,12 @@ require('../../src/grammar/grammar-classes-to-javascript');
 
 exports['test start'] = function(test) {
     test.equals("\
-var c = require('./common');\n\
-var g = require('./generic');\n\
-var l = require('./lookahead');\n\
-\n\
-var List = g.List,\n\
-    Text = g.Text;\n\
+var $ = require('./jsderiv');\n\
 \n\
 " + Import(["INT", "STRING"], ".common-lib").toJavascript() + "\n\n\
 " + Export(Constructor("Statement", "Expression")).toJavascript() + "\n\n\
 " + Export(Grammar("Example", [Start(Ref("NEWLINE")), Rule("NEWLINE", Literal("\"\\n\""))])).toJavascript() + "\n\
-", Module(Import(["INT", "STRING"], ".common-lib"), Export(Constructor("Statement", "Expression")), Export(Grammar("Example", [Start(Ref("NEWLINE")), Rule("NEWLINE", Literal("\"\\n\""))]))).toJavascript('./'));
+", Module(Import(["INT", "STRING"], ".common-lib"), Export(Constructor("Statement", "Expression")), Export(Grammar("Example", [Start(Ref("NEWLINE")), Rule("NEWLINE", Literal("\"\\n\""))]))).toJavascript('./jsderiv'));
     
     test.done();
 };
@@ -60,8 +57,8 @@ var INT    = require(\"./common-lib\").INT,\n\
 exports['test Export'] = function(test) {
     test.equals("\
 // " + Export(Constructor("Statement", "Expression")).toSource() + "\n\
-var Statement  = exports.Statement  = g.Cons(\"Statement\");\n\
-var Expression = exports.Expression = g.Cons(\"Expression\");\
+var Statement  = exports.Statement  = $.Node.define(\"Statement\");\n\
+var Expression = exports.Expression = $.Node.define(\"Expression\");\
 ", Export(Constructor("Statement", "Expression")).toJavascript());
     
     test.done();
@@ -70,8 +67,8 @@ var Expression = exports.Expression = g.Cons(\"Expression\");\
 exports['test Constructor'] = function(test) {
     test.equals("\
 // " + Constructor("Statement", "Expression").toSource() + "\n\
-var Statement  = g.Cons(\"Statement\");\n\
-var Expression = g.Cons(\"Expression\");\
+var Statement  = $.Node.define(\"Statement\");\n\
+var Expression = $.Node.define(\"Expression\");\
 ", Constructor("Statement", "Expression").toJavascript());
     
     test.done();
@@ -96,7 +93,7 @@ exports['test Rule'] = function(test) {
     var $cache;\n\
     \n\
     Example.prototype.start = function() {\n\
-        return $cache || ($cache = g.Ref(function() {\n\
+        return $cache || ($cache = $.Ref(function() {\n\
             return this.NEWLINE();\n\
         }.bind(this), 'start'));\n\
     };\n\
@@ -108,8 +105,8 @@ exports['test Rule'] = function(test) {
     var $cache;\n\
     \n\
     Example.prototype.NEWLINE = function() {\n\
-        return $cache || ($cache = g.Ref(function() {\n\
-            return g.Literal(\"\\n\");\n\
+        return $cache || ($cache = $.Ref(function() {\n\
+            return $.Literal(\"\\n\");\n\
         }.bind(this), 'NEWLINE'));\n\
     };\n\
 })();\
@@ -119,62 +116,65 @@ exports['test Rule'] = function(test) {
 };
 
 exports['test Expression'] = function(test) {
-    test.equals("c.Seq(c.Or(this.r(), this.s()), this.t())", Seq(Or(Ref("r"), Ref("s")), Ref("t")).toJavascript());
-    test.equals("c.Or(this.r(), c.Seq(this.s(), this.t()))", Or(Ref("r"), Seq(Ref("s"), Ref("t"))).toJavascript());
+    test.equals("$.Seq($.Or(this.r(), this.s()), this.t())", Seq(Or(Ref("r"), Ref("s")), Ref("t")).toJavascript());
+    test.equals("$.Or(this.r(), $.Seq(this.s(), this.t()))", Or(Ref("r"), Seq(Ref("s"), Ref("t"))).toJavascript());
     
-    test.equals("c.Or(c.Or(c.Red(c.Seq(c.Seq(c.Ignore(g.Literal(\"var\")), g.Capture(c.Seq(this.Identifier(), c.Any(c.Seq(c.Ignore(g.Literal(\",\")), this.Identifier()))))), c.Ignore(g.Literal(\";\"))), Variable), c.Red(c.Seq(c.Seq(c.Seq(c.Seq(c.Ignore(g.Literal(\"function\")), c.Maybe(this.Identifier())), c.Ignore(g.Literal(\"(\"))), c.Many(this.Param())), c.Ignore(g.Literal(\")\"))), Call)), c.Red(c.Or(g.Type(INT), c.And(g.Type(STRING), c.Not(g.Type(INT)))), Value))", Or(Or(Red(Seq(Seq(Ignore(Literal("\"var\"")), Capture(Seq(Ref("Identifier"), Any(Seq(Ignore(Literal("\",\"")), Ref("Identifier")))))), Ignore(Literal("\";\""))), "Variable"), Red(Seq(Seq(Seq(Seq(Ignore(Literal("\"function\"")), Maybe(Ref("Identifier"))), Ignore(Literal("\"(\""))), Many(Ref("Param"))), Ignore(Literal("\")\""))), "Call")), Red(Or(Type("INT"), And(Type("STRING"), Not(Type("INT")))), "Value")).toJavascript());
+    test.equals("$.Or($.Or($.Red($.Seq($.Seq($.Ignore($.Literal(\"var\")), $.Capture($.Seq(this.Identifier(), $.Any($.Seq($.Ignore($.Literal(\",\")), this.Identifier()))))), $.Ignore($.Literal(\";\"))), Variable), $.Red($.Seq($.Seq($.Seq($.Seq($.Ignore($.Literal(\"function\")), $.Maybe(this.Identifier())), $.Ignore($.Literal(\"(\"))), $.Many(this.Param())), $.Ignore($.Literal(\")\"))), Call)), $.Red($.Or($.Type(INT), $.And($.Type(STRING), $.Not($.Type(INT)))), Value))", Or(Or(Red(Seq(Seq(Ignore(Literal("\"var\"")), Capture(Seq(Ref("Identifier"), Any(Seq(Ignore(Literal("\",\"")), Ref("Identifier")))))), Ignore(Literal("\";\""))), "Variable"), Red(Seq(Seq(Seq(Seq(Ignore(Literal("\"function\"")), Maybe(Ref("Identifier"))), Ignore(Literal("\"(\""))), Many(Ref("Param"))), Ignore(Literal("\")\""))), "Call")), Red(Or(Type("INT"), And(Type("STRING"), Not(Type("INT")))), "Value")).toJavascript());
     
     test.done();
 };
 
 exports['test OrExpr'] = function(test) {
-    test.equal("c.Or(g.Type(INT), c.And(g.Type(STRING), c.Not(g.Type(INT))))", Or(Type("INT"), And(Type("STRING"), Not(Type("INT")))).toJavascript());
+    test.equal("$.Or($.Type(INT), $.And($.Type(STRING), $.Not($.Type(INT))))", Or(Type("INT"), And(Type("STRING"), Not(Type("INT")))).toJavascript());
     
     test.done();
 };
 
 exports['test RedExpr'] = function(test) {
-    test.equal("c.Red(c.Or(g.Type(INT), c.And(g.Type(STRING), c.Not(g.Type(INT)))), Value)", Red(Or(Type("INT"), And(Type("STRING"), Not(Type("INT")))), "Value").toJavascript());
+    test.equal("$.Red($.Or($.Type(INT), $.And($.Type(STRING), $.Not($.Type(INT)))), Value)", Red(Or(Type("INT"), And(Type("STRING"), Not(Type("INT")))), "Value").toJavascript());
     
     test.done();
 };
 
 exports['test AndExpr'] = function(test) {
-    test.equal("c.And(g.Type(STRING), c.Not(g.Type(INT)))", And(Type("STRING"), Not(Type("INT"))).toJavascript());
+    test.equal("$.And($.Type(STRING), $.Not($.Type(INT)))", And(Type("STRING"), Not(Type("INT"))).toJavascript());
     
     test.done();
 };
 
 exports['test SeqExpr'] = function(test) {
-    test.equal("c.Seq(c.Ignore(g.Literal(\",\")), this.Identifier())", Seq(Ignore(Literal("\",\"")), Ref("Identifier")).toJavascript());
+    test.equal("$.Seq($.Ignore($.Literal(\",\")), this.Identifier())", Seq(Ignore(Literal("\",\"")), Ref("Identifier")).toJavascript());
     
     test.done();
 };
 
 exports['test RightExpr'] = function(test) {
-    test.equal("c.Any(c.Seq(c.Ignore(g.Literal(\",\")), this.Identifier()))", Any(Seq(Ignore(Literal("\",\"")), Ref("Identifier"))).toJavascript());
-    test.equal("c.Many(this.Param())", Many(Ref("Param")).toJavascript());
-    test.equal("c.Maybe(this.Identifier())", Maybe(Ref("Identifier")).toJavascript());
-    test.equal("c.Ignore(g.Literal(\"(\"))", Ignore(Literal("\"(\"")).toJavascript());
+    test.equal("$.Any($.Seq($.Ignore($.Literal(\",\")), this.Identifier()))", Any(Seq(Ignore(Literal("\",\"")), Ref("Identifier"))).toJavascript());
+    test.equal("$.Many(this.Param())", Many(Ref("Param")).toJavascript());
+    test.equal("$.Maybe(this.Identifier())", Maybe(Ref("Identifier")).toJavascript());
+    test.equal("$.Ignore($.Literal(\"(\"))", Ignore(Literal("\"(\"")).toJavascript());
     
     test.done();
 };
 
 exports['test LeftExpr'] = function(test) {
-    test.equal("c.Not(g.Type(INT))", Not(Type("INT")).toJavascript());
-    test.equal("l.Look(g.Type(INT))", Look(Type("INT")).toJavascript());
+    test.equal("$.Not($.Type(INT))", Not(Type("INT")).toJavascript());
+    test.equal("$.Look($.Type(INT))", Look(Type("INT")).toJavascript());
     
     test.done();
 };
 
 exports['test Terminal'] = function(test) {
-    test.equals("g.Capture(this.id())", Capture(Ref("id")).toJavascript());
-    test.equals("g.Type(STRING)", Type("STRING").toJavascript());
-    test.equals("g.Value(\"literal\")", Value("\"literal\"").toJavascript());
-    test.equals("g.One()", One().toJavascript());
+    test.equals("$.Capture(this.id())", Capture(Ref("id")).toJavascript());
+    test.equals("$.Type(STRING)", Type("STRING").toJavascript());
+    test.equals("$.Value(\"literal\")", Value("\"literal\"").toJavascript());
+    test.equals("$.One()", One().toJavascript());
     test.equals("this.id()", Ref("id").toJavascript());
-    test.equals("g.Range(\"a\", \"z\")", Class("[a-z]").toJavascript());
-    test.equals("g.Literal(\"literal\")", Literal("\"literal\"").toJavascript());
+    test.equals("$.Range(\"a\", \"z\")", Class("[a-z]").toJavascript());
+    test.equals("$.Literal(\"literal\")", Literal("\"literal\"").toJavascript());
+    test.equals("$.Char(\"a\")", Char("'a'").toJavascript());
+    test.equals("$.Char(\"\\t\")", Char("'\\t'").toJavascript());
+    test.equals("$.Cat(\"w\")", Category("'\\w'").toJavascript());
     test.equals("$default.apply(this, []).func()", Default().toJavascript());
     test.equals("Example.$super.prototype.NEWLINE.apply(this, []).func()", Super().toJavascript("Example", "NEWLINE"));
     

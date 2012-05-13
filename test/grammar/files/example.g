@@ -1,10 +1,11 @@
 export constructor Var, Lit;
 
 export grammar Scannerless {
-    Var: "var"! <ID> ("="! Expr)? ";"! -> Var;
+    Var: "var"! '\s'!* <ID> '\s'!* ("="! '\s'!* Expr '\s'!*)? ";"! -> Var;
     Expr: Lit;
-    Lit: [a-z]+ & ~KEYWORD -> Lit;
+    Lit: <"'" [a-z]+ "'"> -> Lit;
     
+    ID: '\w'+ & ~KEYWORD;
     KEYWORD: "var";
 }
 

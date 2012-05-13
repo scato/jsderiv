@@ -35,7 +35,8 @@ export test "Definition" {
             KEYWORD("assert"), LITERAL("\"\\n\""), SYMBOL("->"), SYMBOL("("), ID("NEWLINE"), SYMBOL("("), LITERAL("\"\\n\""), SYMBOL(")"), SYMBOL(")"), SYMBOL(";"),
         SYMBOL("}")
     ) -> (
-        Test("\"Example\"",
+        Test(
+            "\"Example\"",
             StartDeclaration("Example.NEWLINE"),
             (
                 Assertion(Term("\"\\n\""), Set(List(Node("NEWLINE", List(Term("\"\\n\""))))))

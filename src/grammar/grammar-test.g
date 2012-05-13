@@ -2,6 +2,7 @@ import Lexer, Parser, ID, QID, LITERAL, KEYWORD from ...src."grammar"."grammar";
 
 augment grammar Lexer {
     // TODO: fix caching
+    start (SPACE | ID | QID | COMMENT | LITERAL | CHAR | CATEGORY | SYMBOL | CLASS | KEYWORD)*;
     ID: default & ~KEYWORD;
     
     KEYWORD: default | <"test" | "assert"> ?= ~[A-Za-z0-9_\-] -> KEYWORD;

@@ -153,6 +153,14 @@ parser.Literal.prototype.toSource = function() {
     return this.childNodes[0];
 };
 
+parser.Char.prototype.toSource = function() {
+    return this.childNodes[0];
+};
+
+parser.Category.prototype.toSource = function() {
+    return this.childNodes[0];
+};
+
 parser.Default.prototype.toSource = function() {
     return 'default';
 };

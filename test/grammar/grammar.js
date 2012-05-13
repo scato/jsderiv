@@ -3,13 +3,15 @@ var $ = require('../jsderiv');
 // import {Lexer} from ...src."grammar"."grammar";
 var Lexer = require("./../../src/grammar/grammar").Lexer;
 
-// import {ID, QID, LITERAL, SYMBOL, CLASS, KEYWORD} from ...src."grammar"."grammar";
-var ID      = require("./../../src/grammar/grammar").ID,
-    QID     = require("./../../src/grammar/grammar").QID,
-    LITERAL = require("./../../src/grammar/grammar").LITERAL,
-    SYMBOL  = require("./../../src/grammar/grammar").SYMBOL,
-    CLASS   = require("./../../src/grammar/grammar").CLASS,
-    KEYWORD = require("./../../src/grammar/grammar").KEYWORD;
+// import {ID, QID, LITERAL, CHAR, CATEGORY, SYMBOL, CLASS, KEYWORD} from ...src."grammar"."grammar";
+var ID       = require("./../../src/grammar/grammar").ID,
+    QID      = require("./../../src/grammar/grammar").QID,
+    LITERAL  = require("./../../src/grammar/grammar").LITERAL,
+    CHAR     = require("./../../src/grammar/grammar").CHAR,
+    CATEGORY = require("./../../src/grammar/grammar").CATEGORY,
+    SYMBOL   = require("./../../src/grammar/grammar").SYMBOL,
+    CLASS    = require("./../../src/grammar/grammar").CLASS,
+    KEYWORD  = require("./../../src/grammar/grammar").KEYWORD;
 
 // export test "SPACE" {
 //     start Lexer.SPACE;
@@ -77,15 +79,51 @@ exports["test \"COMMENT\""] = function(test) {
     test.done();
 };
 
+// export test "CHAR" {
+//     start Lexer.CHAR;
+// 
+//     assert "'a'" -> (CHAR("'a'"));
+//     assert "'\\t'" -> (CHAR("'\\t'"));
+//     assert "'\\u0020'" -> (CHAR("'\\u0020'"));
+//     assert "'\\w'" -> {};
+// }
+exports["test \"CHAR\""] = function(test) {
+    var start = new Lexer().CHAR();
+
+    test.deepEqual(start.parse("'a'"), [[CHAR("'a'")]]);
+    test.deepEqual(start.parse("'\\t'"), [[CHAR("'\\t'")]]);
+    test.deepEqual(start.parse("'\\u0020'"), [[CHAR("'\\u0020'")]]);
+    test.deepEqual(start.parse("'\\w'"), []);
+    test.done();
+};
+
+// export test "CATEGORY" {
+//     start Lexer.CATEGORY;
+// 
+//     assert "'\\w'" -> (CATEGORY("'\\w'"));
+//     assert "'a'" -> {};
+//     assert "'\\t'" -> {};
+// }
+exports["test \"CATEGORY\""] = function(test) {
+    var start = new Lexer().CATEGORY();
+
+    test.deepEqual(start.parse("'\\w'"), [[CATEGORY("'\\w'")]]);
+    test.deepEqual(start.parse("'a'"), []);
+    test.deepEqual(start.parse("'\\t'"), []);
+    test.done();
+};
+
 // export test "LITERAL" {
 //     start Lexer.LITERAL;
 // 
 //     assert "\"literal\"" -> (LITERAL("\"literal\""));
+//     assert "'literal'" -> {};
 // }
 exports["test \"LITERAL\""] = function(test) {
     var start = new Lexer().LITERAL();
 
     test.deepEqual(start.parse("\"literal\""), [[LITERAL("\"literal\"")]]);
+    test.deepEqual(start.parse("'literal'"), []);
     test.done();
 };
 
@@ -165,8 +203,13 @@ exports["test \"KEYWORD\""] = function(test) {
 //     assert "id /* comment */ \"literal\" | [0-9] start" -> (ID("id"), LITERAL("\"literal\""), SYMBOL("|"), CLASS("[0-9]"), KEYWORD("start"));
 //     assert "id /* comment */ \"literal\" | [0-9" -> {};
 //     assert "id /* comment */ \"literal\" | [0-9] start 123" -> {};
+//     assert "'a' '\\t' '\\w'" -> (CHAR("'a'"), CHAR("'\\t'"), CATEGORY("'\\w'"));
 //     assert "id" -> (ID("id"));
 //     assert "exports" -> (ID("exports"));
+//     assert ".example" -> (QID(".example"));
+//     assert ". example" -> (SYMBOL("."), ID("example"));
+//     assert "Example.NEWLINE" -> (QID("Example.NEWLINE"));
+//     assert "Example.start" -> (QID("Example.start"));
 // }
 exports["test \"Lexer\""] = function(test) {
     var start = new Lexer().start();
@@ -174,8 +217,13 @@ exports["test \"Lexer\""] = function(test) {
     test.deepEqual(start.parse("id /* comment */ \"literal\" | [0-9] start"), [[ID("id"), LITERAL("\"literal\""), SYMBOL("|"), CLASS("[0-9]"), KEYWORD("start")]]);
     test.deepEqual(start.parse("id /* comment */ \"literal\" | [0-9"), []);
     test.deepEqual(start.parse("id /* comment */ \"literal\" | [0-9] start 123"), []);
+    test.deepEqual(start.parse("'a' '\\t' '\\w'"), [[CHAR("'a'"), CHAR("'\\t'"), CATEGORY("'\\w'")]]);
     test.deepEqual(start.parse("id"), [[ID("id")]]);
     test.deepEqual(start.parse("exports"), [[ID("exports")]]);
+    test.deepEqual(start.parse(".example"), [[QID(".example")]]);
+    test.deepEqual(start.parse(". example"), [[SYMBOL("."), ID("example")]]);
+    test.deepEqual(start.parse("Example.NEWLINE"), [[QID("Example.NEWLINE")]]);
+    test.deepEqual(start.parse("Example.start"), [[QID("Example.start")]]);
     test.done();
 };
 
@@ -191,28 +239,30 @@ var Module      = require("./../../src/grammar/grammar").Module,
     Start       = require("./../../src/grammar/grammar").Start,
     Rule        = require("./../../src/grammar/grammar").Rule;
 
-// import {Or, Red, And, Seq, Any, Many, Maybe, Ignore, Not, Look, One, Ref, Class, Literal, Type, Value, Default, Super, Capture, Part, Defer} from ...src."grammar"."grammar";
-var Or      = require("./../../src/grammar/grammar").Or,
-    Red     = require("./../../src/grammar/grammar").Red,
-    And     = require("./../../src/grammar/grammar").And,
-    Seq     = require("./../../src/grammar/grammar").Seq,
-    Any     = require("./../../src/grammar/grammar").Any,
-    Many    = require("./../../src/grammar/grammar").Many,
-    Maybe   = require("./../../src/grammar/grammar").Maybe,
-    Ignore  = require("./../../src/grammar/grammar").Ignore,
-    Not     = require("./../../src/grammar/grammar").Not,
-    Look    = require("./../../src/grammar/grammar").Look,
-    One     = require("./../../src/grammar/grammar").One,
-    Ref     = require("./../../src/grammar/grammar").Ref,
-    Class   = require("./../../src/grammar/grammar").Class,
-    Literal = require("./../../src/grammar/grammar").Literal,
-    Type    = require("./../../src/grammar/grammar").Type,
-    Value   = require("./../../src/grammar/grammar").Value,
-    Default = require("./../../src/grammar/grammar").Default,
-    Super   = require("./../../src/grammar/grammar").Super,
-    Capture = require("./../../src/grammar/grammar").Capture,
-    Part    = require("./../../src/grammar/grammar").Part,
-    Defer   = require("./../../src/grammar/grammar").Defer;
+// import {Or, Red, And, Seq, Any, Many, Maybe, Ignore, Not, Look, One, Ref, Class, Literal, Char, Category, Type, Value, Default, Super, Capture, Part, Defer} from ...src."grammar"."grammar";
+var Or       = require("./../../src/grammar/grammar").Or,
+    Red      = require("./../../src/grammar/grammar").Red,
+    And      = require("./../../src/grammar/grammar").And,
+    Seq      = require("./../../src/grammar/grammar").Seq,
+    Any      = require("./../../src/grammar/grammar").Any,
+    Many     = require("./../../src/grammar/grammar").Many,
+    Maybe    = require("./../../src/grammar/grammar").Maybe,
+    Ignore   = require("./../../src/grammar/grammar").Ignore,
+    Not      = require("./../../src/grammar/grammar").Not,
+    Look     = require("./../../src/grammar/grammar").Look,
+    One      = require("./../../src/grammar/grammar").One,
+    Ref      = require("./../../src/grammar/grammar").Ref,
+    Class    = require("./../../src/grammar/grammar").Class,
+    Literal  = require("./../../src/grammar/grammar").Literal,
+    Char     = require("./../../src/grammar/grammar").Char,
+    Category = require("./../../src/grammar/grammar").Category,
+    Type     = require("./../../src/grammar/grammar").Type,
+    Value    = require("./../../src/grammar/grammar").Value,
+    Default  = require("./../../src/grammar/grammar").Default,
+    Super    = require("./../../src/grammar/grammar").Super,
+    Capture  = require("./../../src/grammar/grammar").Capture,
+    Part     = require("./../../src/grammar/grammar").Part,
+    Defer    = require("./../../src/grammar/grammar").Defer;
 
 // export test "Parser" {
 //     start Parser.start;
@@ -409,6 +459,8 @@ exports["test \"LeftExpr\""] = function(test) {
 //     assert (ID("id")) -> (Ref("id"));
 //     assert (CLASS("[a-z]")) -> (Class("[a-z]"));
 //     assert (LITERAL("\"literal\"")) -> (Literal("\"literal\""));
+//     assert (CHAR("'a'")) -> (Char("'a'"));
+//     assert (CATEGORY("'\\w'")) -> (Category("'\\w'"));
 //     assert (KEYWORD("default")) -> (Default());
 //     assert (KEYWORD("super")) -> (Super());
 //     assert (SYMBOL("|")) -> {};
@@ -425,6 +477,8 @@ exports["test \"Terminal\""] = function(test) {
     test.deepEqual(start.parse([ID("id")]), [[Ref("id")]]);
     test.deepEqual(start.parse([CLASS("[a-z]")]), [[Class("[a-z]")]]);
     test.deepEqual(start.parse([LITERAL("\"literal\"")]), [[Literal("\"literal\"")]]);
+    test.deepEqual(start.parse([CHAR("'a'")]), [[Char("'a'")]]);
+    test.deepEqual(start.parse([CATEGORY("'\\w'")]), [[Category("'\\w'")]]);
     test.deepEqual(start.parse([KEYWORD("default")]), [[Default()]]);
     test.deepEqual(start.parse([KEYWORD("super")]), [[Super()]]);
     test.deepEqual(start.parse([SYMBOL("|")]), []);

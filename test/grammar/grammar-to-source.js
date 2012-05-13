@@ -6,26 +6,28 @@ var Module      = require('../../src/grammar/grammar').Module,
     Start       = require('../../src/grammar/grammar').Start,
     Rule        = require('../../src/grammar/grammar').Rule;
 
-var Or      = require('../../src/grammar/grammar').Or,
-    Red     = require('../../src/grammar/grammar').Red,
-    And     = require('../../src/grammar/grammar').And,
-    Seq     = require('../../src/grammar/grammar').Seq,
-    Any     = require('../../src/grammar/grammar').Any,
-    Many    = require('../../src/grammar/grammar').Many,
-    Maybe   = require('../../src/grammar/grammar').Maybe,
-    Ignore  = require('../../src/grammar/grammar').Ignore,
-    Not     = require('../../src/grammar/grammar').Not,
-    Look    = require('../../src/grammar/grammar').Look,
-    Token   = require('../../src/grammar/grammar').Token,
-    One     = require('../../src/grammar/grammar').One,
-    Ref     = require('../../src/grammar/grammar').Ref,
-    Class   = require('../../src/grammar/grammar').Class,
-    Literal = require('../../src/grammar/grammar').Literal,
-    Type    = require('../../src/grammar/grammar').Type,
-    Value   = require('../../src/grammar/grammar').Value,
-    Default = require('../../src/grammar/grammar').Default,
-    Super   = require('../../src/grammar/grammar').Super,
-    Capture = require('../../src/grammar/grammar').Capture;
+var Or       = require('../../src/grammar/grammar').Or,
+    Red      = require('../../src/grammar/grammar').Red,
+    And      = require('../../src/grammar/grammar').And,
+    Seq      = require('../../src/grammar/grammar').Seq,
+    Any      = require('../../src/grammar/grammar').Any,
+    Many     = require('../../src/grammar/grammar').Many,
+    Maybe    = require('../../src/grammar/grammar').Maybe,
+    Ignore   = require('../../src/grammar/grammar').Ignore,
+    Not      = require('../../src/grammar/grammar').Not,
+    Look     = require('../../src/grammar/grammar').Look,
+    Token    = require('../../src/grammar/grammar').Token,
+    One      = require('../../src/grammar/grammar').One,
+    Ref      = require('../../src/grammar/grammar').Ref,
+    Class    = require('../../src/grammar/grammar').Class,
+    Literal  = require('../../src/grammar/grammar').Literal,
+    Char     = require('../../src/grammar/grammar').Char,
+    Category = require('../../src/grammar/grammar').Category,
+    Type     = require('../../src/grammar/grammar').Type,
+    Value    = require('../../src/grammar/grammar').Value,
+    Default  = require('../../src/grammar/grammar').Default,
+    Super    = require('../../src/grammar/grammar').Super,
+    Capture  = require('../../src/grammar/grammar').Capture;
 
 require('../../src/grammar/grammar-to-source');
 
@@ -137,6 +139,8 @@ exports['test Terminal'] = function(test) {
     test.equals("id", Ref("id").toSource());
     test.equals("[a-z]", Class("[a-z]").toSource());
     test.equals("\"literal\"", Literal("\"literal\"").toSource());
+    test.equals("'a'", Char("'a'").toSource());
+    test.equals("'\\w'", Category("'\\w'").toSource());
     test.equals("default", Default().toSource());
     test.equals("super", Super().toSource());
     
