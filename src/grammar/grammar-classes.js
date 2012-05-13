@@ -14,10 +14,8 @@ var Scannerless = exports.Scannerless = function() {};
 
 // start Class;
 (function() {
-    var $cache;
-    
     exports.Scannerless.prototype.start = function() {
-        return $cache || ($cache = $.Ref(function() {
+        return this._start_3e2b958 || (this._start_3e2b958 = $.Ref(function() {
             return this.Class();
         }.bind(this), 'start'));
     };
@@ -25,65 +23,53 @@ var Scannerless = exports.Scannerless = function() {};
 
 // CONTROL: <"\\t" | "\\r" | "\\n" | "\\v" | "\\f">;
 (function() {
-    var $cache;
-    
     exports.Scannerless.prototype.CONTROL = function() {
-        return $cache || ($cache = $.Ref(function() {
-            return $.Capture($.Or($.Or($.Or($.Or($.Or($.Literal("\\t"), $.Value("\\t")), $.Or($.Literal("\\r"), $.Value("\\r"))), $.Or($.Literal("\\n"), $.Value("\\n"))), $.Or($.Literal("\\v"), $.Value("\\v"))), $.Or($.Literal("\\f"), $.Value("\\f"))));
+        return this._CONTROL_72e689a || (this._CONTROL_72e689a = $.Ref(function() {
+            return $.Capture($.Or($.Or($.Or($.Or($.Literal("\\t"), $.Literal("\\r")), $.Literal("\\n")), $.Literal("\\v")), $.Literal("\\f")));
         }.bind(this), 'CONTROL'));
     };
 })();
 
 // UNICODE: <"\\u" [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F]>;
 (function() {
-    var $cache;
-    
     exports.Scannerless.prototype.UNICODE = function() {
-        return $cache || ($cache = $.Ref(function() {
-            return $.Capture($.Seq($.Seq($.Seq($.Seq($.Or($.Literal("\\u"), $.Value("\\u")), $.Or($.Or($.Range("0", "9"), $.Range("a", "f")), $.Range("A", "F"))), $.Or($.Or($.Range("0", "9"), $.Range("a", "f")), $.Range("A", "F"))), $.Or($.Or($.Range("0", "9"), $.Range("a", "f")), $.Range("A", "F"))), $.Or($.Or($.Range("0", "9"), $.Range("a", "f")), $.Range("A", "F"))));
+        return this._UNICODE_1b1f947b || (this._UNICODE_1b1f947b = $.Ref(function() {
+            return $.Capture($.Seq($.Seq($.Seq($.Seq($.Literal("\\u"), $.Or($.Or($.Range("0", "9"), $.Range("a", "f")), $.Range("A", "F"))), $.Or($.Or($.Range("0", "9"), $.Range("a", "f")), $.Range("A", "F"))), $.Or($.Or($.Range("0", "9"), $.Range("a", "f")), $.Range("A", "F"))), $.Or($.Or($.Range("0", "9"), $.Range("a", "f")), $.Range("A", "F"))));
         }.bind(this), 'UNICODE'));
     };
 })();
 
 // CHAR: <[^\^\-\\\]] | "\\^" | "\\-" | "\\\\" | "\\]">;
 (function() {
-    var $cache;
-    
     exports.Scannerless.prototype.CHAR = function() {
-        return $cache || ($cache = $.Ref(function() {
-            return $.Capture($.Or($.Or($.Or($.Or($.And($.One(), $.Not($.Or($.Or($.Or($.Char("^"), $.Char("-")), $.Char("\\")), $.Char("]")))), $.Or($.Literal("\\^"), $.Value("\\^"))), $.Or($.Literal("\\-"), $.Value("\\-"))), $.Or($.Literal("\\\\"), $.Value("\\\\"))), $.Or($.Literal("\\]"), $.Value("\\]"))));
+        return this._CHAR_b34444a || (this._CHAR_b34444a = $.Ref(function() {
+            return $.Capture($.Or($.Or($.Or($.Or($.And($.One(), $.Not($.Or($.Or($.Or($.Char("^"), $.Char("-")), $.Char("\\")), $.Char("]")))), $.Literal("\\^")), $.Literal("\\-")), $.Literal("\\\\")), $.Literal("\\]")));
         }.bind(this), 'CHAR'));
     };
 })();
 
 // CATEGORY: <"\\d" | "\\D" | "\\s" | "\\S" | "\\w" | "\\W" | "\\p{" [A-Za-z_]* "}" | "\\P{" [A-Za-z_]+ "}">;
 (function() {
-    var $cache;
-    
     exports.Scannerless.prototype.CATEGORY = function() {
-        return $cache || ($cache = $.Ref(function() {
-            return $.Capture($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Literal("\\d"), $.Value("\\d")), $.Or($.Literal("\\D"), $.Value("\\D"))), $.Or($.Literal("\\s"), $.Value("\\s"))), $.Or($.Literal("\\S"), $.Value("\\S"))), $.Or($.Literal("\\w"), $.Value("\\w"))), $.Or($.Literal("\\W"), $.Value("\\W"))), $.Seq($.Seq($.Or($.Literal("\\p{"), $.Value("\\p{")), $.Any($.Or($.Or($.Range("A", "Z"), $.Range("a", "z")), $.Char("_")))), $.Or($.Literal("}"), $.Value("}")))), $.Seq($.Seq($.Or($.Literal("\\P{"), $.Value("\\P{")), $.Many($.Or($.Or($.Range("A", "Z"), $.Range("a", "z")), $.Char("_")))), $.Or($.Literal("}"), $.Value("}")))));
+        return this._CATEGORY_7d6d674d || (this._CATEGORY_7d6d674d = $.Ref(function() {
+            return $.Capture($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Literal("\\d"), $.Literal("\\D")), $.Literal("\\s")), $.Literal("\\S")), $.Literal("\\w")), $.Literal("\\W")), $.Seq($.Seq($.Literal("\\p{"), $.Any($.Or($.Or($.Range("A", "Z"), $.Range("a", "z")), $.Char("_")))), $.Literal("}"))), $.Seq($.Seq($.Literal("\\P{"), $.Many($.Or($.Or($.Range("A", "Z"), $.Range("a", "z")), $.Char("_")))), $.Literal("}"))));
         }.bind(this), 'CATEGORY'));
     };
 })();
 
 // Range: (CHAR | UNICODE) "-"! (CHAR | UNICODE) -> Range;
 (function() {
-    var $cache;
-    
     exports.Scannerless.prototype.Range = function() {
-        return $cache || ($cache = $.Ref(function() {
-            return $.Red($.Seq($.Seq($.Or(this.CHAR(), this.UNICODE()), $.Ignore($.Or($.Literal("-"), $.Value("-")))), $.Or(this.CHAR(), this.UNICODE())), Range);
+        return this._Range_4461d2cc || (this._Range_4461d2cc = $.Ref(function() {
+            return $.Red($.Seq($.Seq($.Or(this.CHAR(), this.UNICODE()), $.Ignore($.Literal("-"))), $.Or(this.CHAR(), this.UNICODE())), Range);
         }.bind(this), 'Range'));
     };
 })();
 
 // Category: CATEGORY -> Category;
 (function() {
-    var $cache;
-    
     exports.Scannerless.prototype.Category = function() {
-        return $cache || ($cache = $.Ref(function() {
+        return this._Category_7fa39e8b || (this._Category_7fa39e8b = $.Ref(function() {
             return $.Red(this.CATEGORY(), Category);
         }.bind(this), 'Category'));
     };
@@ -91,10 +77,8 @@ var Scannerless = exports.Scannerless = function() {};
 
 // Char: Category | CHAR -> Char | CONTROL -> Control | UNICODE -> Unicode;
 (function() {
-    var $cache;
-    
     exports.Scannerless.prototype.Char = function() {
-        return $cache || ($cache = $.Ref(function() {
+        return this._Char_2cf357ff || (this._Char_2cf357ff = $.Ref(function() {
             return $.Or($.Or($.Or(this.Category(), $.Red(this.CHAR(), Char)), $.Red(this.CONTROL(), Control)), $.Red(this.UNICODE(), Unicode));
         }.bind(this), 'Char'));
     };
@@ -102,11 +86,9 @@ var Scannerless = exports.Scannerless = function() {};
 
 // Class: "["! ((Range | Char)+ | "^"! (Range | Char)+ -> Not) "]"! -> Class;
 (function() {
-    var $cache;
-    
     exports.Scannerless.prototype.Class = function() {
-        return $cache || ($cache = $.Ref(function() {
-            return $.Red($.Seq($.Seq($.Ignore($.Or($.Literal("["), $.Value("["))), $.Or($.Many($.Or(this.Range(), this.Char())), $.Red($.Seq($.Ignore($.Or($.Literal("^"), $.Value("^"))), $.Many($.Or(this.Range(), this.Char()))), Not))), $.Ignore($.Or($.Literal("]"), $.Value("]")))), Class);
+        return this._Class_7b4cf5b3 || (this._Class_7b4cf5b3 = $.Ref(function() {
+            return $.Red($.Seq($.Seq($.Ignore($.Literal("[")), $.Or($.Many($.Or(this.Range(), this.Char())), $.Red($.Seq($.Ignore($.Literal("^")), $.Many($.Or(this.Range(), this.Char()))), Not))), $.Ignore($.Literal("]"))), Class);
         }.bind(this), 'Class'));
     };
 })();

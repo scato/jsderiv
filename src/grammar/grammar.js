@@ -15,10 +15,8 @@ var Lexer = exports.Lexer = function() {};
 
 // start (SPACE | ID | QID | COMMENT | LITERAL | CHAR | CATEGORY | SYMBOL | CLASS | KEYWORD)*;
 (function() {
-    var $cache;
-    
     exports.Lexer.prototype.start = function() {
-        return $cache || ($cache = $.Ref(function() {
+        return this._start_21ca4801 || (this._start_21ca4801 = $.Ref(function() {
             return $.Any($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or(this.SPACE(), this.ID()), this.QID()), this.COMMENT()), this.LITERAL()), this.CHAR()), this.CATEGORY()), this.SYMBOL()), this.CLASS()), this.KEYWORD()));
         }.bind(this), 'start'));
     };
@@ -26,54 +24,44 @@ var Lexer = exports.Lexer = function() {};
 
 // _NEWLINE: "\r\n" | "\n";
 (function() {
-    var $cache;
-    
     exports.Lexer.prototype._NEWLINE = function() {
-        return $cache || ($cache = $.Ref(function() {
-            return $.Or($.Or($.Literal("\r\n"), $.Value("\r\n")), $.Or($.Literal("\n"), $.Value("\n")));
+        return this.__NEWLINE_7cfe551a || (this.__NEWLINE_7cfe551a = $.Ref(function() {
+            return $.Or($.Literal("\r\n"), $.Literal("\n"));
         }.bind(this), '_NEWLINE'));
     };
 })();
 
 // _CONTROL: "\\t" | "\\r" | "\\n" | "\\v" | "\\f";
 (function() {
-    var $cache;
-    
     exports.Lexer.prototype._CONTROL = function() {
-        return $cache || ($cache = $.Ref(function() {
-            return $.Or($.Or($.Or($.Or($.Or($.Literal("\\t"), $.Value("\\t")), $.Or($.Literal("\\r"), $.Value("\\r"))), $.Or($.Literal("\\n"), $.Value("\\n"))), $.Or($.Literal("\\v"), $.Value("\\v"))), $.Or($.Literal("\\f"), $.Value("\\f")));
+        return this.__CONTROL_492e2e94 || (this.__CONTROL_492e2e94 = $.Ref(function() {
+            return $.Or($.Or($.Or($.Or($.Literal("\\t"), $.Literal("\\r")), $.Literal("\\n")), $.Literal("\\v")), $.Literal("\\f"));
         }.bind(this), '_CONTROL'));
     };
 })();
 
 // _UNICODE: "\\u" [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F];
 (function() {
-    var $cache;
-    
     exports.Lexer.prototype._UNICODE = function() {
-        return $cache || ($cache = $.Ref(function() {
-            return $.Seq($.Seq($.Seq($.Seq($.Or($.Literal("\\u"), $.Value("\\u")), $.Or($.Or($.Range("0", "9"), $.Range("a", "f")), $.Range("A", "F"))), $.Or($.Or($.Range("0", "9"), $.Range("a", "f")), $.Range("A", "F"))), $.Or($.Or($.Range("0", "9"), $.Range("a", "f")), $.Range("A", "F"))), $.Or($.Or($.Range("0", "9"), $.Range("a", "f")), $.Range("A", "F")));
+        return this.__UNICODE_1c3cc2df || (this.__UNICODE_1c3cc2df = $.Ref(function() {
+            return $.Seq($.Seq($.Seq($.Seq($.Literal("\\u"), $.Or($.Or($.Range("0", "9"), $.Range("a", "f")), $.Range("A", "F"))), $.Or($.Or($.Range("0", "9"), $.Range("a", "f")), $.Range("A", "F"))), $.Or($.Or($.Range("0", "9"), $.Range("a", "f")), $.Range("A", "F"))), $.Or($.Or($.Range("0", "9"), $.Range("a", "f")), $.Range("A", "F")));
         }.bind(this), '_UNICODE'));
     };
 })();
 
 // SPACE: ((" " | "\t" | "\r" | "\n")+ ?= ~ (" " | "\t" | "\r" | "\n"))!;
 (function() {
-    var $cache;
-    
     exports.Lexer.prototype.SPACE = function() {
-        return $cache || ($cache = $.Ref(function() {
-            return $.Ignore($.Seq($.Many($.Or($.Or($.Or($.Or($.Literal(" "), $.Value(" ")), $.Or($.Literal("\t"), $.Value("\t"))), $.Or($.Literal("\r"), $.Value("\r"))), $.Or($.Literal("\n"), $.Value("\n")))), $.Look($.Not($.Or($.Or($.Or($.Or($.Literal(" "), $.Value(" ")), $.Or($.Literal("\t"), $.Value("\t"))), $.Or($.Literal("\r"), $.Value("\r"))), $.Or($.Literal("\n"), $.Value("\n")))))));
+        return this._SPACE_5f10e941 || (this._SPACE_5f10e941 = $.Ref(function() {
+            return $.Ignore($.Seq($.Many($.Or($.Or($.Or($.Literal(" "), $.Literal("\t")), $.Literal("\r")), $.Literal("\n"))), $.Look($.Not($.Or($.Or($.Or($.Literal(" "), $.Literal("\t")), $.Literal("\r")), $.Literal("\n"))))));
         }.bind(this), 'SPACE'));
     };
 })();
 
 // _ID: [A-Za-z_] [A-Za-z0-9_\-]* ?= ~ [A-Za-z0-9_\-];
 (function() {
-    var $cache;
-    
     exports.Lexer.prototype._ID = function() {
-        return $cache || ($cache = $.Ref(function() {
+        return this.__ID_3a139dc7 || (this.__ID_3a139dc7 = $.Ref(function() {
             return $.Seq($.Seq($.Or($.Or($.Range("A", "Z"), $.Range("a", "z")), $.Char("_")), $.Any($.Or($.Or($.Or($.Or($.Range("A", "Z"), $.Range("a", "z")), $.Range("0", "9")), $.Char("_")), $.Char("-")))), $.Look($.Not($.Or($.Or($.Or($.Or($.Range("A", "Z"), $.Range("a", "z")), $.Range("0", "9")), $.Char("_")), $.Char("-")))));
         }.bind(this), '_ID'));
     };
@@ -81,54 +69,44 @@ var Lexer = exports.Lexer = function() {};
 
 // ID: <_ID ?= ~ "." & ~ KEYWORD> -> ID;
 (function() {
-    var $cache;
-    
     exports.Lexer.prototype.ID = function() {
-        return $cache || ($cache = $.Ref(function() {
-            return $.Red($.Capture($.And($.Seq(this._ID(), $.Look($.Not($.Or($.Literal("."), $.Value("."))))), $.Not(this.KEYWORD()))), ID);
+        return this._ID_51b60bf9 || (this._ID_51b60bf9 = $.Ref(function() {
+            return $.Red($.Capture($.And($.Seq(this._ID(), $.Look($.Not($.Literal(".")))), $.Not(this.KEYWORD()))), ID);
         }.bind(this), 'ID'));
     };
 })();
 
 // QID: <"."* (_ID | _LITERAL) ("." (_ID | _LITERAL))* ?= ~ "." & ~ _ID & ~ _LITERAL> -> QID;
 (function() {
-    var $cache;
-    
     exports.Lexer.prototype.QID = function() {
-        return $cache || ($cache = $.Ref(function() {
-            return $.Red($.Capture($.And($.And($.Seq($.Seq($.Seq($.Any($.Or($.Literal("."), $.Value("."))), $.Or(this._ID(), this._LITERAL())), $.Any($.Seq($.Or($.Literal("."), $.Value(".")), $.Or(this._ID(), this._LITERAL())))), $.Look($.Not($.Or($.Literal("."), $.Value("."))))), $.Not(this._ID())), $.Not(this._LITERAL()))), QID);
+        return this._QID_40a85f2c || (this._QID_40a85f2c = $.Ref(function() {
+            return $.Red($.Capture($.And($.And($.Seq($.Seq($.Seq($.Any($.Literal(".")), $.Or(this._ID(), this._LITERAL())), $.Any($.Seq($.Literal("."), $.Or(this._ID(), this._LITERAL())))), $.Look($.Not($.Literal(".")))), $.Not(this._ID())), $.Not(this._LITERAL()))), QID);
         }.bind(this), 'QID'));
     };
 })();
 
 // COMMENT: ("/*" ([^*] | "*" ?= ~ "/")* "*/" | "//" ~ (.* _NEWLINE .*) ?= _NEWLINE)!;
 (function() {
-    var $cache;
-    
     exports.Lexer.prototype.COMMENT = function() {
-        return $cache || ($cache = $.Ref(function() {
-            return $.Ignore($.Or($.Seq($.Seq($.Or($.Literal("/*"), $.Value("/*")), $.Any($.Or($.And($.One(), $.Not($.Char("*"))), $.Seq($.Or($.Literal("*"), $.Value("*")), $.Look($.Not($.Or($.Literal("/"), $.Value("/")))))))), $.Or($.Literal("*/"), $.Value("*/"))), $.Seq($.Seq($.Or($.Literal("//"), $.Value("//")), $.Not($.Seq($.Seq($.Any($.One()), this._NEWLINE()), $.Any($.One())))), $.Look(this._NEWLINE()))));
+        return this._COMMENT_6e254a6b || (this._COMMENT_6e254a6b = $.Ref(function() {
+            return $.Ignore($.Or($.Seq($.Seq($.Literal("/*"), $.Any($.Or($.And($.One(), $.Not($.Char("*"))), $.Seq($.Literal("*"), $.Look($.Not($.Literal("/"))))))), $.Literal("*/")), $.Seq($.Seq($.Literal("//"), $.Not($.Seq($.Seq($.Any($.One()), this._NEWLINE()), $.Any($.One())))), $.Look(this._NEWLINE()))));
         }.bind(this), 'COMMENT'));
     };
 })();
 
 // _LITERAL: "\"" ([^"\\] | "\\\\" | "\\\"" | _CONTROL | _UNICODE)* "\"";
 (function() {
-    var $cache;
-    
     exports.Lexer.prototype._LITERAL = function() {
-        return $cache || ($cache = $.Ref(function() {
-            return $.Seq($.Seq($.Or($.Literal("\""), $.Value("\"")), $.Any($.Or($.Or($.Or($.Or($.And($.One(), $.Not($.Or($.Char("\""), $.Char("\\")))), $.Or($.Literal("\\\\"), $.Value("\\\\"))), $.Or($.Literal("\\\""), $.Value("\\\""))), this._CONTROL()), this._UNICODE()))), $.Or($.Literal("\""), $.Value("\"")));
+        return this.__LITERAL_73640bf || (this.__LITERAL_73640bf = $.Ref(function() {
+            return $.Seq($.Seq($.Literal("\""), $.Any($.Or($.Or($.Or($.Or($.And($.One(), $.Not($.Or($.Char("\""), $.Char("\\")))), $.Literal("\\\\")), $.Literal("\\\"")), this._CONTROL()), this._UNICODE()))), $.Literal("\""));
         }.bind(this), '_LITERAL'));
     };
 })();
 
 // LITERAL: <_LITERAL> -> LITERAL;
 (function() {
-    var $cache;
-    
     exports.Lexer.prototype.LITERAL = function() {
-        return $cache || ($cache = $.Ref(function() {
+        return this._LITERAL_41742832 || (this._LITERAL_41742832 = $.Ref(function() {
             return $.Red($.Capture(this._LITERAL()), LITERAL);
         }.bind(this), 'LITERAL'));
     };
@@ -136,99 +114,81 @@ var Lexer = exports.Lexer = function() {};
 
 // SYMBOL: <":" | ";" | "(" | ")" | "*" | "+" | "?" | "&" | "|" | "~" | "?=" | "!" | "->" | "@" | "{" | "}" | "," | "." ?= ~ [A-Za-z0-9_\-.] | "<" | ">"> -> SYMBOL;
 (function() {
-    var $cache;
-    
     exports.Lexer.prototype.SYMBOL = function() {
-        return $cache || ($cache = $.Ref(function() {
-            return $.Red($.Capture($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Literal(":"), $.Value(":")), $.Or($.Literal(";"), $.Value(";"))), $.Or($.Literal("("), $.Value("("))), $.Or($.Literal(")"), $.Value(")"))), $.Or($.Literal("*"), $.Value("*"))), $.Or($.Literal("+"), $.Value("+"))), $.Or($.Literal("?"), $.Value("?"))), $.Or($.Literal("&"), $.Value("&"))), $.Or($.Literal("|"), $.Value("|"))), $.Or($.Literal("~"), $.Value("~"))), $.Or($.Literal("?="), $.Value("?="))), $.Or($.Literal("!"), $.Value("!"))), $.Or($.Literal("->"), $.Value("->"))), $.Or($.Literal("@"), $.Value("@"))), $.Or($.Literal("{"), $.Value("{"))), $.Or($.Literal("}"), $.Value("}"))), $.Or($.Literal(","), $.Value(","))), $.Seq($.Or($.Literal("."), $.Value(".")), $.Look($.Not($.Or($.Or($.Or($.Or($.Or($.Range("A", "Z"), $.Range("a", "z")), $.Range("0", "9")), $.Char("_")), $.Char("-")), $.Char(".")))))), $.Or($.Literal("<"), $.Value("<"))), $.Or($.Literal(">"), $.Value(">")))), SYMBOL);
+        return this._SYMBOL_668b054f || (this._SYMBOL_668b054f = $.Ref(function() {
+            return $.Red($.Capture($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Literal(":"), $.Literal(";")), $.Literal("(")), $.Literal(")")), $.Literal("*")), $.Literal("+")), $.Literal("?")), $.Literal("&")), $.Literal("|")), $.Literal("~")), $.Literal("?=")), $.Literal("!")), $.Literal("->")), $.Literal("@")), $.Literal("{")), $.Literal("}")), $.Literal(",")), $.Seq($.Literal("."), $.Look($.Not($.Or($.Or($.Or($.Or($.Or($.Range("A", "Z"), $.Range("a", "z")), $.Range("0", "9")), $.Char("_")), $.Char("-")), $.Char(".")))))), $.Literal("<")), $.Literal(">"))), SYMBOL);
         }.bind(this), 'SYMBOL'));
     };
 })();
 
 // _CHAR: [^\\] | "\\'" | "\\\\" | _CONTROL | _UNICODE;
 (function() {
-    var $cache;
-    
     exports.Lexer.prototype._CHAR = function() {
-        return $cache || ($cache = $.Ref(function() {
-            return $.Or($.Or($.Or($.Or($.And($.One(), $.Not($.Char("\\"))), $.Or($.Literal("\\'"), $.Value("\\'"))), $.Or($.Literal("\\\\"), $.Value("\\\\"))), this._CONTROL()), this._UNICODE());
+        return this.__CHAR_8ab3211 || (this.__CHAR_8ab3211 = $.Ref(function() {
+            return $.Or($.Or($.Or($.Or($.And($.One(), $.Not($.Char("\\"))), $.Literal("\\'")), $.Literal("\\\\")), this._CONTROL()), this._UNICODE());
         }.bind(this), '_CHAR'));
     };
 })();
 
 // CHAR: <"'" _CHAR "'"> -> CHAR;
 (function() {
-    var $cache;
-    
     exports.Lexer.prototype.CHAR = function() {
-        return $cache || ($cache = $.Ref(function() {
-            return $.Red($.Capture($.Seq($.Seq($.Or($.Literal("'"), $.Value("'")), this._CHAR()), $.Or($.Literal("'"), $.Value("'")))), CHAR);
+        return this._CHAR_1db55790 || (this._CHAR_1db55790 = $.Ref(function() {
+            return $.Red($.Capture($.Seq($.Seq($.Literal("'"), this._CHAR()), $.Literal("'"))), CHAR);
         }.bind(this), 'CHAR'));
     };
 })();
 
 // _CATEGORY: "\\d" | "\\D" | "\\s" | "\\S" | "\\w" | "\\W" | "\\p{" [A-Za-z_]* "}" | "\\P{" [A-Za-z_]* "}";
 (function() {
-    var $cache;
-    
     exports.Lexer.prototype._CATEGORY = function() {
-        return $cache || ($cache = $.Ref(function() {
-            return $.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Literal("\\d"), $.Value("\\d")), $.Or($.Literal("\\D"), $.Value("\\D"))), $.Or($.Literal("\\s"), $.Value("\\s"))), $.Or($.Literal("\\S"), $.Value("\\S"))), $.Or($.Literal("\\w"), $.Value("\\w"))), $.Or($.Literal("\\W"), $.Value("\\W"))), $.Seq($.Seq($.Or($.Literal("\\p{"), $.Value("\\p{")), $.Any($.Or($.Or($.Range("A", "Z"), $.Range("a", "z")), $.Char("_")))), $.Or($.Literal("}"), $.Value("}")))), $.Seq($.Seq($.Or($.Literal("\\P{"), $.Value("\\P{")), $.Any($.Or($.Or($.Range("A", "Z"), $.Range("a", "z")), $.Char("_")))), $.Or($.Literal("}"), $.Value("}"))));
+        return this.__CATEGORY_3213d426 || (this.__CATEGORY_3213d426 = $.Ref(function() {
+            return $.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Literal("\\d"), $.Literal("\\D")), $.Literal("\\s")), $.Literal("\\S")), $.Literal("\\w")), $.Literal("\\W")), $.Seq($.Seq($.Literal("\\p{"), $.Any($.Or($.Or($.Range("A", "Z"), $.Range("a", "z")), $.Char("_")))), $.Literal("}"))), $.Seq($.Seq($.Literal("\\P{"), $.Any($.Or($.Or($.Range("A", "Z"), $.Range("a", "z")), $.Char("_")))), $.Literal("}")));
         }.bind(this), '_CATEGORY'));
     };
 })();
 
 // CATEGORY: <"'" _CATEGORY "'"> -> CATEGORY;
 (function() {
-    var $cache;
-    
     exports.Lexer.prototype.CATEGORY = function() {
-        return $cache || ($cache = $.Ref(function() {
-            return $.Red($.Capture($.Seq($.Seq($.Or($.Literal("'"), $.Value("'")), this._CATEGORY()), $.Or($.Literal("'"), $.Value("'")))), CATEGORY);
+        return this._CATEGORY_2d87070 || (this._CATEGORY_2d87070 = $.Ref(function() {
+            return $.Red($.Capture($.Seq($.Seq($.Literal("'"), this._CATEGORY()), $.Literal("'"))), CATEGORY);
         }.bind(this), 'CATEGORY'));
     };
 })();
 
 // _CLASS_CHAR: [^\^\-\\\]] | "\\^" | "\\-" | "\\\\" | _CONTROL | _UNICODE | _CATEGORY | "\\]";
 (function() {
-    var $cache;
-    
     exports.Lexer.prototype._CLASS_CHAR = function() {
-        return $cache || ($cache = $.Ref(function() {
-            return $.Or($.Or($.Or($.Or($.Or($.Or($.Or($.And($.One(), $.Not($.Or($.Or($.Or($.Char("^"), $.Char("-")), $.Char("\\")), $.Char("]")))), $.Or($.Literal("\\^"), $.Value("\\^"))), $.Or($.Literal("\\-"), $.Value("\\-"))), $.Or($.Literal("\\\\"), $.Value("\\\\"))), this._CONTROL()), this._UNICODE()), this._CATEGORY()), $.Or($.Literal("\\]"), $.Value("\\]")));
+        return this.__CLASS_CHAR_795e901b || (this.__CLASS_CHAR_795e901b = $.Ref(function() {
+            return $.Or($.Or($.Or($.Or($.Or($.Or($.Or($.And($.One(), $.Not($.Or($.Or($.Or($.Char("^"), $.Char("-")), $.Char("\\")), $.Char("]")))), $.Literal("\\^")), $.Literal("\\-")), $.Literal("\\\\")), this._CONTROL()), this._UNICODE()), this._CATEGORY()), $.Literal("\\]"));
         }.bind(this), '_CLASS_CHAR'));
     };
 })();
 
 // _CLASS_RANGE: _CLASS_CHAR "-" _CLASS_CHAR;
 (function() {
-    var $cache;
-    
     exports.Lexer.prototype._CLASS_RANGE = function() {
-        return $cache || ($cache = $.Ref(function() {
-            return $.Seq($.Seq(this._CLASS_CHAR(), $.Or($.Literal("-"), $.Value("-"))), this._CLASS_CHAR());
+        return this.__CLASS_RANGE_51cd596f || (this.__CLASS_RANGE_51cd596f = $.Ref(function() {
+            return $.Seq($.Seq(this._CLASS_CHAR(), $.Literal("-")), this._CLASS_CHAR());
         }.bind(this), '_CLASS_RANGE'));
     };
 })();
 
 // CLASS: <"[" ((_CLASS_RANGE | _CLASS_CHAR)* | "^" (_CLASS_RANGE | _CLASS_CHAR)+) "]"> -> CLASS;
 (function() {
-    var $cache;
-    
     exports.Lexer.prototype.CLASS = function() {
-        return $cache || ($cache = $.Ref(function() {
-            return $.Red($.Capture($.Seq($.Seq($.Or($.Literal("["), $.Value("[")), $.Or($.Any($.Or(this._CLASS_RANGE(), this._CLASS_CHAR())), $.Seq($.Or($.Literal("^"), $.Value("^")), $.Many($.Or(this._CLASS_RANGE(), this._CLASS_CHAR()))))), $.Or($.Literal("]"), $.Value("]")))), CLASS);
+        return this._CLASS_68868163 || (this._CLASS_68868163 = $.Ref(function() {
+            return $.Red($.Capture($.Seq($.Seq($.Literal("["), $.Or($.Any($.Or(this._CLASS_RANGE(), this._CLASS_CHAR())), $.Seq($.Literal("^"), $.Many($.Or(this._CLASS_RANGE(), this._CLASS_CHAR()))))), $.Literal("]"))), CLASS);
         }.bind(this), 'CLASS'));
     };
 })();
 
 // KEYWORD: <"grammar" | "start" | "import" | "from" | "export" | "constructor" | "augment" | "default" | "extends" | "super"> ?= ~ [A-Za-z0-9_\-] -> KEYWORD;
 (function() {
-    var $cache;
-    
     exports.Lexer.prototype.KEYWORD = function() {
-        return $cache || ($cache = $.Ref(function() {
-            return $.Red($.Seq($.Capture($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Literal("grammar"), $.Value("grammar")), $.Or($.Literal("start"), $.Value("start"))), $.Or($.Literal("import"), $.Value("import"))), $.Or($.Literal("from"), $.Value("from"))), $.Or($.Literal("export"), $.Value("export"))), $.Or($.Literal("constructor"), $.Value("constructor"))), $.Or($.Literal("augment"), $.Value("augment"))), $.Or($.Literal("default"), $.Value("default"))), $.Or($.Literal("extends"), $.Value("extends"))), $.Or($.Literal("super"), $.Value("super")))), $.Look($.Not($.Or($.Or($.Or($.Or($.Range("A", "Z"), $.Range("a", "z")), $.Range("0", "9")), $.Char("_")), $.Char("-"))))), KEYWORD);
+        return this._KEYWORD_35b8e9c0 || (this._KEYWORD_35b8e9c0 = $.Ref(function() {
+            return $.Red($.Seq($.Capture($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Literal("grammar"), $.Literal("start")), $.Literal("import")), $.Literal("from")), $.Literal("export")), $.Literal("constructor")), $.Literal("augment")), $.Literal("default")), $.Literal("extends")), $.Literal("super"))), $.Look($.Not($.Or($.Or($.Or($.Or($.Range("A", "Z"), $.Range("a", "z")), $.Range("0", "9")), $.Char("_")), $.Char("-"))))), KEYWORD);
         }.bind(this), 'KEYWORD'));
     };
 })();
@@ -271,10 +231,8 @@ var Parser = exports.Parser = function() {};
 
 // start Statement* -> Module;
 (function() {
-    var $cache;
-    
     exports.Parser.prototype.start = function() {
-        return $cache || ($cache = $.Ref(function() {
+        return this._start_1130d4a || (this._start_1130d4a = $.Ref(function() {
             return $.Red($.Any(this.Statement()), Module);
         }.bind(this), 'start'));
     };
@@ -282,187 +240,153 @@ var Parser = exports.Parser = function() {};
 
 // Statement: Import | Export | Definition | Augmentation;
 (function() {
-    var $cache;
-    
     exports.Parser.prototype.Statement = function() {
-        return $cache || ($cache = $.Ref(function() {
+        return this._Statement_1016a344 || (this._Statement_1016a344 = $.Ref(function() {
             return $.Or($.Or($.Or(this.Import(), this.Export()), this.Definition()), this.Augmentation());
         }.bind(this), 'Statement'));
     };
 })();
 
-// Import: "import"! IdentifierList "from"! @QID ";"! -> Import;
+// Import: @"import"! IdentifierList @"from"! @QID @";"! -> Import;
 (function() {
-    var $cache;
-    
     exports.Parser.prototype.Import = function() {
-        return $cache || ($cache = $.Ref(function() {
-            return $.Red($.Seq($.Seq($.Seq($.Seq($.Ignore($.Or($.Literal("import"), $.Value("import"))), this.IdentifierList()), $.Ignore($.Or($.Literal("from"), $.Value("from")))), $.Type(QID)), $.Ignore($.Or($.Literal(";"), $.Value(";")))), Import);
+        return this._Import_56668f8e || (this._Import_56668f8e = $.Ref(function() {
+            return $.Red($.Seq($.Seq($.Seq($.Seq($.Ignore($.Value("import")), this.IdentifierList()), $.Ignore($.Value("from"))), $.Type(QID)), $.Ignore($.Value(";"))), Import);
         }.bind(this), 'Import'));
     };
 })();
 
-// IdentifierList: <"{"! @ID (":"! @ID)? (","! @ID (":"! @ID)?)* "}"!> | <@ID (","! @ID)*>;
+// IdentifierList: <@"{"! @ID (@":"! @ID)? (@","! @ID (@":"! @ID)?)* @"}"!> | <@ID (@","! @ID)*>;
 (function() {
-    var $cache;
-    
     exports.Parser.prototype.IdentifierList = function() {
-        return $cache || ($cache = $.Ref(function() {
-            return $.Or($.Capture($.Seq($.Seq($.Seq($.Seq($.Ignore($.Or($.Literal("{"), $.Value("{"))), $.Type(ID)), $.Maybe($.Seq($.Ignore($.Or($.Literal(":"), $.Value(":"))), $.Type(ID)))), $.Any($.Seq($.Seq($.Ignore($.Or($.Literal(","), $.Value(","))), $.Type(ID)), $.Maybe($.Seq($.Ignore($.Or($.Literal(":"), $.Value(":"))), $.Type(ID)))))), $.Ignore($.Or($.Literal("}"), $.Value("}"))))), $.Capture($.Seq($.Type(ID), $.Any($.Seq($.Ignore($.Or($.Literal(","), $.Value(","))), $.Type(ID))))));
+        return this._IdentifierList_4c28dc8e || (this._IdentifierList_4c28dc8e = $.Ref(function() {
+            return $.Or($.Capture($.Seq($.Seq($.Seq($.Seq($.Ignore($.Value("{")), $.Type(ID)), $.Maybe($.Seq($.Ignore($.Value(":")), $.Type(ID)))), $.Any($.Seq($.Seq($.Ignore($.Value(",")), $.Type(ID)), $.Maybe($.Seq($.Ignore($.Value(":")), $.Type(ID)))))), $.Ignore($.Value("}")))), $.Capture($.Seq($.Type(ID), $.Any($.Seq($.Ignore($.Value(",")), $.Type(ID))))));
         }.bind(this), 'IdentifierList'));
     };
 })();
 
-// Export: "export"! Definition -> Export;
+// Export: @"export"! Definition -> Export;
 (function() {
-    var $cache;
-    
     exports.Parser.prototype.Export = function() {
-        return $cache || ($cache = $.Ref(function() {
-            return $.Red($.Seq($.Ignore($.Or($.Literal("export"), $.Value("export"))), this.Definition()), Export);
+        return this._Export_65c70121 || (this._Export_65c70121 = $.Ref(function() {
+            return $.Red($.Seq($.Ignore($.Value("export")), this.Definition()), Export);
         }.bind(this), 'Export'));
     };
 })();
 
 // Definition: Constructor | Grammar;
 (function() {
-    var $cache;
-    
     exports.Parser.prototype.Definition = function() {
-        return $cache || ($cache = $.Ref(function() {
+        return this._Definition_53907b1d || (this._Definition_53907b1d = $.Ref(function() {
             return $.Or(this.Constructor(), this.Grammar());
         }.bind(this), 'Definition'));
     };
 })();
 
-// Constructor: "constructor"! @ID (","! @ID)* ";"! -> Constructor;
+// Constructor: @"constructor"! @ID (@","! @ID)* @";"! -> Constructor;
 (function() {
-    var $cache;
-    
     exports.Parser.prototype.Constructor = function() {
-        return $cache || ($cache = $.Ref(function() {
-            return $.Red($.Seq($.Seq($.Seq($.Ignore($.Or($.Literal("constructor"), $.Value("constructor"))), $.Type(ID)), $.Any($.Seq($.Ignore($.Or($.Literal(","), $.Value(","))), $.Type(ID)))), $.Ignore($.Or($.Literal(";"), $.Value(";")))), Constructor);
+        return this._Constructor_3afc2ae8 || (this._Constructor_3afc2ae8 = $.Ref(function() {
+            return $.Red($.Seq($.Seq($.Seq($.Ignore($.Value("constructor")), $.Type(ID)), $.Any($.Seq($.Ignore($.Value(",")), $.Type(ID)))), $.Ignore($.Value(";"))), Constructor);
         }.bind(this), 'Constructor'));
     };
 })();
 
-// Grammar: "grammar"! @ID ("extends"! @ID)? "{"! <Rule*> "}"! -> Grammar;
+// Grammar: @"grammar"! @ID (@"extends"! @ID)? @"{"! <Rule*> @"}"! -> Grammar;
 (function() {
-    var $cache;
-    
     exports.Parser.prototype.Grammar = function() {
-        return $cache || ($cache = $.Ref(function() {
-            return $.Red($.Seq($.Seq($.Seq($.Seq($.Seq($.Ignore($.Or($.Literal("grammar"), $.Value("grammar"))), $.Type(ID)), $.Maybe($.Seq($.Ignore($.Or($.Literal("extends"), $.Value("extends"))), $.Type(ID)))), $.Ignore($.Or($.Literal("{"), $.Value("{")))), $.Capture($.Any(this.Rule()))), $.Ignore($.Or($.Literal("}"), $.Value("}")))), Grammar);
+        return this._Grammar_69e95806 || (this._Grammar_69e95806 = $.Ref(function() {
+            return $.Red($.Seq($.Seq($.Seq($.Seq($.Seq($.Ignore($.Value("grammar")), $.Type(ID)), $.Maybe($.Seq($.Ignore($.Value("extends")), $.Type(ID)))), $.Ignore($.Value("{"))), $.Capture($.Any(this.Rule()))), $.Ignore($.Value("}"))), Grammar);
         }.bind(this), 'Grammar'));
     };
 })();
 
-// Rule: "start"! Expression ";"! -> Start | @ID ":"! Expression ";"! -> Rule;
+// Rule: @"start"! Expression @";"! -> Start | @ID @":"! Expression @";"! -> Rule;
 (function() {
-    var $cache;
-    
     exports.Parser.prototype.Rule = function() {
-        return $cache || ($cache = $.Ref(function() {
-            return $.Or($.Red($.Seq($.Seq($.Ignore($.Or($.Literal("start"), $.Value("start"))), this.Expression()), $.Ignore($.Or($.Literal(";"), $.Value(";")))), Start), $.Red($.Seq($.Seq($.Seq($.Type(ID), $.Ignore($.Or($.Literal(":"), $.Value(":")))), this.Expression()), $.Ignore($.Or($.Literal(";"), $.Value(";")))), Rule));
+        return this._Rule_1f59ce2b || (this._Rule_1f59ce2b = $.Ref(function() {
+            return $.Or($.Red($.Seq($.Seq($.Ignore($.Value("start")), this.Expression()), $.Ignore($.Value(";"))), Start), $.Red($.Seq($.Seq($.Seq($.Type(ID), $.Ignore($.Value(":"))), this.Expression()), $.Ignore($.Value(";"))), Rule));
         }.bind(this), 'Rule'));
     };
 })();
 
-// Augmentation: "augment"! "grammar"! @ID "{"! <Rule*> "}"! -> Augmentation;
+// Augmentation: @"augment"! @"grammar"! @ID @"{"! <Rule*> @"}"! -> Augmentation;
 (function() {
-    var $cache;
-    
     exports.Parser.prototype.Augmentation = function() {
-        return $cache || ($cache = $.Ref(function() {
-            return $.Red($.Seq($.Seq($.Seq($.Seq($.Seq($.Ignore($.Or($.Literal("augment"), $.Value("augment"))), $.Ignore($.Or($.Literal("grammar"), $.Value("grammar")))), $.Type(ID)), $.Ignore($.Or($.Literal("{"), $.Value("{")))), $.Capture($.Any(this.Rule()))), $.Ignore($.Or($.Literal("}"), $.Value("}")))), Augmentation);
+        return this._Augmentation_3f60bd9e || (this._Augmentation_3f60bd9e = $.Ref(function() {
+            return $.Red($.Seq($.Seq($.Seq($.Seq($.Seq($.Ignore($.Value("augment")), $.Ignore($.Value("grammar"))), $.Type(ID)), $.Ignore($.Value("{"))), $.Capture($.Any(this.Rule()))), $.Ignore($.Value("}"))), Augmentation);
         }.bind(this), 'Augmentation'));
     };
 })();
 
 // Expression: OrExpr;
 (function() {
-    var $cache;
-    
     exports.Parser.prototype.Expression = function() {
-        return $cache || ($cache = $.Ref(function() {
+        return this._Expression_72c98168 || (this._Expression_72c98168 = $.Ref(function() {
             return this.OrExpr();
         }.bind(this), 'Expression'));
     };
 })();
 
-// OrExpr: OrExpr "|"! RedExpr -> Or | RedExpr;
+// OrExpr: OrExpr @"|"! RedExpr -> Or | RedExpr;
 (function() {
-    var $cache;
-    
     exports.Parser.prototype.OrExpr = function() {
-        return $cache || ($cache = $.Ref(function() {
-            return $.Or($.Red($.Seq($.Seq(this.OrExpr(), $.Ignore($.Or($.Literal("|"), $.Value("|")))), this.RedExpr()), Or), this.RedExpr());
+        return this._OrExpr_58879795 || (this._OrExpr_58879795 = $.Ref(function() {
+            return $.Or($.Red($.Seq($.Seq(this.OrExpr(), $.Ignore($.Value("|"))), this.RedExpr()), Or), this.RedExpr());
         }.bind(this), 'OrExpr'));
     };
 })();
 
-// RedExpr: RedExpr "->"! @ID -> Red | AndExpr;
+// RedExpr: RedExpr @"->"! @ID -> Red | AndExpr;
 (function() {
-    var $cache;
-    
     exports.Parser.prototype.RedExpr = function() {
-        return $cache || ($cache = $.Ref(function() {
-            return $.Or($.Red($.Seq($.Seq(this.RedExpr(), $.Ignore($.Or($.Literal("->"), $.Value("->")))), $.Type(ID)), Red), this.AndExpr());
+        return this._RedExpr_4042149d || (this._RedExpr_4042149d = $.Ref(function() {
+            return $.Or($.Red($.Seq($.Seq(this.RedExpr(), $.Ignore($.Value("->"))), $.Type(ID)), Red), this.AndExpr());
         }.bind(this), 'RedExpr'));
     };
 })();
 
-// AndExpr: AndExpr "&"! SeqExpr -> And | SeqExpr;
+// AndExpr: AndExpr @"&"! SeqExpr -> And | SeqExpr;
 (function() {
-    var $cache;
-    
     exports.Parser.prototype.AndExpr = function() {
-        return $cache || ($cache = $.Ref(function() {
-            return $.Or($.Red($.Seq($.Seq(this.AndExpr(), $.Ignore($.Or($.Literal("&"), $.Value("&")))), this.SeqExpr()), And), this.SeqExpr());
+        return this._AndExpr_2f1fd44b || (this._AndExpr_2f1fd44b = $.Ref(function() {
+            return $.Or($.Red($.Seq($.Seq(this.AndExpr(), $.Ignore($.Value("&"))), this.SeqExpr()), And), this.SeqExpr());
         }.bind(this), 'AndExpr'));
     };
 })();
 
 // SeqExpr: SeqExpr RightExpr -> Seq | RightExpr;
 (function() {
-    var $cache;
-    
     exports.Parser.prototype.SeqExpr = function() {
-        return $cache || ($cache = $.Ref(function() {
+        return this._SeqExpr_269f9328 || (this._SeqExpr_269f9328 = $.Ref(function() {
             return $.Or($.Red($.Seq(this.SeqExpr(), this.RightExpr()), Seq), this.RightExpr());
         }.bind(this), 'SeqExpr'));
     };
 })();
 
-// RightExpr: RightExpr "*"! -> Any | RightExpr "+"! -> Many | RightExpr "?"! -> Maybe | RightExpr "!"! -> Ignore | LeftExpr;
+// RightExpr: RightExpr @"*"! -> Any | RightExpr @"+"! -> Many | RightExpr @"?"! -> Maybe | RightExpr @"!"! -> Ignore | LeftExpr;
 (function() {
-    var $cache;
-    
     exports.Parser.prototype.RightExpr = function() {
-        return $cache || ($cache = $.Ref(function() {
-            return $.Or($.Or($.Or($.Or($.Red($.Seq(this.RightExpr(), $.Ignore($.Or($.Literal("*"), $.Value("*")))), Any), $.Red($.Seq(this.RightExpr(), $.Ignore($.Or($.Literal("+"), $.Value("+")))), Many)), $.Red($.Seq(this.RightExpr(), $.Ignore($.Or($.Literal("?"), $.Value("?")))), Maybe)), $.Red($.Seq(this.RightExpr(), $.Ignore($.Or($.Literal("!"), $.Value("!")))), Ignore)), this.LeftExpr());
+        return this._RightExpr_6a00908c || (this._RightExpr_6a00908c = $.Ref(function() {
+            return $.Or($.Or($.Or($.Or($.Red($.Seq(this.RightExpr(), $.Ignore($.Value("*"))), Any), $.Red($.Seq(this.RightExpr(), $.Ignore($.Value("+"))), Many)), $.Red($.Seq(this.RightExpr(), $.Ignore($.Value("?"))), Maybe)), $.Red($.Seq(this.RightExpr(), $.Ignore($.Value("!"))), Ignore)), this.LeftExpr());
         }.bind(this), 'RightExpr'));
     };
 })();
 
-// LeftExpr: "~"! LeftExpr -> Not | "?="! LeftExpr -> Look | Terminal;
+// LeftExpr: @"~"! LeftExpr -> Not | @"?="! LeftExpr -> Look | Terminal;
 (function() {
-    var $cache;
-    
     exports.Parser.prototype.LeftExpr = function() {
-        return $cache || ($cache = $.Ref(function() {
-            return $.Or($.Or($.Red($.Seq($.Ignore($.Or($.Literal("~"), $.Value("~"))), this.LeftExpr()), Not), $.Red($.Seq($.Ignore($.Or($.Literal("?="), $.Value("?="))), this.LeftExpr()), Look)), this.Terminal());
+        return this._LeftExpr_7727c56a || (this._LeftExpr_7727c56a = $.Ref(function() {
+            return $.Or($.Or($.Red($.Seq($.Ignore($.Value("~")), this.LeftExpr()), Not), $.Red($.Seq($.Ignore($.Value("?=")), this.LeftExpr()), Look)), this.Terminal());
         }.bind(this), 'LeftExpr'));
     };
 })();
 
-// Terminal: "("! Expression ")"! | "<"! Expression ">"! -> Capture | "@"! @ID -> Type | "@"! @LITERAL -> Value | "."! -> One | @ID -> Ref | @CLASS -> Class | @LITERAL -> Literal | @CHAR -> Char | @CATEGORY -> Category | "default"! -> Default | "super"! -> Super;
+// Terminal: @"("! Expression @")"! | @"<"! Expression @">"! -> Capture | @"@"! @ID -> Type | @"@"! @LITERAL -> Value | @"."! -> One | @ID -> Ref | @CLASS -> Class | @LITERAL -> Literal | @CHAR -> Char | @CATEGORY -> Category | @"default"! -> Default | @"super"! -> Super;
 (function() {
-    var $cache;
-    
     exports.Parser.prototype.Terminal = function() {
-        return $cache || ($cache = $.Ref(function() {
-            return $.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Seq($.Seq($.Ignore($.Or($.Literal("("), $.Value("("))), this.Expression()), $.Ignore($.Or($.Literal(")"), $.Value(")")))), $.Red($.Seq($.Seq($.Ignore($.Or($.Literal("<"), $.Value("<"))), this.Expression()), $.Ignore($.Or($.Literal(">"), $.Value(">")))), Capture)), $.Red($.Seq($.Ignore($.Or($.Literal("@"), $.Value("@"))), $.Type(ID)), Type)), $.Red($.Seq($.Ignore($.Or($.Literal("@"), $.Value("@"))), $.Type(LITERAL)), Value)), $.Red($.Ignore($.Or($.Literal("."), $.Value("."))), One)), $.Red($.Type(ID), Ref)), $.Red($.Type(CLASS), Class)), $.Red($.Type(LITERAL), Literal)), $.Red($.Type(CHAR), Char)), $.Red($.Type(CATEGORY), Category)), $.Red($.Ignore($.Or($.Literal("default"), $.Value("default"))), Default)), $.Red($.Ignore($.Or($.Literal("super"), $.Value("super"))), Super));
+        return this._Terminal_6c7eecd0 || (this._Terminal_6c7eecd0 = $.Ref(function() {
+            return $.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Seq($.Seq($.Ignore($.Value("(")), this.Expression()), $.Ignore($.Value(")"))), $.Red($.Seq($.Seq($.Ignore($.Value("<")), this.Expression()), $.Ignore($.Value(">"))), Capture)), $.Red($.Seq($.Ignore($.Value("@")), $.Type(ID)), Type)), $.Red($.Seq($.Ignore($.Value("@")), $.Type(LITERAL)), Value)), $.Red($.Ignore($.Value(".")), One)), $.Red($.Type(ID), Ref)), $.Red($.Type(CLASS), Class)), $.Red($.Type(LITERAL), Literal)), $.Red($.Type(CHAR), Char)), $.Red($.Type(CATEGORY), Category)), $.Red($.Ignore($.Value("default")), Default)), $.Red($.Ignore($.Value("super")), Super));
         }.bind(this), 'Terminal'));
     };
 })();

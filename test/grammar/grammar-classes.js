@@ -14,7 +14,7 @@ var Class    = require("./../../src/grammar/grammar-classes").Class,
 
 // export test "CONTROL" {
 //     start Scannerless.CONTROL;
-// 
+//     
 //     assert "\\t" -> ("\\t");
 //     assert "\\r" -> ("\\r");
 //     assert "\\n" -> ("\\n");
@@ -24,7 +24,7 @@ var Class    = require("./../../src/grammar/grammar-classes").Class,
 // }
 exports["test \"CONTROL\""] = function(test) {
     var start = new Scannerless().CONTROL();
-
+    
     test.deepEqual(start.parse("\\t"), [["\\t"]]);
     test.deepEqual(start.parse("\\r"), [["\\r"]]);
     test.deepEqual(start.parse("\\n"), [["\\n"]]);
@@ -36,13 +36,13 @@ exports["test \"CONTROL\""] = function(test) {
 
 // export test "UNICODE" {
 //     start Scannerless.UNICODE;
-// 
+//     
 //     assert "\\u0020" -> ("\\u0020");
 //     assert "\\u20" -> {};
 // }
 exports["test \"UNICODE\""] = function(test) {
     var start = new Scannerless().UNICODE();
-
+    
     test.deepEqual(start.parse("\\u0020"), [["\\u0020"]]);
     test.deepEqual(start.parse("\\u20"), []);
     test.done();
@@ -50,7 +50,7 @@ exports["test \"UNICODE\""] = function(test) {
 
 // export test "CHAR" {
 //     start Scannerless.CHAR;
-// 
+//     
 //     assert "\\^" -> ("\\^");
 //     assert "\\-" -> ("\\-");
 //     assert "\\\\" -> ("\\\\");
@@ -61,7 +61,7 @@ exports["test \"UNICODE\""] = function(test) {
 // }
 exports["test \"CHAR\""] = function(test) {
     var start = new Scannerless().CHAR();
-
+    
     test.deepEqual(start.parse("\\^"), [["\\^"]]);
     test.deepEqual(start.parse("\\-"), [["\\-"]]);
     test.deepEqual(start.parse("\\\\"), [["\\\\"]]);
@@ -74,7 +74,7 @@ exports["test \"CHAR\""] = function(test) {
 
 // export test "CATEGORY" {
 //     start Scannerless.CATEGORY;
-// 
+//     
 //     assert "\\d" -> ("\\d");
 //     assert "\\D" -> ("\\D");
 //     assert "\\s" -> ("\\s");
@@ -88,7 +88,7 @@ exports["test \"CHAR\""] = function(test) {
 // }
 exports["test \"CATEGORY\""] = function(test) {
     var start = new Scannerless().CATEGORY();
-
+    
     test.deepEqual(start.parse("\\d"), [["\\d"]]);
     test.deepEqual(start.parse("\\D"), [["\\D"]]);
     test.deepEqual(start.parse("\\s"), [["\\s"]]);
@@ -104,7 +104,7 @@ exports["test \"CATEGORY\""] = function(test) {
 
 // export test "Range" {
 //     start Scannerless.Range;
-// 
+//     
 //     assert "a-z" -> (Range("a", "z"));
 //     assert "\\u0020-\\u007e" -> (Range("\\u0020", "\\u007e"));
 //     assert "a" -> {};
@@ -112,7 +112,7 @@ exports["test \"CATEGORY\""] = function(test) {
 // }
 exports["test \"Range\""] = function(test) {
     var start = new Scannerless().Range();
-
+    
     test.deepEqual(start.parse("a-z"), [[Range("a", "z")]]);
     test.deepEqual(start.parse("\\u0020-\\u007e"), [[Range("\\u0020", "\\u007e")]]);
     test.deepEqual(start.parse("a"), []);
@@ -122,19 +122,19 @@ exports["test \"Range\""] = function(test) {
 
 // export test "Category" {
 //     start Scannerless.Category;
-// 
+//     
 //     assert "\\w" -> (Category("\\w"));
 // }
 exports["test \"Category\""] = function(test) {
     var start = new Scannerless().Category();
-
+    
     test.deepEqual(start.parse("\\w"), [[Category("\\w")]]);
     test.done();
 };
 
 // export test "Char" {
 //     start Scannerless.Char;
-// 
+//     
 //     assert "\\w" -> (Category("\\w"));
 //     assert "a" -> (Char("a"));
 //     assert "\\-" -> (Char("\\-"));
@@ -144,7 +144,7 @@ exports["test \"Category\""] = function(test) {
 // }
 exports["test \"Char\""] = function(test) {
     var start = new Scannerless().Char();
-
+    
     test.deepEqual(start.parse("\\w"), [[Category("\\w")]]);
     test.deepEqual(start.parse("a"), [[Char("a")]]);
     test.deepEqual(start.parse("\\-"), [[Char("\\-")]]);
@@ -156,14 +156,14 @@ exports["test \"Char\""] = function(test) {
 
 // export test "Class" {
 //     start Scannerless.Class;
-// 
+//     
 //     assert "[\\t\\u0020\\-\\w0-9]" -> (Class(Control("\\t"), Unicode("\\u0020"), Char("\\-"), Category("\\w"), Range("0", "9")));
 //     assert "[^\\t\\u0020\\-\\w0-9]" -> (Class(Not(Control("\\t"), Unicode("\\u0020"), Char("\\-"), Category("\\w"), Range("0", "9"))));
 //     assert "[a-z^cqxy]" -> {};
 // }
 exports["test \"Class\""] = function(test) {
     var start = new Scannerless().Class();
-
+    
     test.deepEqual(start.parse("[\\t\\u0020\\-\\w0-9]"), [[Class(Control("\\t"), Unicode("\\u0020"), Char("\\-"), Category("\\w"), Range("0", "9"))]]);
     test.deepEqual(start.parse("[^\\t\\u0020\\-\\w0-9]"), [[Class(Not(Control("\\t"), Unicode("\\u0020"), Char("\\-"), Category("\\w"), Range("0", "9")))]]);
     test.deepEqual(start.parse("[a-z^cqxy]"), []);

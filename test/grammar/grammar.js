@@ -15,19 +15,19 @@ var ID       = require("./../../src/grammar/grammar").ID,
 
 // export test "SPACE" {
 //     start Lexer.SPACE;
-// 
+//     
 //     assert " " -> ();
 // }
 exports["test \"SPACE\""] = function(test) {
     var start = new Lexer().SPACE();
-
+    
     test.deepEqual(start.parse(" "), [[]]);
     test.done();
 };
 
 // export test "ID" {
 //     start Lexer.ID;
-// 
+//     
 //     assert "id" -> (ID("id"));
 //     assert "start" -> {};
 //     assert "id2" -> (ID("id2"));
@@ -36,7 +36,7 @@ exports["test \"SPACE\""] = function(test) {
 // }
 exports["test \"ID\""] = function(test) {
     var start = new Lexer().ID();
-
+    
     test.deepEqual(start.parse("id"), [[ID("id")]]);
     test.deepEqual(start.parse("start"), []);
     test.deepEqual(start.parse("id2"), [[ID("id2")]]);
@@ -47,7 +47,7 @@ exports["test \"ID\""] = function(test) {
 
 // export test "QID" {
 //     start Lexer.QID;
-// 
+//     
 //     assert "." -> {};
 //     assert "id" -> {};
 //     assert "Example.NEWLINE" -> (QID("Example.NEWLINE"));
@@ -56,7 +56,7 @@ exports["test \"ID\""] = function(test) {
 // }
 exports["test \"QID\""] = function(test) {
     var start = new Lexer().QID();
-
+    
     test.deepEqual(start.parse("."), []);
     test.deepEqual(start.parse("id"), []);
     test.deepEqual(start.parse("Example.NEWLINE"), [[QID("Example.NEWLINE")]]);
@@ -67,13 +67,13 @@ exports["test \"QID\""] = function(test) {
 
 // export test "COMMENT" {
 //     start Lexer.COMMENT;
-// 
+//     
 //     assert "/* comment */" -> ();
 //     assert "// comment" -> ();
 // }
 exports["test \"COMMENT\""] = function(test) {
     var start = new Lexer().COMMENT();
-
+    
     test.deepEqual(start.parse("/* comment */"), [[]]);
     test.deepEqual(start.parse("// comment"), [[]]);
     test.done();
@@ -81,7 +81,7 @@ exports["test \"COMMENT\""] = function(test) {
 
 // export test "CHAR" {
 //     start Lexer.CHAR;
-// 
+//     
 //     assert "'a'" -> (CHAR("'a'"));
 //     assert "'\\t'" -> (CHAR("'\\t'"));
 //     assert "'\\u0020'" -> (CHAR("'\\u0020'"));
@@ -89,7 +89,7 @@ exports["test \"COMMENT\""] = function(test) {
 // }
 exports["test \"CHAR\""] = function(test) {
     var start = new Lexer().CHAR();
-
+    
     test.deepEqual(start.parse("'a'"), [[CHAR("'a'")]]);
     test.deepEqual(start.parse("'\\t'"), [[CHAR("'\\t'")]]);
     test.deepEqual(start.parse("'\\u0020'"), [[CHAR("'\\u0020'")]]);
@@ -99,14 +99,14 @@ exports["test \"CHAR\""] = function(test) {
 
 // export test "CATEGORY" {
 //     start Lexer.CATEGORY;
-// 
+//     
 //     assert "'\\w'" -> (CATEGORY("'\\w'"));
 //     assert "'a'" -> {};
 //     assert "'\\t'" -> {};
 // }
 exports["test \"CATEGORY\""] = function(test) {
     var start = new Lexer().CATEGORY();
-
+    
     test.deepEqual(start.parse("'\\w'"), [[CATEGORY("'\\w'")]]);
     test.deepEqual(start.parse("'a'"), []);
     test.deepEqual(start.parse("'\\t'"), []);
@@ -115,13 +115,13 @@ exports["test \"CATEGORY\""] = function(test) {
 
 // export test "LITERAL" {
 //     start Lexer.LITERAL;
-// 
+//     
 //     assert "\"literal\"" -> (LITERAL("\"literal\""));
 //     assert "'literal'" -> {};
 // }
 exports["test \"LITERAL\""] = function(test) {
     var start = new Lexer().LITERAL();
-
+    
     test.deepEqual(start.parse("\"literal\""), [[LITERAL("\"literal\"")]]);
     test.deepEqual(start.parse("'literal'"), []);
     test.done();
@@ -129,14 +129,14 @@ exports["test \"LITERAL\""] = function(test) {
 
 // export test "SYMBOL" {
 //     start Lexer.SYMBOL;
-// 
+//     
 //     assert "|" -> (SYMBOL("|"));
 //     assert "<" -> (SYMBOL("<"));
 //     assert ">" -> (SYMBOL(">"));
 // }
 exports["test \"SYMBOL\""] = function(test) {
     var start = new Lexer().SYMBOL();
-
+    
     test.deepEqual(start.parse("|"), [[SYMBOL("|")]]);
     test.deepEqual(start.parse("<"), [[SYMBOL("<")]]);
     test.deepEqual(start.parse(">"), [[SYMBOL(">")]]);
@@ -145,7 +145,7 @@ exports["test \"SYMBOL\""] = function(test) {
 
 // export test "CLASS" {
 //     start Lexer.CLASS;
-// 
+//     
 //     assert "[0-9]" -> (CLASS("[0-9]"));
 //     assert "[123]" -> (CLASS("[123]"));
 //     assert "[^0-9]" -> (CLASS("[^0-9]"));
@@ -156,7 +156,7 @@ exports["test \"SYMBOL\""] = function(test) {
 // }
 exports["test \"CLASS\""] = function(test) {
     var start = new Lexer().CLASS();
-
+    
     test.deepEqual(start.parse("[0-9]"), [[CLASS("[0-9]")]]);
     test.deepEqual(start.parse("[123]"), [[CLASS("[123]")]]);
     test.deepEqual(start.parse("[^0-9]"), [[CLASS("[^0-9]")]]);
@@ -169,7 +169,7 @@ exports["test \"CLASS\""] = function(test) {
 
 // export test "KEYWORD" {
 //     start Lexer.KEYWORD;
-// 
+//     
 //     assert "grammar" -> (KEYWORD("grammar"));
 //     assert "start" -> (KEYWORD("start"));
 //     assert "import" -> (KEYWORD("import"));
@@ -183,7 +183,7 @@ exports["test \"CLASS\""] = function(test) {
 // }
 exports["test \"KEYWORD\""] = function(test) {
     var start = new Lexer().KEYWORD();
-
+    
     test.deepEqual(start.parse("grammar"), [[KEYWORD("grammar")]]);
     test.deepEqual(start.parse("start"), [[KEYWORD("start")]]);
     test.deepEqual(start.parse("import"), [[KEYWORD("import")]]);
@@ -199,7 +199,7 @@ exports["test \"KEYWORD\""] = function(test) {
 
 // export test "Lexer" {
 //     start Lexer.start;
-// 
+//     
 //     assert "id /* comment */ \"literal\" | [0-9] start" -> (ID("id"), LITERAL("\"literal\""), SYMBOL("|"), CLASS("[0-9]"), KEYWORD("start"));
 //     assert "id /* comment */ \"literal\" | [0-9" -> {};
 //     assert "id /* comment */ \"literal\" | [0-9] start 123" -> {};
@@ -214,7 +214,7 @@ exports["test \"KEYWORD\""] = function(test) {
 // }
 exports["test \"Lexer\""] = function(test) {
     var start = new Lexer().start();
-
+    
     test.deepEqual(start.parse("id /* comment */ \"literal\" | [0-9] start"), [[ID("id"), LITERAL("\"literal\""), SYMBOL("|"), CLASS("[0-9]"), KEYWORD("start")]]);
     test.deepEqual(start.parse("id /* comment */ \"literal\" | [0-9"), []);
     test.deepEqual(start.parse("id /* comment */ \"literal\" | [0-9] start 123"), []);
@@ -268,61 +268,61 @@ var Or       = require("./../../src/grammar/grammar").Or,
 
 // export test "Parser" {
 //     start Parser.start;
-// 
+//     
 //     assert (KEYWORD("import"), SYMBOL("{"), ID("INT"), SYMBOL(","), ID("STRING"), SYMBOL("}"), KEYWORD("from"), QID(".common-lib"), SYMBOL(";"), KEYWORD("export"), KEYWORD("constructor"), ID("Statement"), SYMBOL(","), ID("Expression"), SYMBOL(";"), KEYWORD("export"), KEYWORD("grammar"), ID("Example"), SYMBOL("{"), KEYWORD("start"), ID("NEWLINE"), SYMBOL(";"), ID("NEWLINE"), SYMBOL(":"), LITERAL("\"\\n\""), SYMBOL(";"), SYMBOL("}")) -> (Module(Import(("INT", "STRING"), ".common-lib"), Export(Constructor("Statement", "Expression")), Export(Grammar("Example", (Start(Ref("NEWLINE")), Rule("NEWLINE", Literal("\"\\n\"")))))));
 // }
 exports["test \"Parser\""] = function(test) {
     var start = new Parser().start();
-
+    
     test.deepEqual(start.parse([KEYWORD("import"), SYMBOL("{"), ID("INT"), SYMBOL(","), ID("STRING"), SYMBOL("}"), KEYWORD("from"), QID(".common-lib"), SYMBOL(";"), KEYWORD("export"), KEYWORD("constructor"), ID("Statement"), SYMBOL(","), ID("Expression"), SYMBOL(";"), KEYWORD("export"), KEYWORD("grammar"), ID("Example"), SYMBOL("{"), KEYWORD("start"), ID("NEWLINE"), SYMBOL(";"), ID("NEWLINE"), SYMBOL(":"), LITERAL("\"\\n\""), SYMBOL(";"), SYMBOL("}")]), [[Module(Import(["INT", "STRING"], ".common-lib"), Export(Constructor("Statement", "Expression")), Export(Grammar("Example", [Start(Ref("NEWLINE")), Rule("NEWLINE", Literal("\"\\n\""))])))]]);
     test.done();
 };
 
 // export test "Import" {
 //     start Parser.Import;
-// 
+//     
 //     assert (KEYWORD("import"), SYMBOL("{"), ID("INT"), SYMBOL(","), ID("STRING"), SYMBOL("}"), KEYWORD("from"), QID(".common-lib"), SYMBOL(";")) -> (Import(("INT", "STRING"), ".common-lib"));
 // }
 exports["test \"Import\""] = function(test) {
     var start = new Parser().Import();
-
+    
     test.deepEqual(start.parse([KEYWORD("import"), SYMBOL("{"), ID("INT"), SYMBOL(","), ID("STRING"), SYMBOL("}"), KEYWORD("from"), QID(".common-lib"), SYMBOL(";")]), [[Import(["INT", "STRING"], ".common-lib")]]);
     test.done();
 };
 
 // export test "Export" {
 //     start Parser.Export;
-// 
+//     
 //     assert (KEYWORD("export"), KEYWORD("constructor"), ID("Statement"), SYMBOL(","), ID("Expression"), SYMBOL(";")) -> (Export(Constructor("Statement", "Expression")));
 // }
 exports["test \"Export\""] = function(test) {
     var start = new Parser().Export();
-
+    
     test.deepEqual(start.parse([KEYWORD("export"), KEYWORD("constructor"), ID("Statement"), SYMBOL(","), ID("Expression"), SYMBOL(";")]), [[Export(Constructor("Statement", "Expression"))]]);
     test.done();
 };
 
 // export test "Constructor" {
 //     start Parser.Constructor;
-// 
+//     
 //     assert (KEYWORD("constructor"), ID("Statement"), SYMBOL(","), ID("Expression"), SYMBOL(";")) -> (Constructor("Statement", "Expression"));
 // }
 exports["test \"Constructor\""] = function(test) {
     var start = new Parser().Constructor();
-
+    
     test.deepEqual(start.parse([KEYWORD("constructor"), ID("Statement"), SYMBOL(","), ID("Expression"), SYMBOL(";")]), [[Constructor("Statement", "Expression")]]);
     test.done();
 };
 
 // export test "Grammar" {
 //     start Parser.Grammar;
-// 
+//     
 //     assert (KEYWORD("grammar"), ID("Example"), SYMBOL("{"), KEYWORD("start"), ID("NEWLINE"), SYMBOL(";"), ID("NEWLINE"), SYMBOL(":"), LITERAL("\"\\n\""), SYMBOL(";"), SYMBOL("}")) -> (Grammar("Example", (Start(Ref("NEWLINE")), Rule("NEWLINE", Literal("\"\\n\"")))));
 //     assert (KEYWORD("grammar"), ID("Example2"), KEYWORD("extends"), ID("Example"), SYMBOL("{"), ID("NEWLINE"), SYMBOL(":"), KEYWORD("super"), SYMBOL("|"), LITERAL("\"\\r\\n\""), SYMBOL(";"), SYMBOL("}")) -> (Grammar("Example2", "Example", (Rule("NEWLINE", Or(Super(), Literal("\"\\r\\n\""))))));
 // }
 exports["test \"Grammar\""] = function(test) {
     var start = new Parser().Grammar();
-
+    
     test.deepEqual(start.parse([KEYWORD("grammar"), ID("Example"), SYMBOL("{"), KEYWORD("start"), ID("NEWLINE"), SYMBOL(";"), ID("NEWLINE"), SYMBOL(":"), LITERAL("\"\\n\""), SYMBOL(";"), SYMBOL("}")]), [[Grammar("Example", [Start(Ref("NEWLINE")), Rule("NEWLINE", Literal("\"\\n\""))])]]);
     test.deepEqual(start.parse([KEYWORD("grammar"), ID("Example2"), KEYWORD("extends"), ID("Example"), SYMBOL("{"), ID("NEWLINE"), SYMBOL(":"), KEYWORD("super"), SYMBOL("|"), LITERAL("\"\\r\\n\""), SYMBOL(";"), SYMBOL("}")]), [[Grammar("Example2", "Example", [Rule("NEWLINE", Or(Super(), Literal("\"\\r\\n\"")))])]]);
     test.done();
@@ -330,7 +330,7 @@ exports["test \"Grammar\""] = function(test) {
 
 // export test "Rule" {
 //     start Parser.Rule;
-// 
+//     
 //     assert (KEYWORD("start"), ID("NEWLINE"), SYMBOL(";")) -> (Start(Ref("NEWLINE")));
 //     assert (KEYWORD("start")) -> {};
 //     assert (ID("NEWLINE"), SYMBOL(":"), LITERAL("\"\\n\""), SYMBOL(";")) -> (Rule("NEWLINE", Literal("\"\\n\"")));
@@ -338,7 +338,7 @@ exports["test \"Grammar\""] = function(test) {
 // }
 exports["test \"Rule\""] = function(test) {
     var start = new Parser().Rule();
-
+    
     test.deepEqual(start.parse([KEYWORD("start"), ID("NEWLINE"), SYMBOL(";")]), [[Start(Ref("NEWLINE"))]]);
     test.deepEqual(start.parse([KEYWORD("start")]), []);
     test.deepEqual(start.parse([ID("NEWLINE"), SYMBOL(":"), LITERAL("\"\\n\""), SYMBOL(";")]), [[Rule("NEWLINE", Literal("\"\\n\""))]]);
@@ -348,79 +348,79 @@ exports["test \"Rule\""] = function(test) {
 
 // export test "IdentifierList" {
 //     start Parser.IdentifierList;
-// 
+//     
 //     assert (SYMBOL("{"), ID("INT"), SYMBOL(","), ID("STRING"), SYMBOL("}")) -> (("INT", "STRING"));
 // }
 exports["test \"IdentifierList\""] = function(test) {
     var start = new Parser().IdentifierList();
-
+    
     test.deepEqual(start.parse([SYMBOL("{"), ID("INT"), SYMBOL(","), ID("STRING"), SYMBOL("}")]), [[["INT", "STRING"]]]);
     test.done();
 };
 
 // export test "Expression" {
 //     start Parser.Expression;
-// 
+//     
 //     assert (LITERAL("\"var\""), SYMBOL("!"), SYMBOL("<"), ID("Identifier"), SYMBOL("("), LITERAL("\",\""), SYMBOL("!"), ID("Identifier"), SYMBOL(")"), SYMBOL("*"), SYMBOL(">"), LITERAL("\";\""), SYMBOL("!"), SYMBOL("->"), ID("Variable"), SYMBOL("|"), LITERAL("\"function\""), SYMBOL("!"), ID("Identifier"), SYMBOL("?"), LITERAL("\"(\""), SYMBOL("!"), ID("Param"), SYMBOL("+"), LITERAL("\")\""), SYMBOL("!"), SYMBOL("->"), ID("Call"), SYMBOL("|"), SYMBOL("("), SYMBOL("@"), ID("INT"), SYMBOL("|"), SYMBOL("@"), ID("STRING"), SYMBOL("&"), SYMBOL("~"), SYMBOL("@"), ID("INT"), SYMBOL(")"), SYMBOL("->"), ID("Value")) -> (Or(Or(Red(Seq(Seq(Ignore(Literal("\"var\"")), Capture(Seq(Ref("Identifier"), Any(Seq(Ignore(Literal("\",\"")), Ref("Identifier")))))), Ignore(Literal("\";\""))), "Variable"), Red(Seq(Seq(Seq(Seq(Ignore(Literal("\"function\"")), Maybe(Ref("Identifier"))), Ignore(Literal("\"(\""))), Many(Ref("Param"))), Ignore(Literal("\")\""))), "Call")), Red(Or(Type("INT"), And(Type("STRING"), Not(Type("INT")))), "Value")));
 // }
 exports["test \"Expression\""] = function(test) {
     var start = new Parser().Expression();
-
+    
     test.deepEqual(start.parse([LITERAL("\"var\""), SYMBOL("!"), SYMBOL("<"), ID("Identifier"), SYMBOL("("), LITERAL("\",\""), SYMBOL("!"), ID("Identifier"), SYMBOL(")"), SYMBOL("*"), SYMBOL(">"), LITERAL("\";\""), SYMBOL("!"), SYMBOL("->"), ID("Variable"), SYMBOL("|"), LITERAL("\"function\""), SYMBOL("!"), ID("Identifier"), SYMBOL("?"), LITERAL("\"(\""), SYMBOL("!"), ID("Param"), SYMBOL("+"), LITERAL("\")\""), SYMBOL("!"), SYMBOL("->"), ID("Call"), SYMBOL("|"), SYMBOL("("), SYMBOL("@"), ID("INT"), SYMBOL("|"), SYMBOL("@"), ID("STRING"), SYMBOL("&"), SYMBOL("~"), SYMBOL("@"), ID("INT"), SYMBOL(")"), SYMBOL("->"), ID("Value")]), [[Or(Or(Red(Seq(Seq(Ignore(Literal("\"var\"")), Capture(Seq(Ref("Identifier"), Any(Seq(Ignore(Literal("\",\"")), Ref("Identifier")))))), Ignore(Literal("\";\""))), "Variable"), Red(Seq(Seq(Seq(Seq(Ignore(Literal("\"function\"")), Maybe(Ref("Identifier"))), Ignore(Literal("\"(\""))), Many(Ref("Param"))), Ignore(Literal("\")\""))), "Call")), Red(Or(Type("INT"), And(Type("STRING"), Not(Type("INT")))), "Value"))]]);
     test.done();
 };
 
 // export test "OrExpr" {
 //     start Parser.OrExpr;
-// 
+//     
 //     assert (SYMBOL("@"), ID("INT"), SYMBOL("|"), SYMBOL("@"), ID("STRING"), SYMBOL("&"), SYMBOL("~"), SYMBOL("@"), ID("INT")) -> (Or(Type("INT"), And(Type("STRING"), Not(Type("INT")))));
 // }
 exports["test \"OrExpr\""] = function(test) {
     var start = new Parser().OrExpr();
-
+    
     test.deepEqual(start.parse([SYMBOL("@"), ID("INT"), SYMBOL("|"), SYMBOL("@"), ID("STRING"), SYMBOL("&"), SYMBOL("~"), SYMBOL("@"), ID("INT")]), [[Or(Type("INT"), And(Type("STRING"), Not(Type("INT"))))]]);
     test.done();
 };
 
 // export test "RedExpr" {
 //     start Parser.RedExpr;
-// 
+//     
 //     assert (SYMBOL("("), SYMBOL("@"), ID("INT"), SYMBOL("|"), SYMBOL("@"), ID("STRING"), SYMBOL("&"), SYMBOL("~"), SYMBOL("@"), ID("INT"), SYMBOL(")"), SYMBOL("->"), ID("Value")) -> (Red(Or(Type("INT"), And(Type("STRING"), Not(Type("INT")))), "Value"));
 // }
 exports["test \"RedExpr\""] = function(test) {
     var start = new Parser().RedExpr();
-
+    
     test.deepEqual(start.parse([SYMBOL("("), SYMBOL("@"), ID("INT"), SYMBOL("|"), SYMBOL("@"), ID("STRING"), SYMBOL("&"), SYMBOL("~"), SYMBOL("@"), ID("INT"), SYMBOL(")"), SYMBOL("->"), ID("Value")]), [[Red(Or(Type("INT"), And(Type("STRING"), Not(Type("INT")))), "Value")]]);
     test.done();
 };
 
 // export test "AndExpr" {
 //     start Parser.AndExpr;
-// 
+//     
 //     assert (SYMBOL("@"), ID("STRING"), SYMBOL("&"), SYMBOL("~"), SYMBOL("@"), ID("INT")) -> (And(Type("STRING"), Not(Type("INT"))));
 // }
 exports["test \"AndExpr\""] = function(test) {
     var start = new Parser().AndExpr();
-
+    
     test.deepEqual(start.parse([SYMBOL("@"), ID("STRING"), SYMBOL("&"), SYMBOL("~"), SYMBOL("@"), ID("INT")]), [[And(Type("STRING"), Not(Type("INT")))]]);
     test.done();
 };
 
 // export test "SeqExpr" {
 //     start Parser.SeqExpr;
-// 
+//     
 //     assert (LITERAL("\",\""), SYMBOL("!"), ID("Identifier")) -> (Seq(Ignore(Literal("\",\"")), Ref("Identifier")));
 // }
 exports["test \"SeqExpr\""] = function(test) {
     var start = new Parser().SeqExpr();
-
+    
     test.deepEqual(start.parse([LITERAL("\",\""), SYMBOL("!"), ID("Identifier")]), [[Seq(Ignore(Literal("\",\"")), Ref("Identifier"))]]);
     test.done();
 };
 
 // export test "RightExpr" {
 //     start Parser.RightExpr;
-// 
+//     
 //     assert (SYMBOL("("), LITERAL("\",\""), SYMBOL("!"), ID("Identifier"), SYMBOL(")"), SYMBOL("*")) -> (Any(Seq(Ignore(Literal("\",\"")), Ref("Identifier"))));
 //     assert (ID("Param"), SYMBOL("+")) -> (Many(Ref("Param")));
 //     assert (ID("Identifier"), SYMBOL("?")) -> (Maybe(Ref("Identifier")));
@@ -428,7 +428,7 @@ exports["test \"SeqExpr\""] = function(test) {
 // }
 exports["test \"RightExpr\""] = function(test) {
     var start = new Parser().RightExpr();
-
+    
     test.deepEqual(start.parse([SYMBOL("("), LITERAL("\",\""), SYMBOL("!"), ID("Identifier"), SYMBOL(")"), SYMBOL("*")]), [[Any(Seq(Ignore(Literal("\",\"")), Ref("Identifier")))]]);
     test.deepEqual(start.parse([ID("Param"), SYMBOL("+")]), [[Many(Ref("Param"))]]);
     test.deepEqual(start.parse([ID("Identifier"), SYMBOL("?")]), [[Maybe(Ref("Identifier"))]]);
@@ -438,13 +438,13 @@ exports["test \"RightExpr\""] = function(test) {
 
 // export test "LeftExpr" {
 //     start Parser.LeftExpr;
-// 
+//     
 //     assert (SYMBOL("~"), SYMBOL("@"), ID("INT")) -> (Not(Type("INT")));
 //     assert (SYMBOL("?="), SYMBOL("@"), ID("INT")) -> (Look(Type("INT")));
 // }
 exports["test \"LeftExpr\""] = function(test) {
     var start = new Parser().LeftExpr();
-
+    
     test.deepEqual(start.parse([SYMBOL("~"), SYMBOL("@"), ID("INT")]), [[Not(Type("INT"))]]);
     test.deepEqual(start.parse([SYMBOL("?="), SYMBOL("@"), ID("INT")]), [[Look(Type("INT"))]]);
     test.done();
@@ -452,7 +452,7 @@ exports["test \"LeftExpr\""] = function(test) {
 
 // export test "Terminal" {
 //     start Parser.Terminal;
-// 
+//     
 //     assert (SYMBOL("("), ID("id"), SYMBOL(")")) -> (Ref("id"));
 //     assert (SYMBOL("<"), ID("id"), SYMBOL(">")) -> (Capture(Ref("id")));
 //     assert (SYMBOL("@"), ID("STRING")) -> (Type("STRING"));
@@ -470,7 +470,7 @@ exports["test \"LeftExpr\""] = function(test) {
 // }
 exports["test \"Terminal\""] = function(test) {
     var start = new Parser().Terminal();
-
+    
     test.deepEqual(start.parse([SYMBOL("("), ID("id"), SYMBOL(")")]), [[Ref("id")]]);
     test.deepEqual(start.parse([SYMBOL("<"), ID("id"), SYMBOL(">")]), [[Capture(Ref("id"))]]);
     test.deepEqual(start.parse([SYMBOL("@"), ID("STRING")]), [[Type("STRING")]]);
