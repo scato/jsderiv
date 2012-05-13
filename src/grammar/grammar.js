@@ -134,13 +134,13 @@ var Lexer = exports.Lexer = function() {};
     };
 })();
 
-// SYMBOL: <":" | ";" | "(" | ")" | "*" | "+" | "?" | "&" | "|" | "~" | "?=" | "!" | "->" | "@" | "{" | "}" | "," | "." ?= ~ [A-Za-z0-9_\-] | "<" | ">"> -> SYMBOL;
+// SYMBOL: <":" | ";" | "(" | ")" | "*" | "+" | "?" | "&" | "|" | "~" | "?=" | "!" | "->" | "@" | "{" | "}" | "," | "." ?= ~ [A-Za-z0-9_\-.] | "<" | ">"> -> SYMBOL;
 (function() {
     var $cache;
     
     exports.Lexer.prototype.SYMBOL = function() {
         return $cache || ($cache = $.Ref(function() {
-            return $.Red($.Capture($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Literal(":"), $.Value(":")), $.Or($.Literal(";"), $.Value(";"))), $.Or($.Literal("("), $.Value("("))), $.Or($.Literal(")"), $.Value(")"))), $.Or($.Literal("*"), $.Value("*"))), $.Or($.Literal("+"), $.Value("+"))), $.Or($.Literal("?"), $.Value("?"))), $.Or($.Literal("&"), $.Value("&"))), $.Or($.Literal("|"), $.Value("|"))), $.Or($.Literal("~"), $.Value("~"))), $.Or($.Literal("?="), $.Value("?="))), $.Or($.Literal("!"), $.Value("!"))), $.Or($.Literal("->"), $.Value("->"))), $.Or($.Literal("@"), $.Value("@"))), $.Or($.Literal("{"), $.Value("{"))), $.Or($.Literal("}"), $.Value("}"))), $.Or($.Literal(","), $.Value(","))), $.Seq($.Or($.Literal("."), $.Value(".")), $.Look($.Not($.Or($.Or($.Or($.Or($.Range("A", "Z"), $.Range("a", "z")), $.Range("0", "9")), $.Char("_")), $.Char("-")))))), $.Or($.Literal("<"), $.Value("<"))), $.Or($.Literal(">"), $.Value(">")))), SYMBOL);
+            return $.Red($.Capture($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Or($.Literal(":"), $.Value(":")), $.Or($.Literal(";"), $.Value(";"))), $.Or($.Literal("("), $.Value("("))), $.Or($.Literal(")"), $.Value(")"))), $.Or($.Literal("*"), $.Value("*"))), $.Or($.Literal("+"), $.Value("+"))), $.Or($.Literal("?"), $.Value("?"))), $.Or($.Literal("&"), $.Value("&"))), $.Or($.Literal("|"), $.Value("|"))), $.Or($.Literal("~"), $.Value("~"))), $.Or($.Literal("?="), $.Value("?="))), $.Or($.Literal("!"), $.Value("!"))), $.Or($.Literal("->"), $.Value("->"))), $.Or($.Literal("@"), $.Value("@"))), $.Or($.Literal("{"), $.Value("{"))), $.Or($.Literal("}"), $.Value("}"))), $.Or($.Literal(","), $.Value(","))), $.Seq($.Or($.Literal("."), $.Value(".")), $.Look($.Not($.Or($.Or($.Or($.Or($.Or($.Range("A", "Z"), $.Range("a", "z")), $.Range("0", "9")), $.Char("_")), $.Char("-")), $.Char(".")))))), $.Or($.Literal("<"), $.Value("<"))), $.Or($.Literal(">"), $.Value(">")))), SYMBOL);
         }.bind(this), 'SYMBOL'));
     };
 })();

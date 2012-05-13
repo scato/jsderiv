@@ -104,6 +104,7 @@ export test "Lexer" {
     assert "id" -> (ID("id"));
     assert "exports" -> (ID("exports"));
     assert ".example" -> (QID(".example"));
+    assert "...example" -> (QID("...example"));
     assert ". example" -> (SYMBOL("."), ID("example"));
     assert "Example.NEWLINE" -> (QID("Example.NEWLINE"));
     assert "Example.start" -> (QID("Example.start"));

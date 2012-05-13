@@ -207,6 +207,7 @@ exports["test \"KEYWORD\""] = function(test) {
 //     assert "id" -> (ID("id"));
 //     assert "exports" -> (ID("exports"));
 //     assert ".example" -> (QID(".example"));
+//     assert "...example" -> (QID("...example"));
 //     assert ". example" -> (SYMBOL("."), ID("example"));
 //     assert "Example.NEWLINE" -> (QID("Example.NEWLINE"));
 //     assert "Example.start" -> (QID("Example.start"));
@@ -221,6 +222,7 @@ exports["test \"Lexer\""] = function(test) {
     test.deepEqual(start.parse("id"), [[ID("id")]]);
     test.deepEqual(start.parse("exports"), [[ID("exports")]]);
     test.deepEqual(start.parse(".example"), [[QID(".example")]]);
+    test.deepEqual(start.parse("...example"), [[QID("...example")]]);
     test.deepEqual(start.parse(". example"), [[SYMBOL("."), ID("example")]]);
     test.deepEqual(start.parse("Example.NEWLINE"), [[QID("Example.NEWLINE")]]);
     test.deepEqual(start.parse("Example.start"), [[QID("Example.start")]]);
