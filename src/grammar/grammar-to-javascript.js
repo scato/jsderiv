@@ -76,12 +76,12 @@ parser.Augmentation.prototype.toJavascript = function() {
 function exprToJavascript(id, expr, exports, augmentation, grammar, rule) {
     var param = augmentation ? '$default' : '';
     var childNodes = augmentation ? exports + '.' + id : '';
+    var hashCode = expr.toSource().hashCode();
+    var cache = 'this._' + rule + '_' + hashCode;
     
     return '(function(' + param + ') {\n' +
-        '    var $cache;\n' +
-        '    \n' +
         '    ' + exports + '.' + id + ' = function() {\n' +
-        '        return $cache || ($cache = $.Ref(function() {\n' +
+        '        return ' + cache + ' || (' + cache + ' = $.Ref(function() {\n' +
         '            return ' + expr.toJavascript(grammar, rule) + ';\n' +
         '        }.bind(this), \'' + id + '\'));\n' +
         '    };\n' +
@@ -179,11 +179,11 @@ parser.Category.prototype.toJavascript = function() {
 };
 
 parser.Default.prototype.toJavascript = function(grammar, rule) {
-    return '$default.apply(this, []).func()';
+    return '$default.apply(this, []).resolve()';
 };
 
 parser.Super.prototype.toJavascript = function(grammar, rule) {
-    return grammar + '.$super.prototype.' + rule + '.apply(this, []).func()';
+    return grammar + '.$super.prototype.' + rule + '.apply(this, []).resolve()';
 };
 
 parser.Capture.prototype.toJavascript = function(grammar, rule) {

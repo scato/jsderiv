@@ -84,3 +84,12 @@ exports.unescapeSlash = function(string) {
     }
 };
 
+String.prototype.hashCode = function() {
+    for(var r = 0, i = 0; i < this.length; i++) {
+        r = (r << 5) - r + this.charCodeAt(i);
+        r &= r;
+    }
+    
+    return r.toString(16).replace(/^-/, '');
+};
+

@@ -87,13 +87,14 @@ var Example = function() {};\n\
 };
 
 exports['test Rule'] = function(test) {
+    var startHashCode = Ref("NEWLINE").toSource().hashCode();
+    var NEWLINEHashCode = Literal("\"\\n\"").toSource().hashCode();
+    
     test.equals("\
 // " + Start(Ref("NEWLINE")).toSource() + "\n\
 (function() {\n\
-    var $cache;\n\
-    \n\
     Example.prototype.start = function() {\n\
-        return $cache || ($cache = $.Ref(function() {\n\
+        return this._start_" + startHashCode + " || (this._start_" + startHashCode + " = $.Ref(function() {\n\
             return this.NEWLINE();\n\
         }.bind(this), 'start'));\n\
     };\n\
@@ -102,10 +103,8 @@ exports['test Rule'] = function(test) {
     test.equals("\
 // " + Rule("NEWLINE", Literal("\"\\n\"")).toSource() + "\n\
 (function() {\n\
-    var $cache;\n\
-    \n\
     Example.prototype.NEWLINE = function() {\n\
-        return $cache || ($cache = $.Ref(function() {\n\
+        return this._NEWLINE_" + NEWLINEHashCode + " || (this._NEWLINE_" + NEWLINEHashCode + " = $.Ref(function() {\n\
             return $.Literal(\"\\n\");\n\
         }.bind(this), 'NEWLINE'));\n\
     };\n\
@@ -175,8 +174,8 @@ exports['test Terminal'] = function(test) {
     test.equals("$.Char(\"a\")", Char("'a'").toJavascript());
     test.equals("$.Char(\"\\t\")", Char("'\\t'").toJavascript());
     test.equals("$.Cat(\"w\")", Category("'\\w'").toJavascript());
-    test.equals("$default.apply(this, []).func()", Default().toJavascript());
-    test.equals("Example.$super.prototype.NEWLINE.apply(this, []).func()", Super().toJavascript("Example", "NEWLINE"));
+    test.equals("$default.apply(this, []).resolve()", Default().toJavascript());
+    test.equals("Example.$super.prototype.NEWLINE.apply(this, []).resolve()", Super().toJavascript("Example", "NEWLINE"));
     
     test.done();
 };
